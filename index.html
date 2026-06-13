@@ -3,699 +3,1015 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Сабля Coffee</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Cinzel:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        /* ===== RESET ===== */
+        *, *::before, *::after {
+            margin: 0; padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
 
         :root {
             --dark:   #120a03;
             --dark2:  #1e1008;
-            --brown:  #5c3317;
             --gold:   #c8963c;
             --gold2:  #e8b84b;
             --gold3:  #f5d47a;
             --cream:  #faf3e8;
             --cream2: #f0e2c8;
-            --cream3: #e8d5b0;
+            --cream3: #e0cba8;
             --white:  #fff8ee;
-            --red:    #8b2010;
+            --red:    #c0392b;
             --muted:  #8a6a40;
-            --green:  #3a7d44;
+            --green:  #27ae60;
             --shadow: rgba(60,30,5,0.12);
+            --brown:  #5c3317;
+
+            /* Минимальный размер касания 48px */
+            --touch: 52px;
         }
 
-        html { scroll-behavior: smooth; }
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
 
         body {
             background: var(--cream);
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, sans-serif;
             color: var(--dark);
             min-height: 100vh;
             max-width: 480px;
             margin: 0 auto;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
 
         body::before {
             content: '';
-            position: fixed; inset: 0;
+            position: fixed; inset: 0; z-index: 0;
             background-image:
-                repeating-linear-gradient(45deg,  rgba(200,150,60,0.04) 0, rgba(200,150,60,0.04) 1px, transparent 1px, transparent 14px),
-                repeating-linear-gradient(-45deg, rgba(200,150,60,0.04) 0, rgba(200,150,60,0.04) 1px, transparent 1px, transparent 14px);
-            pointer-events: none; z-index: 0;
+                repeating-linear-gradient(45deg,  rgba(200,150,60,0.035) 0, rgba(200,150,60,0.035) 1px, transparent 1px, transparent 16px),
+                repeating-linear-gradient(-45deg, rgba(200,150,60,0.035) 0, rgba(200,150,60,0.035) 1px, transparent 1px, transparent 16px);
+            pointer-events: none;
         }
 
         body > * { position: relative; z-index: 1; }
+
         ::-webkit-scrollbar { display: none; }
+        * { scrollbar-width: none; }
 
         /* ===== HEADER ===== */
         .header {
-            background: linear-gradient(180deg, #0e0804 0%, var(--dark2) 100%);
-            padding: 10px 16px;
+            background: linear-gradient(180deg, #0a0502 0%, var(--dark2) 100%);
+            padding: 0 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             position: sticky; top: 0; z-index: 1000;
             border-bottom: 2px solid var(--gold);
-            box-shadow: 0 4px 24px rgba(0,0,0,0.5);
-            min-height: 64px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            height: 60px;
         }
 
-        /* ================================================
-           📌 ЛОГОТИП В ШАПКЕ
-           Замените src на путь к вашему файлу логотипа.
-           Пример: src="logo.png"  или  src="images/logo.png"
-           ================================================ */
-        .header-logo {
-            cursor: pointer;
+        .logo {
             display: flex;
             align-items: center;
-            height: 46px;
+            gap: 10px;
+            cursor: pointer;
+            /* Большая зона касания */
+            min-height: var(--touch);
+            padding: 4px 8px 4px 0;
         }
 
-        .header-logo img {
-            height: 46px;
+        /* ===== МЕСТО ДЛЯ ЛОГОТИПА =====
+           Замените src="LOGO" на путь к своему файлу
+           Например: src="logo.png"
+        */
+        .logo-img {
+            height: 44px;
             width: auto;
-            max-width: 180px;
+            max-width: 160px;
             object-fit: contain;
-            /* Фильтр делает логотип золотым на тёмном фоне.
-               Уберите строку filter если хотите оригинальные цвета: */
-            filter: brightness(0) invert(1) sepia(0.5) saturate(3) hue-rotate(8deg) brightness(1.1);
+            display: block;
         }
 
-        /* Текст показывается если картинка НЕ загружена */
-        .header-logo-text {
-            display: none;
+        .logo-text {
+            display: flex;
             flex-direction: column;
-            align-items: flex-start;
         }
 
-        .header-logo-text .hn {
-            font-family: 'Cinzel', serif;
-            font-size: 1.1rem;
+        .logo-text .ln {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
             font-weight: 700;
             color: var(--gold2);
-            letter-spacing: 4px;
+            letter-spacing: 3px;
+            line-height: 1.1;
         }
 
-        .header-logo-text .hs {
-            font-family: 'Cinzel', serif;
-            font-size: 0.45rem;
+        .logo-text .ls {
+            font-size: 0.5rem;
             color: var(--gold);
             letter-spacing: 5px;
             text-transform: uppercase;
         }
 
-        .cart-pill {
+        .cart-btn {
             background: linear-gradient(135deg, var(--gold), var(--gold2));
-            color: var(--dark); border: 1px solid var(--gold3);
-            padding: 9px 18px; border-radius: 4px;
-            font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.75rem;
-            cursor: pointer; display: flex; align-items: center; gap: 7px;
-            box-shadow: 0 2px 10px rgba(200,150,60,0.3);
-            transition: transform 0.2s; letter-spacing: 0.5px;
+            color: var(--dark);
+            border: none;
+            border-radius: 8px;
+            min-width: var(--touch);
+            min-height: var(--touch);
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(200,150,60,0.35);
+            transition: transform 0.15s;
             flex-shrink: 0;
         }
 
-        .cart-pill:active { transform: scale(0.95); }
+        .cart-btn:active { transform: scale(0.93); }
 
-        .cart-badge {
-            background: var(--red); color: #fff;
-            border-radius: 50%; width: 19px; height: 19px;
-            font-size: 0.65rem; font-weight: 700;
+        .cart-num {
+            background: var(--red);
+            color: #fff;
+            border-radius: 50%;
+            width: 22px; height: 22px;
+            font-size: 0.72rem; font-weight: 700;
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* ===== TABS ===== */
-        .cat-tabs {
-            background: linear-gradient(180deg, var(--dark2) 0%, #2a1408 100%);
-            padding: 8px 8px 10px;
-            overflow-x: auto; display: flex; gap: 6px;
-            position: sticky; top: 64px; z-index: 999;
-            border-bottom: 2px solid rgba(200,150,60,0.35);
+        /* ===== CATEGORY SCROLL TABS ===== */
+        .tabs-wrap {
+            background: var(--dark2);
+            padding: 10px 8px 12px;
+            overflow-x: auto;
+            display: flex;
+            gap: 8px;
+            position: sticky;
+            top: 60px;
+            z-index: 999;
+            border-bottom: 2px solid rgba(200,150,60,0.3);
+            -webkit-overflow-scrolling: touch;
         }
 
-        .cat-tab {
-            flex-shrink: 0; padding: 6px 13px; border-radius: 3px;
-            border: 1px solid rgba(200,150,60,0.2);
-            background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.45);
-            font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 600;
-            cursor: pointer; white-space: nowrap; transition: all 0.2s;
+        .tab-btn {
+            flex-shrink: 0;
+            min-height: 44px;
+            padding: 0 16px;
+            border-radius: 22px;
+            border: 1.5px solid rgba(200,150,60,0.2);
+            background: rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.5);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
         }
 
-        .cat-tab.active {
+        .tab-btn.active {
             background: linear-gradient(135deg, var(--gold), var(--gold2));
-            color: var(--dark); border-color: var(--gold3);
-            box-shadow: 0 2px 8px rgba(200,150,60,0.35); font-weight: 700;
+            color: var(--dark);
+            border-color: var(--gold3);
+            box-shadow: 0 2px 10px rgba(200,150,60,0.4);
+            font-weight: 700;
         }
 
         /* ===== PAGES ===== */
         .page { display: none; }
-        .page.active { display: block; animation: fadeUp 0.28s ease; }
+        .page.active { display: block; animation: fadeUp 0.25s ease; }
 
         @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(8px); }
+            from { opacity: 0; transform: translateY(6px); }
             to   { opacity: 1; transform: translateY(0); }
         }
 
         /* ===== HERO ===== */
         .hero {
-            background: linear-gradient(180deg, #0e0804 0%, var(--dark) 50%, #2a1408 100%);
-            padding: 36px 20px 44px;
-            text-align: center; position: relative; overflow: hidden;
+            background: linear-gradient(180deg, #0a0502 0%, var(--dark) 60%, #241208 100%);
+            padding: 32px 20px 40px;
+            text-align: center;
+            position: relative; overflow: hidden;
         }
 
         .hero::before {
             content: ''; position: absolute; inset: 0;
-            background:
-                radial-gradient(ellipse 80% 50% at 50% 0%, rgba(200,150,60,0.18) 0%, transparent 70%),
-                repeating-linear-gradient(0deg,  rgba(200,150,60,0.025) 0, rgba(200,150,60,0.025) 1px, transparent 1px, transparent 32px),
-                repeating-linear-gradient(90deg, rgba(200,150,60,0.025) 0, rgba(200,150,60,0.025) 1px, transparent 1px, transparent 32px);
+            background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(200,150,60,0.18) 0%, transparent 70%);
             pointer-events: none;
         }
 
         .hero-content { position: relative; z-index: 1; }
 
-        /* ================================================
-           📌 ЛОГОТИП В ГЕРОЕ (большой, центральный)
-           Замените src на путь к вашему файлу логотипа.
-           Пример: src="logo.png"
-           ================================================ */
-        .hero-logo-block {
-            margin-bottom: 28px;
+        /* ЛОГОТИП В ГЕРОЕ */
+        .hero-logo {
+            margin-bottom: 24px;
             display: flex;
             justify-content: center;
-            align-items: center;
-            min-height: 80px;
         }
 
-        .hero-logo-block img {
-            width: 220px;
-            max-width: 80vw;
+        .hero-logo img {
+            width: 200px;
+            max-width: 75vw;
             height: auto;
-            object-fit: contain;
-            /* Фильтр делает логотип золотым на тёмном фоне.
-               Уберите строку filter если хотите оригинальные цвета: */
-            filter: brightness(0) invert(1) sepia(0.5) saturate(3) hue-rotate(8deg) brightness(1.15);
-            drop-shadow: 0 4px 20px rgba(200,150,60,0.4);
         }
 
         /* Заглушка если нет логотипа */
-        .hero-logo-placeholder {
+        .hero-logo-stub {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
         }
 
-        .hlp-name {
-            font-family: 'Cinzel', serif;
+        .hls-name {
+            font-family: 'Playfair Display', serif;
             font-size: 2.4rem;
             font-weight: 700;
             color: var(--gold2);
             letter-spacing: 8px;
-            text-shadow: 0 2px 15px rgba(200,150,60,0.5);
+            text-shadow: 0 2px 14px rgba(200,150,60,0.5);
         }
 
-        .hlp-line {
-            display: flex; align-items: center; gap: 12px;
-            width: 100%;
+        .hls-line {
+            display: flex; align-items: center; gap: 10px; width: 100%;
         }
 
-        .hlp-line::before, .hlp-line::after {
+        .hls-line::before, .hls-line::after {
             content: ''; flex: 1; height: 1px;
             background: linear-gradient(90deg, transparent, var(--gold), transparent);
         }
 
-        .hlp-sword { font-size: 1.6rem; transform: rotate(-12deg); }
+        .hls-sword { font-size: 1.6rem; }
 
-        .hlp-sub {
-            font-family: 'Cinzel', serif;
-            font-size: 0.58rem;
+        .hls-sub {
+            font-size: 0.65rem;
             color: var(--gold);
             letter-spacing: 7px;
             text-transform: uppercase;
             opacity: 0.85;
         }
 
-        .hero-tagline {
-            font-family: 'Cinzel', serif;
-            font-size: 0.6rem; color: rgba(255,255,255,0.3);
-            letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px;
+        .hero-tag {
+            font-size: 0.68rem;
+            color: rgba(255,255,255,0.3);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
         }
 
         .hero p {
-            color: rgba(255,255,255,0.5); font-size: 0.88rem;
-            line-height: 1.75; margin-bottom: 26px;
-            max-width: 300px; margin-left: auto; margin-right: auto; font-weight: 300;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 28px;
+            font-weight: 300;
         }
 
-        .hero-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .hero-btns {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
 
         .btn-gold {
             background: linear-gradient(135deg, var(--gold), var(--gold2));
-            color: var(--dark); border: 1px solid var(--gold3);
-            padding: 12px 24px; border-radius: 4px;
-            font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.8rem;
-            cursor: pointer; box-shadow: 0 4px 16px rgba(200,150,60,0.35);
-            transition: transform 0.2s; letter-spacing: 0.5px;
+            color: var(--dark);
+            border: none;
+            min-height: var(--touch);
+            padding: 0 28px;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(200,150,60,0.4);
+            transition: transform 0.15s;
+            display: flex; align-items: center; gap: 6px;
         }
 
-        .btn-gold:active { transform: scale(0.96); }
+        .btn-gold:active { transform: scale(0.95); }
 
         .btn-ghost {
-            background: transparent; color: rgba(255,255,255,0.7);
-            border: 1px solid rgba(200,150,60,0.3);
-            padding: 12px 20px; border-radius: 4px;
-            font-family: 'Cinzel', serif; font-weight: 600; font-size: 0.8rem;
-            cursor: pointer; transition: all 0.2s;
+            background: transparent;
+            color: rgba(255,255,255,0.75);
+            border: 1.5px solid rgba(200,150,60,0.35);
+            min-height: var(--touch);
+            padding: 0 24px;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex; align-items: center; gap: 6px;
         }
 
         .btn-ghost:active { border-color: var(--gold); color: var(--gold2); }
 
         .hero-stats {
-            display: flex; margin-top: 30px; padding-top: 22px;
-            border-top: 1px solid rgba(200,150,60,0.2); position: relative;
+            display: flex;
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(200,150,60,0.18);
         }
 
-        .hero-stats::before {
-            content: '✦'; position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
-            color: var(--gold); font-size: 0.7rem; background: var(--dark); padding: 0 6px;
-        }
-
-        .stat { flex: 1; text-align: center; padding: 0 4px; border-right: 1px solid rgba(200,150,60,0.15); }
+        .stat { flex: 1; text-align: center; border-right: 1px solid rgba(200,150,60,0.15); }
         .stat:last-child { border-right: none; }
-        .stat-n { font-family: 'Cinzel', serif; font-size: 1.3rem; color: var(--gold2); display: block; }
-        .stat-l { font-size: 0.56rem; color: rgba(255,255,255,0.28); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
+        .stat-n { font-family: 'Playfair Display', serif; font-size: 1.45rem; color: var(--gold2); display: block; }
+        .stat-l { font-size: 0.58rem; color: rgba(255,255,255,0.28); letter-spacing: 1.5px; text-transform: uppercase; }
 
         /* ===== HOME CATS ===== */
-        .home-sec { padding: 26px 16px 100px; }
+        .home-sec { padding: 24px 14px 100px; }
 
-        .sec-head { margin-bottom: 20px; text-align: center; }
-        .sec-label { font-family: 'Cinzel', serif; font-size: 0.56rem; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; display: block; }
-        .sec-title { font-family: 'Playfair Display', serif; font-size: 1.55rem; color: var(--dark); }
+        .sec-head { margin-bottom: 18px; text-align: center; }
+        .sec-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; display: block; }
+        .sec-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--dark); }
 
-        .home-cats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
-
-        .home-cat-card {
-            background: var(--white); border: 1px solid var(--cream3);
-            border-radius: 6px; padding: 20px 12px 16px;
-            text-align: center; cursor: pointer;
-            transition: all 0.22s; box-shadow: 0 2px 12px var(--shadow);
-            position: relative; overflow: hidden;
+        .cats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
         }
 
-        .home-cat-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+        .cat-card {
+            background: var(--white);
+            border: 1.5px solid var(--cream3);
+            border-radius: 14px;
+            /* Большая зона касания */
+            min-height: 110px;
+            padding: 20px 12px 18px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.15s;
+            box-shadow: 0 2px 10px var(--shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .cat-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0;
+            height: 3px;
             background: linear-gradient(90deg, transparent, var(--gold), transparent);
-            transform: scaleX(0); transition: transform 0.25s;
+            transform: scaleX(0); transition: transform 0.2s;
         }
 
-        .home-cat-card:active { transform: scale(0.95); }
-        .home-cat-card:active::before { transform: scaleX(1); }
+        .cat-card:active { transform: scale(0.94); }
+        .cat-card:active::before { transform: scaleX(1); }
 
-        .hcc-icon { font-size: 2.2rem; display: block; margin-bottom: 8px; }
-        .hcc-name { font-family: 'Cinzel', serif; font-weight: 600; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--dark); }
-        .hcc-count { font-size: 0.65rem; color: var(--muted); margin-top: 4px; }
+        .cat-icon { font-size: 2.4rem; line-height: 1; }
+        .cat-name { font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--dark); }
+        .cat-cnt  { font-size: 0.7rem; color: var(--muted); }
 
         /* ===== MENU PAGE ===== */
-        .menu-inner { padding: 20px 16px 100px; }
+        .menu-wrap { padding: 18px 14px 100px; }
 
-        .menu-header {
-            display: flex; align-items: center; gap: 14px; margin-bottom: 20px;
-            padding-bottom: 14px; border-bottom: 1px solid var(--cream3); position: relative;
+        .menu-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 1.5px solid var(--cream3);
         }
 
-        .menu-header::after {
-            content: ''; position: absolute; bottom: -1px; left: 0;
-            width: 60px; height: 2px;
-            background: linear-gradient(90deg, var(--gold), transparent);
-        }
-
-        .mh-icon {
-            width: 48px; height: 48px;
+        .menu-top-icon {
+            width: 52px; height: 52px;
             background: linear-gradient(135deg, var(--gold), var(--gold2));
-            border-radius: 6px; display: flex; align-items: center; justify-content: center;
-            font-size: 1.4rem; box-shadow: 0 4px 12px rgba(200,150,60,0.3);
-            flex-shrink: 0; border: 1px solid var(--gold3);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(200,150,60,0.3);
+            flex-shrink: 0;
         }
 
-        .mh-title { font-family: 'Playfair Display', serif; font-size: 1.45rem; color: var(--dark); }
-        .mh-sub { font-size: 0.72rem; color: var(--muted); margin-top: 3px; }
+        .menu-top-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--dark); }
+        .menu-top-sub   { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
 
-        .search-wrap { position: relative; margin-bottom: 20px; }
-        .search-ico { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 0.82rem; color: var(--muted); pointer-events: none; }
+        /* SEARCH */
+        .search-wrap { position: relative; margin-bottom: 18px; }
+
+        .search-ico {
+            position: absolute; left: 16px; top: 50%;
+            transform: translateY(-50%);
+            font-size: 1rem; color: var(--muted); pointer-events: none;
+        }
 
         .search-in {
-            width: 100%; padding: 11px 14px 11px 40px;
-            border: 1px solid var(--cream3); border-radius: 4px;
-            font-family: 'Inter', sans-serif; font-size: 0.86rem;
-            background: var(--white); color: var(--dark);
-            transition: all 0.2s; box-shadow: 0 2px 8px var(--shadow);
+            width: 100%;
+            height: var(--touch);
+            padding: 0 16px 0 48px;
+            border: 1.5px solid var(--cream3);
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            background: var(--white);
+            color: var(--dark);
+            transition: border-color 0.2s;
+            box-shadow: 0 2px 8px var(--shadow);
         }
 
-        .search-in::placeholder { color: var(--muted); }
-        .search-in:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(200,150,60,0.1); }
+        .search-in::placeholder { color: var(--muted); font-size: 0.9rem; }
+        .search-in:focus { outline: none; border-color: var(--gold); }
 
-        /* ===== ITEM CARD ===== */
-        .cards-list { display: flex; flex-direction: column; gap: 12px; }
+        /* ===== ITEM CARDS ===== */
+        .items-list { display: flex; flex-direction: column; gap: 14px; }
 
         .item-card {
-            background: var(--white); border-radius: 6px;
-            box-shadow: 0 2px 12px var(--shadow); border: 1px solid var(--cream3);
-            transition: all 0.2s; overflow: hidden; position: relative;
+            background: var(--white);
+            border-radius: 16px;
+            border: 1.5px solid var(--cream3);
+            box-shadow: 0 2px 12px var(--shadow);
+            overflow: hidden;
+            transition: transform 0.15s;
+            position: relative;
         }
 
         .item-card::before {
-            content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px;
+            content: '';
+            position: absolute; top: 0; left: 0; bottom: 0;
+            width: 4px;
             background: linear-gradient(180deg, var(--gold), var(--gold2), var(--gold));
         }
 
         .item-card:active { transform: scale(0.985); }
 
-        .card-top-strip { height: 2px; background: linear-gradient(90deg, var(--gold), var(--gold2), var(--gold)); }
-
-        .item-body { padding: 14px 16px 16px 18px; }
-
-        .item-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
-        .item-left { flex: 1; }
-
-        .item-emoji-wrap {
-            width: 46px; height: 46px; flex-shrink: 0;
-            background: linear-gradient(135deg, var(--cream), var(--cream2));
-            border: 1px solid var(--cream3); border-radius: 8px;
-            display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
+        .item-strip {
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), var(--gold2), var(--gold));
         }
 
-        .item-name { font-family: 'Cinzel', serif; font-weight: 600; font-size: 0.82rem; color: var(--dark); line-height: 1.4; margin-bottom: 4px; letter-spacing: 0.3px; }
-        .item-note { font-size: 0.7rem; color: var(--muted); font-style: italic; }
+        .item-body { padding: 16px 16px 18px 20px; }
+
+        .item-row1 {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .item-emoji {
+            width: 52px; height: 52px;
+            background: linear-gradient(135deg, var(--cream), var(--cream2));
+            border: 1.5px solid var(--cream3);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.7rem;
+            flex-shrink: 0;
+        }
+
+        .item-info { flex: 1; }
+        .item-name { font-weight: 700; font-size: 1rem; color: var(--dark); line-height: 1.3; margin-bottom: 4px; }
+        .item-note { font-size: 0.78rem; color: var(--muted); font-style: italic; }
 
         .item-badge {
             display: inline-block;
             background: linear-gradient(135deg, var(--gold), var(--gold2));
-            color: var(--dark); font-size: 0.58rem; font-weight: 700;
-            padding: 2px 8px; border-radius: 3px;
-            letter-spacing: 0.5px; text-transform: uppercase; margin-top: 5px;
-            font-family: 'Cinzel', serif;
+            color: var(--dark); font-size: 0.65rem; font-weight: 700;
+            padding: 3px 10px; border-radius: 12px;
+            text-transform: uppercase; margin-top: 6px;
         }
 
-        .item-divider { display: flex; align-items: center; gap: 6px; margin: 10px 0; }
-        .item-divider::before, .item-divider::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--cream3), transparent); }
+        .item-divider {
+            display: flex; align-items: center; gap: 6px;
+            margin: 12px 0;
+        }
+
+        .item-divider::before, .item-divider::after {
+            content: ''; flex: 1; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--cream3), transparent);
+        }
+
         .idot { width: 4px; height: 4px; border-radius: 50%; background: var(--gold); opacity: 0.5; }
 
-        .size-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+        /* SIZES */
+        .size-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
 
         .sz-btn {
-            padding: 5px 13px; border-radius: 3px;
-            border: 1px solid var(--cream3); background: var(--cream);
-            color: var(--muted); font-family: 'Cinzel', serif;
-            font-size: 0.65rem; font-weight: 600; cursor: pointer;
-            transition: all 0.18s; letter-spacing: 0.3px;
+            /* Большие кнопки размеров */
+            min-height: 40px;
+            padding: 0 16px;
+            border-radius: 20px;
+            border: 1.5px solid var(--cream3);
+            background: var(--cream);
+            color: var(--muted);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex; align-items: center;
         }
 
         .sz-btn.on {
-            background: var(--dark); color: var(--gold2);
-            border-color: var(--dark); box-shadow: 0 2px 6px rgba(26,15,7,0.2);
+            background: var(--dark);
+            color: var(--gold2);
+            border-color: var(--dark);
         }
 
-        .item-footer { display: flex; align-items: center; justify-content: space-between; }
+        .item-row2 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
 
-        .price-block { display: flex; flex-direction: column; }
-        .pb-vol { font-size: 0.65rem; color: var(--muted); margin-bottom: 2px; }
-        .pb-price { font-family: 'Cinzel', serif; font-size: 1.35rem; color: var(--dark); font-weight: 700; line-height: 1; }
-        .pb-price span { font-size: 0.72rem; font-family: 'Inter', sans-serif; font-weight: 400; color: var(--muted); }
+        .price-wrap { display: flex; flex-direction: column; }
+        .price-vol  { font-size: 0.72rem; color: var(--muted); margin-bottom: 2px; }
+        .price-val  { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--dark); font-weight: 700; line-height: 1; }
+        .price-val span { font-size: 0.8rem; font-family: 'Inter', sans-serif; font-weight: 400; color: var(--muted); }
 
+        /* ADD BUTTON — большая круглая кнопка */
         .add-btn {
-            width: 44px; height: 44px; border-radius: 4px;
-            border: 1px solid rgba(200,150,60,0.3);
+            width: 52px; height: 52px;
+            border-radius: 50%;
+            border: none;
             background: linear-gradient(135deg, var(--dark), var(--dark2));
-            color: var(--gold2); font-size: 1.4rem; cursor: pointer;
+            color: var(--gold2);
+            font-size: 1.6rem;
+            cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 3px 10px rgba(26,15,7,0.25);
-            transition: all 0.22s; flex-shrink: 0;
+            box-shadow: 0 4px 14px rgba(18,10,3,0.3);
+            transition: all 0.2s;
+            flex-shrink: 0;
+            line-height: 1;
         }
 
-        .add-btn:active { transform: scale(0.9); }
-        .add-btn.done { background: linear-gradient(135deg, var(--green), #2d6b3a); color: #fff; border-color: var(--green); }
+        .add-btn:active { transform: scale(0.88); }
+        .add-btn.done   { background: linear-gradient(135deg, var(--green), #1e8449); color: #fff; }
 
+        /* SUB SECTION HEADER */
         .sub-head {
-            font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--brown);
-            padding: 10px 14px; background: var(--white); border-radius: 4px;
-            border-left: 3px solid var(--gold); border: 1px solid var(--cream3);
-            border-left: 3px solid var(--gold);
-            box-shadow: 0 2px 8px var(--shadow); margin: 22px 0 14px;
-            display: inline-flex; align-items: center; gap: 8px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.05rem;
+            color: var(--brown);
+            padding: 12px 16px;
+            background: var(--white);
+            border-radius: 10px;
+            border-left: 4px solid var(--gold);
+            border: 1.5px solid var(--cream3);
+            border-left: 4px solid var(--gold);
+            box-shadow: 0 2px 8px var(--shadow);
+            margin: 22px 0 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        /* ===== CART ===== */
+        /* ===== CART SHEET ===== */
         .overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000;
-            display: none; align-items: flex-end; backdrop-filter: blur(4px);
-            max-width: 480px; margin: 0 auto; left: 0; right: 0;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.65);
+            z-index: 2000; display: none;
+            align-items: flex-end;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
         }
 
         .overlay.open { display: flex; }
 
         .cart-sheet {
-            background: var(--cream); width: 100%; max-height: 92vh;
-            border-radius: 16px 16px 0 0; display: flex; flex-direction: column;
-            animation: sheetUp 0.3s cubic-bezier(0.34,1.56,0.64,1);
-            box-shadow: 0 -20px 60px rgba(0,0,0,0.3); border-top: 2px solid var(--gold);
+            background: var(--cream);
+            width: 100%;
+            max-height: 92vh;
+            border-radius: 24px 24px 0 0;
+            display: flex; flex-direction: column;
+            animation: slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);
+            box-shadow: 0 -20px 60px rgba(0,0,0,0.35);
+            border-top: 2px solid var(--gold);
         }
 
-        @keyframes sheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-        .sheet-handle { width: 40px; height: 4px; background: var(--cream3); border-radius: 10px; margin: 12px auto 0; }
-
-        .sheet-hdr {
-            padding: 14px 20px; display: flex; align-items: center; justify-content: space-between;
-            border-bottom: 1px solid var(--cream3); position: relative;
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to   { transform: translateY(0); }
         }
 
-        .sheet-hdr::after { content: ''; position: absolute; bottom: -1px; left: 20px; width: 50px; height: 2px; background: linear-gradient(90deg, var(--gold), transparent); }
-        .sheet-hdr h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--dark); }
+        .cart-handle {
+            width: 44px; height: 5px;
+            background: var(--cream3); border-radius: 10px;
+            margin: 14px auto 0;
+        }
 
-        .x-btn { width: 32px; height: 32px; border-radius: 4px; background: var(--cream2); border: 1px solid var(--cream3); color: var(--muted); font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .cart-head {
+            padding: 14px 20px 16px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1.5px solid var(--cream3);
+        }
 
-        .sheet-body { flex: 1; overflow-y: auto; padding: 4px 20px; }
+        .cart-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--dark); }
 
-        .empty-cart { text-align: center; padding: 50px 16px; color: var(--muted); }
-        .empty-cart .ei { font-size: 3rem; display: block; margin-bottom: 12px; }
-        .empty-cart strong { display: block; color: var(--dark); font-family: 'Cinzel', serif; font-size: 0.95rem; margin-bottom: 5px; }
-        .empty-cart span { font-size: 0.8rem; }
+        .cart-close {
+            width: var(--touch); height: var(--touch);
+            border-radius: 50%;
+            background: var(--cream2); border: 1.5px solid var(--cream3);
+            color: var(--muted); font-size: 1.1rem;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.15s;
+        }
 
-        .cart-row { display: flex; align-items: center; gap: 12px; padding: 13px 0; border-bottom: 1px solid var(--cream2); }
-        .cart-row:last-child { border-bottom: none; }
+        .cart-close:active { background: var(--cream3); }
 
-        .cr-emoji { width: 48px; height: 48px; border-radius: 8px; background: linear-gradient(135deg, var(--cream), var(--cream2)); border: 1px solid var(--cream3); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; }
-        .cr-info { flex: 1; min-width: 0; }
-        .cr-name { font-family: 'Cinzel', serif; font-weight: 600; font-size: 0.78rem; color: var(--dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .cr-meta { font-size: 0.68rem; color: var(--muted); margin-top: 3px; }
+        .cart-body { flex: 1; overflow-y: auto; padding: 6px 20px; -webkit-overflow-scrolling: touch; }
 
-        .cr-ctrl { display: flex; align-items: center; gap: 8px; background: var(--cream2); border: 1px solid var(--cream3); border-radius: 4px; padding: 3px; }
-        .cr-q { width: 26px; height: 26px; border-radius: 3px; border: none; background: var(--white); color: var(--dark); font-weight: 700; font-size: 0.9rem; cursor: pointer; box-shadow: 0 1px 3px var(--shadow); display: flex; align-items: center; justify-content: center; font-family: 'Inter', sans-serif; }
-        .cr-q:active { background: var(--dark); color: var(--gold2); }
-        .cr-n { font-weight: 700; font-size: 0.85rem; min-width: 16px; text-align: center; font-family: 'Cinzel', serif; }
-        .cr-price { font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.88rem; min-width: 52px; text-align: right; color: var(--dark); }
-        .cr-del { width: 28px; height: 28px; border-radius: 4px; border: none; background: none; color: #bbb; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; }
-        .cr-del:active { color: var(--red); }
+        .cart-empty { text-align: center; padding: 50px 20px; color: var(--muted); }
+        .cart-empty .ei { font-size: 3.5rem; display: block; margin-bottom: 12px; }
+        .cart-empty strong { display: block; color: var(--dark); font-size: 1rem; margin-bottom: 5px; }
+        .cart-empty span   { font-size: 0.85rem; }
 
-        .sheet-ftr { padding: 16px 20px 28px; border-top: 1px solid var(--cream3); background: var(--cream2); }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 0;
+            border-bottom: 1.5px solid var(--cream2);
+        }
 
-        .comment-in { width: 100%; padding: 11px 14px; border: 1px solid var(--cream3); border-radius: 4px; font-family: 'Inter', sans-serif; font-size: 0.84rem; resize: none; margin-bottom: 14px; background: var(--white); color: var(--dark); }
-        .comment-in::placeholder { color: var(--muted); }
-        .comment-in:focus { outline: none; border-color: var(--gold); }
+        .cart-item:last-child { border-bottom: none; }
 
-        .total-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: var(--white); border-radius: 4px; border: 1px solid var(--cream3); margin-bottom: 12px; }
-        .total-label { font-family: 'Cinzel', serif; font-size: 0.78rem; color: var(--muted); letter-spacing: 0.5px; }
-        .total-price { font-family: 'Cinzel', serif; font-size: 1.5rem; color: var(--dark); font-weight: 700; }
+        .ci-emoji {
+            width: 54px; height: 54px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--cream), var(--cream2));
+            border: 1.5px solid var(--cream3);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; flex-shrink: 0;
+        }
 
-        .wa-btn { width: 100%; background: linear-gradient(135deg, #25d366, #128c7e); color: #fff; border: none; padding: 15px; border-radius: 4px; font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.88rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 9px; box-shadow: 0 4px 16px rgba(37,211,102,0.3); transition: transform 0.2s; letter-spacing: 0.5px; }
-        .wa-btn:active { transform: scale(0.98); }
+        .ci-info { flex: 1; min-width: 0; }
+        .ci-name { font-weight: 600; font-size: 0.9rem; color: var(--dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ci-meta { font-size: 0.75rem; color: var(--muted); margin-top: 3px; }
 
-        .clear-btn { width: 100%; background: none; border: 1px solid var(--cream3); color: var(--muted); padding: 10px; border-radius: 4px; font-family: 'Cinzel', serif; font-size: 0.75rem; cursor: pointer; margin-top: 8px; }
-        .clear-btn:active { border-color: var(--red); color: var(--red); }
+        .ci-ctrl {
+            display: flex; align-items: center;
+            gap: 4px;
+            background: var(--cream2);
+            border: 1.5px solid var(--cream3);
+            border-radius: 50px; padding: 4px;
+        }
 
-        /* ===== ABOUT ===== */
-        .about-inner { padding: 24px 16px 100px; }
+        /* Большие кнопки +/- */
+        .ci-q {
+            width: 36px; height: 36px;
+            border-radius: 50%; border: none;
+            background: var(--white); color: var(--dark);
+            font-size: 1.1rem; font-weight: 700;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 1px 4px var(--shadow);
+            transition: all 0.15s;
+        }
 
-        .about-hero-block {
-            background: linear-gradient(180deg, #0e0804 0%, var(--dark2) 100%);
-            border-radius: 8px; padding: 32px 20px; text-align: center;
-            margin-bottom: 16px; position: relative; overflow: hidden;
+        .ci-q:active { background: var(--dark); color: var(--gold2); }
+        .ci-n { font-weight: 700; font-size: 0.95rem; min-width: 22px; text-align: center; }
+        .ci-price { font-weight: 700; font-size: 0.95rem; min-width: 60px; text-align: right; }
+
+        .ci-del {
+            width: 36px; height: 36px;
+            border-radius: 50%; border: none;
+            background: none; color: #ccc; font-size: 1rem;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.15s;
+        }
+
+        .ci-del:active { background: rgba(192,57,43,0.1); color: var(--red); }
+
+        /* CART FOOTER */
+        .cart-foot {
+            padding: 16px 20px 30px;
+            border-top: 1.5px solid var(--cream3);
+            background: var(--cream2);
+        }
+
+        .cart-comment {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid var(--cream3);
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            resize: none;
+            margin-bottom: 14px;
+            background: var(--white);
+            color: var(--dark);
+            transition: border-color 0.2s;
+        }
+
+        .cart-comment::placeholder { color: var(--muted); }
+        .cart-comment:focus { outline: none; border-color: var(--gold); }
+
+        .cart-total {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 18px;
+            background: var(--white); border-radius: 12px;
+            border: 1.5px solid var(--cream3); margin-bottom: 14px;
+        }
+
+        .ct-label { font-size: 0.9rem; color: var(--muted); font-weight: 500; }
+        .ct-price { font-family: 'Playfair Display', serif; font-size: 1.7rem; color: var(--dark); font-weight: 700; }
+
+        /* WHATSAPP BUTTON — большая */
+        .wa-order {
+            width: 100%;
+            min-height: 58px;
+            background: linear-gradient(135deg, #25d366, #128c7e);
+            color: #fff; border: none;
+            border-radius: 14px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700; font-size: 1rem;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            box-shadow: 0 6px 20px rgba(37,211,102,0.35);
+            transition: transform 0.15s;
+            letter-spacing: 0.3px;
+        }
+
+        .wa-order:active { transform: scale(0.97); }
+
+        .cart-clear {
+            width: 100%; min-height: 48px;
+            background: none; border: 1.5px solid var(--cream3);
+            color: var(--muted);
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif; font-size: 0.85rem;
+            cursor: pointer; margin-top: 10px;
+            transition: all 0.15s;
+        }
+
+        .cart-clear:active { border-color: var(--red); color: var(--red); }
+
+        /* ===== ABOUT PAGE ===== */
+        .about-wrap { padding: 22px 14px 100px; }
+
+        .about-top {
+            background: linear-gradient(180deg, #0a0502 0%, var(--dark2) 100%);
+            border-radius: 18px; padding: 30px 20px;
+            text-align: center; margin-bottom: 16px;
+            position: relative; overflow: hidden;
             border: 1px solid rgba(200,150,60,0.3);
         }
 
-        .about-hero-block::before {
+        .about-top::before {
             content: ''; position: absolute; inset: 0;
-            background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(200,150,60,0.15) 0%, transparent 70%),
-                repeating-linear-gradient(45deg, rgba(200,150,60,0.03) 0, rgba(200,150,60,0.03) 1px, transparent 1px, transparent 16px);
+            background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(200,150,60,0.15) 0%, transparent 70%);
             pointer-events: none;
         }
 
-        /* ================================================
-           📌 ЛОГОТИП В РАЗДЕЛЕ "О НАС"
-           Замените src на путь к вашему файлу логотипа.
-           ================================================ */
         .about-logo-wrap {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 18px;
-            position: relative; z-index: 1;
+            display: flex; justify-content: center;
+            margin-bottom: 16px; position: relative; z-index: 1;
         }
 
         .about-logo-wrap img {
-            width: 170px; height: auto;
-            object-fit: contain;
-            filter: brightness(0) invert(1) sepia(0.5) saturate(3) hue-rotate(8deg) brightness(1.1);
+            width: 160px; height: auto; object-fit: contain;
         }
 
-        .about-logo-placeholder {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
+        .about-logo-stub {
+            display: flex; flex-direction: column;
+            align-items: center; gap: 4px;
         }
 
-        .alp-icon { font-size: 3rem; }
-        .alp-name { font-family: 'Cinzel', serif; font-size: 1.4rem; font-weight: 700; color: var(--gold2); letter-spacing: 5px; }
-        .alp-sub  { font-family: 'Cinzel', serif; font-size: 0.5rem; color: var(--gold); letter-spacing: 6px; text-transform: uppercase; opacity: 0.8; }
+        .als-icon { font-size: 2.8rem; }
+        .als-name { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--gold2); letter-spacing: 5px; }
+        .als-sub  { font-size: 0.6rem; color: var(--gold); letter-spacing: 6px; text-transform: uppercase; }
 
-        .about-hero-block p { color: rgba(255,255,255,0.5); font-size: 0.85rem; line-height: 1.75; font-weight: 300; position: relative; z-index: 1; }
+        .about-top p {
+            color: rgba(255,255,255,0.5); font-size: 0.9rem;
+            line-height: 1.7; font-weight: 300; position: relative; z-index: 1;
+        }
 
-        .work-hours-card { background: var(--white); border: 1px solid var(--cream3); border-radius: 8px; padding: 20px 18px; margin-bottom: 14px; box-shadow: 0 2px 12px var(--shadow); position: relative; overflow: hidden; }
-        .work-hours-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--gold), var(--gold2), var(--gold)); }
+        /* HOURS */
+        .hours-card {
+            background: var(--white); border: 1.5px solid var(--cream3);
+            border-radius: 16px; padding: 20px;
+            margin-bottom: 14px; box-shadow: 0 2px 12px var(--shadow);
+            position: relative; overflow: hidden;
+        }
 
-        .wh-title { font-family: 'Cinzel', serif; font-size: 0.88rem; font-weight: 700; color: var(--dark); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; letter-spacing: 0.5px; }
+        .hours-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--gold), var(--gold2), var(--gold));
+        }
 
-        .wh-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: var(--cream); border-radius: 4px; border: 1px solid var(--cream3); }
-        .wh-left { display: flex; align-items: center; gap: 10px; }
-        .wh-ico { width: 36px; height: 36px; background: linear-gradient(135deg, var(--gold), var(--gold2)); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
-        .wh-day { font-family: 'Cinzel', serif; font-weight: 600; font-size: 0.8rem; color: var(--dark); }
-        .wh-note { font-size: 0.65rem; color: var(--muted); margin-top: 2px; }
-        .wh-time { font-family: 'Cinzel', serif; font-size: 1.05rem; color: var(--dark); font-weight: 700; }
+        .hours-title {
+            font-weight: 700; font-size: 0.95rem; color: var(--dark);
+            margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+        }
 
-        .wh-open-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: 3px; font-family: 'Cinzel', serif; font-size: 0.6rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-top: 12px; }
-        .wh-open-dot { width: 6px; height: 6px; border-radius: 50%; animation: pulse 2s infinite; }
+        .hours-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 16px;
+            background: var(--cream); border-radius: 10px; border: 1px solid var(--cream3);
+        }
+
+        .hours-left { display: flex; align-items: center; gap: 12px; }
+
+        .hours-ico {
+            width: 42px; height: 42px;
+            background: linear-gradient(135deg, var(--gold), var(--gold2));
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+        }
+
+        .hours-day  { font-weight: 700; font-size: 0.9rem; color: var(--dark); }
+        .hours-note { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+        .hours-time { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: var(--dark); font-weight: 700; }
+
+        .open-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; border-radius: 8px;
+            font-size: 0.72rem; font-weight: 700;
+            letter-spacing: 0.5px; margin-top: 14px;
+        }
+
+        .open-dot { width: 7px; height: 7px; border-radius: 50%; }
+        .open-dot.pulse { animation: pulse 2s infinite; }
 
         @keyframes pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(0.7); } }
 
-        .about-cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+        /* ABOUT CARDS */
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
 
-        .about-card { background: var(--white); border: 1px solid var(--cream3); border-radius: 6px; padding: 18px 12px; text-align: center; box-shadow: 0 2px 8px var(--shadow); position: relative; overflow: hidden; }
-        .about-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
-        .about-card .aci { width: 48px; height: 48px; background: linear-gradient(135deg, var(--cream), var(--cream2)); border: 1px solid var(--cream3); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 10px; }
-        .about-card h4 { font-family: 'Cinzel', serif; font-size: 0.78rem; color: var(--dark); margin-bottom: 5px; }
-        .about-card p { font-size: 0.7rem; color: var(--muted); line-height: 1.5; }
+        .about-card {
+            background: var(--white); border: 1.5px solid var(--cream3);
+            border-radius: 14px; padding: 20px 14px;
+            text-align: center; box-shadow: 0 2px 8px var(--shadow);
+        }
 
-        .contact-card { background: linear-gradient(180deg, #0e0804 0%, var(--dark2) 100%); border-radius: 8px; padding: 26px 20px; text-align: center; position: relative; overflow: hidden; border: 1px solid rgba(200,150,60,0.3); }
-        .contact-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 30% 30%, rgba(200,150,60,0.1) 0%, transparent 60%), repeating-linear-gradient(-45deg, rgba(200,150,60,0.03) 0, rgba(200,150,60,0.03) 1px, transparent 1px, transparent 14px); pointer-events: none; }
-        .contact-card h3 { font-family: 'Cinzel', serif; color: var(--gold2); font-size: 1.2rem; letter-spacing: 3px; margin-bottom: 4px; position: relative; z-index: 1; }
-        .contact-card .cs { color: rgba(255,255,255,0.2); font-size: 0.58rem; letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 20px; display: block; font-family: 'Cinzel', serif; position: relative; z-index: 1; }
-        .contact-lines { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; position: relative; z-index: 1; }
-        .cl { display: flex; align-items: center; justify-content: center; gap: 10px; color: rgba(255,255,255,0.7); font-size: 0.88rem; }
-        .cl-ico { width: 32px; height: 32px; background: rgba(255,255,255,0.06); border: 1px solid rgba(200,150,60,0.2); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
-        .wa-contact { background: linear-gradient(135deg, #25d366, #128c7e); color: #fff; border: none; padding: 13px 28px; border-radius: 4px; font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.82rem; cursor: pointer; box-shadow: 0 4px 16px rgba(37,211,102,0.3); display: inline-flex; align-items: center; gap: 8px; position: relative; z-index: 1; transition: transform 0.2s; }
+        .about-card .ai {
+            width: 52px; height: 52px;
+            background: linear-gradient(135deg, var(--cream), var(--cream2));
+            border: 1.5px solid var(--cream3); border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.6rem; margin: 0 auto 12px;
+        }
+
+        .about-card h4 { font-weight: 700; font-size: 0.9rem; color: var(--dark); margin-bottom: 6px; }
+        .about-card p  { font-size: 0.75rem; color: var(--muted); line-height: 1.5; }
+
+        /* CONTACT */
+        .contact-card {
+            background: linear-gradient(180deg, #0a0502 0%, var(--dark2) 100%);
+            border-radius: 18px; padding: 28px 20px;
+            text-align: center; position: relative; overflow: hidden;
+            border: 1px solid rgba(200,150,60,0.3);
+        }
+
+        .contact-card::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(circle at 30% 30%, rgba(200,150,60,0.1) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .contact-title { font-family: 'Playfair Display', serif; color: var(--gold2); font-size: 1.3rem; margin-bottom: 4px; position: relative; z-index: 1; }
+        .contact-sub   { color: rgba(255,255,255,0.25); font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 22px; display: block; position: relative; z-index: 1; }
+
+        .contact-list  { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; position: relative; z-index: 1; }
+
+        .contact-item {
+            display: flex; align-items: center; justify-content: center;
+            gap: 12px; color: rgba(255,255,255,0.75); font-size: 0.95rem;
+        }
+
+        .contact-ico {
+            width: 38px; height: 38px;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(200,150,60,0.2);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; font-size: 1rem;
+        }
+
+        /* WA CONTACT BUTTON — большая */
+        .wa-contact {
+            background: linear-gradient(135deg, #25d366, #128c7e);
+            color: #fff; border: none;
+            min-height: 56px;
+            padding: 0 32px;
+            border-radius: 14px;
+            font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(37,211,102,0.35);
+            display: inline-flex; align-items: center; gap: 10px;
+            position: relative; z-index: 1;
+            transition: transform 0.15s;
+        }
+
         .wa-contact:active { transform: scale(0.96); }
 
         /* ===== TOAST ===== */
-        .toast { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%) translateY(10px); background: var(--dark); color: var(--gold2); padding: 10px 20px; border-radius: 4px; font-family: 'Cinzel', serif; font-size: 0.75rem; font-weight: 600; opacity: 0; transition: all 0.28s cubic-bezier(0.34,1.56,0.64,1); z-index: 3000; white-space: nowrap; pointer-events: none; border: 1px solid rgba(200,150,60,0.4); box-shadow: 0 4px 20px rgba(0,0,0,0.3); max-width: 92vw; }
+        .toast {
+            position: fixed; bottom: 28px; left: 50%;
+            transform: translateX(-50%) translateY(12px);
+            background: var(--dark); color: var(--gold2);
+            padding: 12px 22px; border-radius: 12px;
+            font-size: 0.88rem; font-weight: 600;
+            opacity: 0; transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+            z-index: 3000; white-space: nowrap; pointer-events: none;
+            border: 1px solid rgba(200,150,60,0.35);
+            box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+            max-width: 90vw;
+        }
+
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* ===== MEDIA — Extra small ===== */
+        @media (max-width: 360px) {
+            .cats-grid { gap: 10px; }
+            .cat-icon  { font-size: 2rem; }
+            .cat-name  { font-size: 0.72rem; }
+            .hls-name  { font-size: 2rem; }
+        }
     </style>
 </head>
 <body>
 
-<!-- ╔══════════════════════════════════════════════════════╗
-     ║  📌 КАК ДОБАВИТЬ СВОЙ ЛОГОТИП:                      ║
-     ║                                                      ║
-     ║  1. Сохраните файл логотипа рядом с этим HTML        ║
-     ║     (например: logo.png)                             ║
-     ║                                                      ║
-     ║  2. Найдите в коде три тега <img id="logo-...">      ║
-     ║     и замените  src="ВСТАВЬТЕ_ПУТЬ_К_ЛОГОТИПУ"      ║
-     ║     на  src="logo.png"                               ║
-     ║                                                      ║
-     ║  3. Если хотите оригинальные цвета логотипа —        ║
-     ║     удалите атрибут  style="filter:..."  у img       ║
-     ╚══════════════════════════════════════════════════════╝ -->
+<!-- ╔═══════════════════════════════════════════════╗
+     ║  📌 КАК ДОБАВИТЬ ЛОГОТИП:                    ║
+     ║  1. Сохраните logo.png рядом с этим файлом   ║
+     ║  2. Найдите src="LOGO" (3 штуки)             ║
+     ║  3. Замените на src="logo.png"               ║
+     ╚═══════════════════════════════════════════════╝ -->
 
 <!-- HEADER -->
 <header class="header">
-    <div class="header-logo" onclick="showPage('home')">
-
-        <!-- ✏️ ЗАМЕНИТЕ src на путь к вашему логотипу -->
-        <img
-            id="logo-header"
-            src="ВСТАВЬТЕ_ПУТЬ_К_ЛОГОТИПУ"
-            alt="Сабля Coffee"
-            style="filter: brightness(0) invert(1) sepia(0.5) saturate(3) hue-rotate(8deg) brightness(1.1);"
-            onerror="
-                this.style.display='none';
-                this.nextElementSibling.style.display='flex';
-            "
-        >
-        <!-- Текст-заглушка (скрыт если есть картинка) -->
-        <div class="header-logo-text">
-            <span class="hn">САБЛЯ</span>
-            <span class="hs">— coffee —</span>
+    <div class="logo" onclick="goPage('home')">
+        <img class="logo-img" src="LOGO" alt="Сабля Coffee"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="logo-text" style="display:none">
+            <span class="ln">САБЛЯ</span>
+            <span class="ls">— coffee —</span>
         </div>
-
     </div>
-    <button class="cart-pill" onclick="openCart()">
-        🛒 <span class="cart-badge" id="cartCount">0</span>
+    <button class="cart-btn" onclick="openCart()">
+        🛒
+        <span class="cart-num" id="cartNum">0</span>
     </button>
 </header>
 
 <!-- TABS -->
-<div class="cat-tabs">
-    <button class="cat-tab active"  onclick="showPage('home')">🏠 Главная</button>
-    <button class="cat-tab"         onclick="showPage('coffee')">☕ Кофе</button>
-    <button class="cat-tab"         onclick="showPage('cold')">🧊 Холодный</button>
-    <button class="cat-tab"         onclick="showPage('tea')">🍵 Чаи</button>
-    <button class="cat-tab"         onclick="showPage('noncoffee')">🍫 Не кофе</button>
-    <button class="cat-tab"         onclick="showPage('matcha')">🌿 Матча</button>
-    <button class="cat-tab"         onclick="showPage('cocktails')">🥤 Коктейли</button>
-    <button class="cat-tab"         onclick="showPage('lemonades')">🍋 Лимонады</button>
-    <button class="cat-tab"         onclick="showPage('smoothie')">🫐 Смузи</button>
-    <button class="cat-tab"         onclick="showPage('fresh')">🍊 Фреши</button>
-    <button class="cat-tab"         onclick="showPage('icecream')">🍨 Мороженое</button>
-    <button class="cat-tab"         onclick="showPage('about')">📍 О нас</button>
+<div class="tabs-wrap" id="tabsWrap">
+    <button class="tab-btn active" onclick="goPage('home')">🏠 Главная</button>
+    <button class="tab-btn" onclick="goPage('coffee')">☕ Кофе</button>
+    <button class="tab-btn" onclick="goPage('cold')">🧊 Холодный</button>
+    <button class="tab-btn" onclick="goPage('tea')">🍵 Чаи</button>
+    <button class="tab-btn" onclick="goPage('noncoffee')">🍫 Не кофе</button>
+    <button class="tab-btn" onclick="goPage('matcha')">🌿 Матча</button>
+    <button class="tab-btn" onclick="goPage('cocktails')">🥤 Коктейли</button>
+    <button class="tab-btn" onclick="goPage('lemonades')">🍋 Лимонады</button>
+    <button class="tab-btn" onclick="goPage('smoothie')">🫐 Смузи</button>
+    <button class="tab-btn" onclick="goPage('fresh')">🍊 Фреши</button>
+    <button class="tab-btn" onclick="goPage('icecream')">🍨 Мороженое</button>
+    <button class="tab-btn" onclick="goPage('about')">📍 О нас</button>
 </div>
 
-<!-- ===================== HOME ===================== -->
-<div class="page active" id="page-home">
+<!-- ======== HOME ======== -->
+<div class="page active" id="p-home">
     <div class="hero">
         <div class="hero-content">
-
-            <!-- ✏️ БОЛЬШОЙ ЛОГОТИП В ГЕРОЕ — замените src -->
-            <div class="hero-logo-block">
-                <img
-                    id="logo-hero"
-                    src="ВСТАВЬТЕ_ПУТЬ_К_ЛОГОТИПУ"
-                    alt="Сабля Coffee"
-                    style="width:220px; max-width:80vw; height:auto; filter: brightness(0) invert(1) sepia(0.5) saturate(3) hue-rotate(8deg) brightness(1.15);"
-                    onerror="
-                        this.style.display='none';
-                        this.nextElementSibling.style.display='flex';
-                    "
-                >
-                <!-- Заглушка если нет картинки -->
-                <div class="hero-logo-placeholder">
-                    <div class="hlp-name">САБЛЯ</div>
-                    <div class="hlp-line">
-                        <span class="hlp-sword">⚔️</span>
-                    </div>
-                    <div class="hlp-sub">— coffee —</div>
+            <div class="hero-logo">
+                <img src="LOGO" alt="Сабля Coffee"
+                     style="width:200px; max-width:75vw; height:auto;"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="hero-logo-stub" style="display:none">
+                    <div class="hls-name">САБЛЯ</div>
+                    <div class="hls-line"><span class="hls-sword">⚔️</span></div>
+                    <div class="hls-sub">— coffee —</div>
                 </div>
             </div>
-
-            <div class="hero-tagline">✦ Кофейня с характером ✦</div>
-            <p>Авторские напитки, натуральные ингредиенты. Выберите из меню и закажите через WhatsApp!</p>
+            <div class="hero-tag">✦ Кофейня с характером ✦</div>
+            <p>Авторские напитки, натуральные ингредиенты.<br>Заказывайте прямо через WhatsApp!</p>
             <div class="hero-btns">
-                <button class="btn-gold" onclick="showPage('coffee')">☕ Смотреть меню</button>
-                <button class="btn-ghost" onclick="showPage('about')">📍 О нас</button>
+                <button class="btn-gold" onclick="goPage('coffee')">☕ Меню</button>
+                <button class="btn-ghost" onclick="goPage('about')">📍 О нас</button>
             </div>
             <div class="hero-stats">
                 <div class="stat"><span class="stat-n">60+</span><span class="stat-l">Позиций</span></div>
@@ -705,179 +1021,164 @@
             </div>
         </div>
     </div>
-
     <div class="home-sec">
         <div class="sec-head">
             <span class="sec-label">✦ Меню Сабля Coffee ✦</span>
             <div class="sec-title">Выберите категорию</div>
         </div>
-        <div class="home-cats-grid">
-            <div class="home-cat-card" onclick="showPage('coffee')"><span class="hcc-icon">☕</span><div class="hcc-name">Кофе</div><div class="hcc-count">20 позиций</div></div>
-            <div class="home-cat-card" onclick="showPage('cold')"><span class="hcc-icon">🧊</span><div class="hcc-name">Холодный кофе</div><div class="hcc-count">10 позиций</div></div>
-            <div class="home-cat-card" onclick="showPage('tea')"><span class="hcc-icon">🍵</span><div class="hcc-name">Чаи</div><div class="hcc-count">8 позиций</div></div>
-            <div class="home-cat-card" onclick="showPage('noncoffee')"><span class="hcc-icon">🍫</span><div class="hcc-name">Не кофе</div><div class="hcc-count">4 позиции</div></div>
-            <div class="home-cat-card" onclick="showPage('matcha')"><span class="hcc-icon">🌿</span><div class="hcc-name">Матча</div><div class="hcc-count">4 позиции</div></div>
-            <div class="home-cat-card" onclick="showPage('cocktails')"><span class="hcc-icon">🥤</span><div class="hcc-name">Коктейли</div><div class="hcc-count">10 позиций</div></div>
-            <div class="home-cat-card" onclick="showPage('lemonades')"><span class="hcc-icon">🍋</span><div class="hcc-name">Лимонады</div><div class="hcc-count">6 позиций</div></div>
-            <div class="home-cat-card" onclick="showPage('smoothie')"><span class="hcc-icon">🫐</span><div class="hcc-name">Смузи</div><div class="hcc-count">3 позиции</div></div>
-            <div class="home-cat-card" onclick="showPage('fresh')"><span class="hcc-icon">🍊</span><div class="hcc-name">Фреши</div><div class="hcc-count">5 позиций</div></div>
-            <div class="home-cat-card" onclick="showPage('icecream')"><span class="hcc-icon">🍨</span><div class="hcc-name">Мороженое</div><div class="hcc-count">4 вкуса</div></div>
+        <div class="cats-grid">
+            <div class="cat-card" onclick="goPage('coffee')"><span class="cat-icon">☕</span><div class="cat-name">Кофе</div><div class="cat-cnt">20 позиций</div></div>
+            <div class="cat-card" onclick="goPage('cold')"><span class="cat-icon">🧊</span><div class="cat-name">Холодный кофе</div><div class="cat-cnt">10 позиций</div></div>
+            <div class="cat-card" onclick="goPage('tea')"><span class="cat-icon">🍵</span><div class="cat-name">Чаи</div><div class="cat-cnt">8 позиций</div></div>
+            <div class="cat-card" onclick="goPage('noncoffee')"><span class="cat-icon">🍫</span><div class="cat-name">Не кофе</div><div class="cat-cnt">4 позиции</div></div>
+            <div class="cat-card" onclick="goPage('matcha')"><span class="cat-icon">🌿</span><div class="cat-name">Матча</div><div class="cat-cnt">4 позиции</div></div>
+            <div class="cat-card" onclick="goPage('cocktails')"><span class="cat-icon">🥤</span><div class="cat-name">Коктейли</div><div class="cat-cnt">10 позиций</div></div>
+            <div class="cat-card" onclick="goPage('lemonades')"><span class="cat-icon">🍋</span><div class="cat-name">Лимонады</div><div class="cat-cnt">6 позиций</div></div>
+            <div class="cat-card" onclick="goPage('smoothie')"><span class="cat-icon">🫐</span><div class="cat-name">Смузи</div><div class="cat-cnt">3 позиции</div></div>
+            <div class="cat-card" onclick="goPage('fresh')"><span class="cat-icon">🍊</span><div class="cat-name">Фреши</div><div class="cat-cnt">5 позиций</div></div>
+            <div class="cat-card" onclick="goPage('icecream')"><span class="cat-icon">🍨</span><div class="cat-name">Мороженое</div><div class="cat-cnt">4 вкуса</div></div>
         </div>
     </div>
 </div>
 
 <!-- COFFEE -->
-<div class="page" id="page-coffee">
-    <div class="menu-inner">
-        <div class="menu-header"><div class="mh-icon">☕</div><div><div class="mh-title">Кофе</div><div class="mh-sub">Эспрессо, латте, раф и авторские</div></div></div>
-        <div class="search-wrap"><span class="search-ico">🔍</span><input class="search-in" type="text" placeholder="Найти напиток..." oninput="filterList(this,'coffee-list')"></div>
-        <div class="cards-list" id="coffee-list"></div>
+<div class="page" id="p-coffee">
+    <div class="menu-wrap">
+        <div class="menu-top"><div class="menu-top-icon">☕</div><div><div class="menu-top-title">Кофе</div><div class="menu-top-sub">Эспрессо, латте, раф и авторские</div></div></div>
+        <div class="search-wrap"><span class="search-ico">🔍</span><input class="search-in" type="text" placeholder="Найти напиток..." oninput="doSearch(this,'coffee-items')"></div>
+        <div class="items-list" id="coffee-items"></div>
     </div>
 </div>
 
 <!-- COLD -->
-<div class="page" id="page-cold">
-    <div class="menu-inner">
-        <div class="menu-header"><div class="mh-icon">🧊</div><div><div class="mh-title">Холодный кофе</div><div class="mh-sub">Айс латте, колд брю, тоники</div></div></div>
-        <div class="search-wrap"><span class="search-ico">🔍</span><input class="search-in" type="text" placeholder="Найти..." oninput="filterList(this,'cold-list')"></div>
-        <div class="cards-list" id="cold-list"></div>
+<div class="page" id="p-cold">
+    <div class="menu-wrap">
+        <div class="menu-top"><div class="menu-top-icon">🧊</div><div><div class="menu-top-title">Холодный кофе</div><div class="menu-top-sub">Айс латте, колд брю, тоники</div></div></div>
+        <div class="search-wrap"><span class="search-ico">🔍</span><input class="search-in" type="text" placeholder="Найти..." oninput="doSearch(this,'cold-items')"></div>
+        <div class="items-list" id="cold-items"></div>
     </div>
 </div>
 
 <!-- TEA -->
-<div class="page" id="page-tea">
-    <div class="menu-inner">
-        <div class="menu-header"><div class="mh-icon">🍵</div><div><div class="mh-title">Чаи</div><div class="mh-sub">Классические и авторские</div></div></div>
-        <div class="sub-head">🍃 Классические чаи</div>
-        <div class="cards-list" id="tea-classic-list"></div>
-        <div class="sub-head">✨ Авторские чаи</div>
-        <div class="cards-list" id="tea-author-list"></div>
-        <div class="sub-head">➕ Добавки к чаю</div>
-        <div class="cards-list" id="tea-add-list"></div>
+<div class="page" id="p-tea">
+    <div class="menu-wrap">
+        <div class="menu-top"><div class="menu-top-icon">🍵</div><div><div class="menu-top-title">Чаи</div><div class="menu-top-sub">Классические и авторские</div></div></div>
+        <div class="sub-head">🍃 Классические чаи</div><div class="items-list" id="tea-c"></div>
+        <div class="sub-head">✨ Авторские чаи</div><div class="items-list" id="tea-a"></div>
+        <div class="sub-head">➕ Добавки к чаю</div><div class="items-list" id="tea-d"></div>
     </div>
 </div>
 
 <!-- NON-COFFEE -->
-<div class="page" id="page-noncoffee">
-    <div class="menu-inner">
-        <div class="menu-header"><div class="mh-icon">🍫</div><div><div class="mh-title">Не кофе</div><div class="mh-sub">Какао, шоколад и другое</div></div></div>
-        <div class="cards-list" id="noncoffee-list"></div>
+<div class="page" id="p-noncoffee">
+    <div class="menu-wrap">
+        <div class="menu-top"><div class="menu-top-icon">🍫</div><div><div class="menu-top-title">Не кофе</div><div class="menu-top-sub">Какао, шоколад и другое</div></div></div>
+        <div class="items-list" id="nc-items"></div>
     </div>
 </div>
 
 <!-- MATCHA -->
-<div class="page" id="page-matcha">
-    <div class="menu-inner">
-        <div class="menu-header"><div class="mh-icon">🌿</div><div><div class="mh-title">Матча</div><div class="mh-sub">Альтернатива кофе из Японии</div></div></div>
-        <div class="cards-list" id="matcha-list"></div>
+<div class="page" id="p-matcha">
+    <div class="menu-wrap">
+        <div class="menu-top"><div class="menu-top-icon">🌿</div><div><div class="menu-top-title">Матча</div><div class="menu-top-sub">Альтернатива кофе из Японии</div></div></div>
+        <div class="items-list" id="matcha-items"></div>
     </div>
 </div>
 
 <!-- COCKTAILS -->
-<div class="page" id="page-cocktails">
-    <div class="menu-inner">
-        <div class="menu-header"><div class="mh-icon">🥤</div><div><div class="mh-title">Коктейли</div><div class="mh-sub">Молочные коктейли на любой вкус</div></div></div>
-        <div class="cards-list" id="cocktails-list"></div>
+<div class="page" id="p-cocktails">
+    <div class="menu-wrap">
+        <div class="menu-top"><div class="menu-top-icon">🥤</div><div><div class="menu-top-title">Коктейли</div><div class="menu-top-sub">Молочные коктейли на любой вкус</div></div></div>
+        <div class="items-list" id="cocktail-items"></div>
     </div>
 </div>
 
 <!-- LEMONADES -->
-<div class="page" id="page-lemonades">
-    <div class="menu-inner">
-        <div class="menu-header"><div class="mh-icon">🍋</div><div><div class="mh-title">Лимонады</div><div class="mh-sub">Свежие авторские лимонады</div></div></div>
-        <div class="cards-list" id="lemonades-list"></div>
+<div class="page" id="p-lemonades">
+    <div class="menu-wrap">
+        <div class="menu-top"><div class="menu-top-icon">🍋</div><div><div class="menu-top-title">Лимонады</div><div class="menu-top-sub">Свежие авторские лимонады</div></div></div>
+        <div class="items-list" id="lemon-items"></div>
     </div>
 </div>
 
 <!-- SMOOTHIE -->
-<div class="page" id="page-smoothie">
-    <div class="menu-inner">
-        <div class="menu-header"><div class="mh-icon">🫐</div><div><div class="mh-title">Смузи</div><div class="mh-sub">Натуральные ягодные смузи</div></div></div>
-        <div class="cards-list" id="smoothie-list"></div>
+<div class="page" id="p-smoothie">
+    <div class="menu-wrap">
+        <div class="menu-top"><div class="menu-top-icon">🫐</div><div><div class="menu-top-title">Смузи</div><div class="menu-top-sub">Натуральные ягодные смузи</div></div></div>
+        <div class="items-list" id="sm-items"></div>
     </div>
 </div>
 
 <!-- FRESH -->
-<div class="page" id="page-fresh">
-    <div class="menu-inner">
-        <div class="menu-header"><div class="mh-icon">🍊</div><div><div class="mh-title">Фреши</div><div class="mh-sub">Свежевыжатые соки</div></div></div>
-        <div class="cards-list" id="fresh-list"></div>
+<div class="page" id="p-fresh">
+    <div class="menu-wrap">
+        <div class="menu-top"><div class="menu-top-icon">🍊</div><div><div class="menu-top-title">Фреши</div><div class="menu-top-sub">Свежевыжатые соки</div></div></div>
+        <div class="items-list" id="fresh-items"></div>
     </div>
 </div>
 
 <!-- ICECREAM -->
-<div class="page" id="page-icecream">
-    <div class="menu-inner">
-        <div class="menu-header"><div class="mh-icon">🍨</div><div><div class="mh-title">Мороженое</div><div class="mh-sub">Шарики и топинги</div></div></div>
-        <div class="sub-head">🍦 Шарики (55 гр)</div>
-        <div class="cards-list" id="icecream-list"></div>
-        <div class="sub-head">➕ Добавки к мороженому</div>
-        <div class="cards-list" id="icecream-add-list"></div>
+<div class="page" id="p-icecream">
+    <div class="menu-wrap">
+        <div class="menu-top"><div class="menu-top-icon">🍨</div><div><div class="menu-top-title">Мороженое</div><div class="menu-top-sub">Шарики и топинги</div></div></div>
+        <div class="sub-head">🍦 Шарики (55 гр)</div><div class="items-list" id="ice-items"></div>
+        <div class="sub-head">➕ Добавки</div><div class="items-list" id="ice-add"></div>
     </div>
 </div>
 
 <!-- ABOUT -->
-<div class="page" id="page-about">
-    <div class="about-inner">
-        <div class="about-hero-block">
-
-            <!-- ✏️ ЛОГОТИП В "О НАС" — замените src -->
+<div class="page" id="p-about">
+    <div class="about-wrap">
+        <div class="about-top">
             <div class="about-logo-wrap">
-                <img
-                    id="logo-about"
-                    src="ВСТАВЬТЕ_ПУТЬ_К_ЛОГОТИПУ"
-                    alt="Сабля Coffee"
-                    style="width:170px; height:auto; filter: brightness(0) invert(1) sepia(0.5) saturate(3) hue-rotate(8deg) brightness(1.1);"
-                    onerror="
-                        this.style.display='none';
-                        this.nextElementSibling.style.display='flex';
-                    "
-                >
-                <!-- Заглушка -->
-                <div class="about-logo-placeholder">
-                    <span class="alp-icon">⚔️</span>
-                    <span class="alp-name">САБЛЯ</span>
-                    <span class="alp-sub">— coffee —</span>
+                <img src="LOGO" alt="Сабля Coffee"
+                     style="width:160px; height:auto;"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="about-logo-stub" style="display:none">
+                    <span class="als-icon">⚔️</span>
+                    <span class="als-name">САБЛЯ</span>
+                    <span class="als-sub">— coffee —</span>
                 </div>
             </div>
-
-            <p>Кофейня с характером и душой. Варим кофе с любовью, используем качественные зёрна и натуральные ингредиенты. Каждый напиток — маленькое путешествие вкусов.</p>
+            <p>Кофейня с характером и душой. Варим кофе с любовью, используем качественные зёрна и натуральные ингредиенты.</p>
         </div>
 
-        <!-- ЧАСЫ РАБОТЫ -->
-        <div class="work-hours-card">
-            <div class="wh-title">🕐 Время работы</div>
-            <div class="wh-row">
-                <div class="wh-left">
-                    <div class="wh-ico">📅</div>
-                    <div><div class="wh-day">Ежедневно</div><div class="wh-note">Пн — Вс, без выходных</div></div>
+        <div class="hours-card">
+            <div class="hours-title">🕐 Время работы</div>
+            <div class="hours-row">
+                <div class="hours-left">
+                    <div class="hours-ico">📅</div>
+                    <div>
+                        <div class="hours-day">Ежедневно</div>
+                        <div class="hours-note">Пн — Вс, без выходных</div>
+                    </div>
                 </div>
-                <div class="wh-time">09:00 — 23:00</div>
+                <div class="hours-time">09:00 — 23:00</div>
             </div>
-            <div style="text-align:center; margin-top:12px;">
-                <span class="wh-open-badge" id="openBadge">
-                    <span class="wh-open-dot"></span>Проверяем...
+            <div style="text-align:center;">
+                <span class="open-badge" id="openBadge">
+                    <span class="open-dot pulse"></span> Проверяем...
                 </span>
             </div>
         </div>
 
-        <div class="about-cards-grid">
-            <div class="about-card"><div class="aci">☕</div><h4>Качество</h4><p>Свежеобжаренные зёрна и проф. оборудование</p></div>
-            <div class="about-card"><div class="aci">🌿</div><h4>Натурально</h4><p>Только натуральные фрукты и специи</p></div>
-            <div class="about-card"><div class="aci">❤️</div><h4>С заботой</h4><p>Альтернативное молоко и авторские рецепты</p></div>
-            <div class="about-card"><div class="aci">📱</div><h4>Удобно</h4><p>Заказ через WhatsApp за пару кликов</p></div>
+        <div class="about-grid">
+            <div class="about-card"><div class="ai">☕</div><h4>Качество</h4><p>Свежеобжаренные зёрна и проф. оборудование</p></div>
+            <div class="about-card"><div class="ai">🌿</div><h4>Натурально</h4><p>Натуральные фрукты и специи</p></div>
+            <div class="about-card"><div class="ai">❤️</div><h4>С заботой</h4><p>Альтернативное молоко и авторские рецепты</p></div>
+            <div class="about-card"><div class="ai">📱</div><h4>Удобно</h4><p>Заказ через WhatsApp за пару кликов</p></div>
         </div>
 
         <div class="contact-card">
-            <h3>КОНТАКТЫ</h3>
-            <span class="cs">✦ ВСЕГДА НА СВЯЗИ ✦</span>
-            <div class="contact-lines">
-                <div class="cl"><div class="cl-ico">📱</div>+7 (928) 062-17-27</div>
-                <div class="cl"><div class="cl-ico">💬</div>WhatsApp и звонки</div>
-                <div class="cl"><div class="cl-ico">🕐</div>Ежедневно 09:00 — 23:00</div>
+            <div class="contact-title">Контакты</div>
+            <span class="contact-sub">✦ ВСЕГДА НА СВЯЗИ ✦</span>
+            <div class="contact-list">
+                <div class="contact-item"><div class="contact-ico">📱</div>+7 (928) 062-17-27</div>
+                <div class="contact-item"><div class="contact-ico">💬</div>WhatsApp и звонки</div>
+                <div class="contact-item"><div class="contact-ico">🕐</div>Ежедневно 09:00 — 23:00</div>
             </div>
-            <button class="wa-contact" onclick="openWA('Здравствуйте! Хочу узнать подробнее о вашей кофейне Сабля Coffee.')">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            <button class="wa-contact" onclick="openWA('Здравствуйте! Хочу узнать подробнее о кофейне Сабля Coffee.')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                 Написать в WhatsApp
             </button>
         </div>
@@ -885,25 +1186,25 @@
 </div>
 
 <!-- CART -->
-<div class="overlay" id="overlay" onclick="closeOL(event)">
+<div class="overlay" id="overlay" onclick="overlayClick(event)">
     <div class="cart-sheet">
-        <div class="sheet-handle"></div>
-        <div class="sheet-hdr">
-            <h3>🛒 Ваш заказ</h3>
-            <button class="x-btn" onclick="closeCart()">✕</button>
+        <div class="cart-handle"></div>
+        <div class="cart-head">
+            <div class="cart-title">🛒 Ваш заказ</div>
+            <button class="cart-close" onclick="closeCart()">✕</button>
         </div>
-        <div class="sheet-body" id="cartBody"></div>
-        <div class="sheet-ftr" id="cartFtr" style="display:none">
-            <textarea class="comment-in" id="cartComment" rows="2" placeholder="💬 Комментарий к заказу..."></textarea>
-            <div class="total-row">
-                <span class="total-label">ИТОГО</span>
-                <span class="total-price" id="cartTotal">0 р</span>
+        <div class="cart-body" id="cartBody"></div>
+        <div class="cart-foot" id="cartFoot" style="display:none">
+            <textarea class="cart-comment" id="cartComment" rows="2" placeholder="💬 Комментарий к заказу..."></textarea>
+            <div class="cart-total">
+                <span class="ct-label">Итого</span>
+                <span class="ct-price" id="cartTotal">0 р</span>
             </div>
-            <button class="wa-btn" onclick="sendWA()">
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            <button class="wa-order" onclick="sendToWA()">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                 Заказать через WhatsApp
             </button>
-            <button class="clear-btn" onclick="clearCart()">✦ Очистить корзину ✦</button>
+            <button class="cart-clear" onclick="clearCart()">🗑 Очистить корзину</button>
         </div>
     </div>
 </div>
@@ -911,100 +1212,73 @@
 <div class="toast" id="toast"></div>
 
 <script>
-/*
-╔═══════════════════════════════════════════════════════════╗
-║  📌 ИНСТРУКЦИЯ ПО ДОБАВЛЕНИЮ ЛОГОТИПА                    ║
-║                                                           ║
-║  Шаг 1: Положите файл логотипа (logo.png) рядом с        ║
-║          этим HTML-файлом.                                ║
-║                                                           ║
-║  Шаг 2: В HTML найдите строки:                            ║
-║          src="ВСТАВЬТЕ_ПУТЬ_К_ЛОГОТИПУ"                  ║
-║          и замените на:  src="logo.png"                   ║
-║          (их 3 штуки: в header, hero и about)             ║
-║                                                           ║
-║  Шаг 3: Если хотите оригинальные цвета логотипа          ║
-║          (не золотой, а как в исходнике),                 ║
-║          удалите  style="filter:..."  у тега img          ║
-║                                                           ║
-║  ИЛИ программно через JS (раскомментируйте ниже):         ║
-╚═══════════════════════════════════════════════════════════╝
-*/
-
-// -------------------------------------------------------
-// 📌 АЛЬТЕРНАТИВА: Установите путь к логотипу здесь:
-// -------------------------------------------------------
-// const LOGO_PATH = 'logo.png'; // ← замените на ваш файл
-// document.querySelectorAll('[id^="logo-"]').forEach(img => {
-//     img.src = LOGO_PATH;
-// });
-// -------------------------------------------------------
+'use strict';
 
 // ================================================================
-// MENU DATA
+// ДАННЫЕ МЕНЮ
 // ================================================================
-const menu = {
+const MENU = {
   coffee: [
-    { id:'c1',  name:'Двойной эспрессо',              emoji:'☕', note:'',                     badge:'',       sizes:[{l:'50мл',  p:170}] },
-    { id:'c2',  name:'Лунго',                          emoji:'☕', note:'',                     badge:'',       sizes:[{l:'80мл',  p:170}] },
-    { id:'c3',  name:'Американо',                      emoji:'☕', note:'',                     badge:'',       sizes:[{l:'180мл', p:170}] },
-    { id:'c4',  name:'Американ эмбл',                  emoji:'☕', note:'',                     badge:'',       sizes:[{l:'200мл', p:200}] },
-    { id:'c5',  name:'Капучино',                       emoji:'☕', note:'',                     badge:'',       sizes:[{l:'250мл', p:200},{l:'350мл', p:250}] },
-    { id:'c6',  name:'Фильтр',                         emoji:'☕', note:'',                     badge:'',       sizes:[{l:'200мл', p:180},{l:'300мл', p:200}] },
-    { id:'c7',  name:'Флэт уайт',                      emoji:'☕', note:'',                     badge:'',       sizes:[{l:'250мл', p:220},{l:'300мл', p:270}] },
-    { id:'c8',  name:'Латте',                          emoji:'🥛', note:'',                     badge:'',       sizes:[{l:'250мл', p:220},{l:'350мл', p:270}] },
-    { id:'c9',  name:'Гляссе',                         emoji:'🍦', note:'',                     badge:'',       sizes:[{l:'200мл', p:250}] },
-    { id:'c10', name:'Кофе Pele',                      emoji:'☕', note:'Легенда из детства',   badge:'',       sizes:[{l:'250мл', p:100}] },
-    { id:'c11', name:'Гляссе шоколадный',              emoji:'🍫', note:'',                     badge:'',       sizes:[{l:'200мл', p:300}] },
-    { id:'c12', name:'Мокко с натуральным шоколадом',  emoji:'🍫', note:'',                     badge:'',       sizes:[{l:'250мл', p:250},{l:'350мл', p:300}] },
-    { id:'c13', name:'Раф классика',                   emoji:'🥛', note:'Без сахара',           badge:'',       sizes:[{l:'250мл', p:250},{l:'350мл', p:300}] },
-    { id:'c14', name:'Раф солёная карамель',           emoji:'🍮', note:'',                     badge:'',       sizes:[{l:'250мл', p:280},{l:'350мл', p:330}] },
-    { id:'c15', name:'Раф красный апельсин',           emoji:'🍊', note:'',                     badge:'',       sizes:[{l:'250мл', p:280},{l:'350мл', p:330}] },
-    { id:'c16', name:'Раф с урбечом',                  emoji:'🌰', note:'Миндаль / Арахис',     badge:'',       sizes:[{l:'250мл', p:300},{l:'350мл', p:350}] },
-    { id:'c17', name:'Раф сникерс',                    emoji:'🍫', note:'',                     badge:'',       sizes:[{l:'250мл', p:320},{l:'350мл', p:370}] },
-    { id:'c18', name:'Раф финиковый',                  emoji:'🌴', note:'',                     badge:'',       sizes:[{l:'250мл', p:300},{l:'350мл', p:350}] },
-    { id:'c19', name:'Раф Блаунти шоколад-кокос',     emoji:'🥥', note:'',                     badge:'',       sizes:[{l:'250мл', p:320},{l:'350мл', p:370}] },
-    { id:'c20', name:'Дубайский раф шоколад-фисташка', emoji:'🌟', note:'',                     badge:'⭐ Хит', sizes:[{l:'250мл', p:320},{l:'350мл', p:370}] },
+    { id:'c1',  name:'Двойной эспрессо',             emoji:'☕', note:'',                    badge:'',      sizes:[{l:'50мл',  p:170}] },
+    { id:'c2',  name:'Лунго',                         emoji:'☕', note:'',                    badge:'',      sizes:[{l:'80мл',  p:170}] },
+    { id:'c3',  name:'Американо',                     emoji:'☕', note:'',                    badge:'',      sizes:[{l:'180мл', p:170}] },
+    { id:'c4',  name:'Американ эмбл',                 emoji:'☕', note:'',                    badge:'',      sizes:[{l:'200мл', p:200}] },
+    { id:'c5',  name:'Капучино',                      emoji:'☕', note:'',                    badge:'',      sizes:[{l:'250мл', p:200},{l:'350мл', p:250}] },
+    { id:'c6',  name:'Фильтр',                        emoji:'☕', note:'',                    badge:'',      sizes:[{l:'200мл', p:180},{l:'300мл', p:200}] },
+    { id:'c7',  name:'Флэт уайт',                     emoji:'☕', note:'',                    badge:'',      sizes:[{l:'250мл', p:220},{l:'300мл', p:270}] },
+    { id:'c8',  name:'Латте',                         emoji:'🥛', note:'',                    badge:'',      sizes:[{l:'250мл', p:220},{l:'350мл', p:270}] },
+    { id:'c9',  name:'Гляссе',                        emoji:'🍦', note:'',                    badge:'',      sizes:[{l:'200мл', p:250}] },
+    { id:'c10', name:'Кофе Pele',                     emoji:'☕', note:'Легенда из детства',  badge:'',      sizes:[{l:'250мл', p:100}] },
+    { id:'c11', name:'Гляссе шоколадный',             emoji:'🍫', note:'',                    badge:'',      sizes:[{l:'200мл', p:300}] },
+    { id:'c12', name:'Мокко с натуральным шоколадом', emoji:'🍫', note:'',                    badge:'',      sizes:[{l:'250мл', p:250},{l:'350мл', p:300}] },
+    { id:'c13', name:'Раф классика',                  emoji:'🥛', note:'Без сахара',          badge:'',      sizes:[{l:'250мл', p:250},{l:'350мл', p:300}] },
+    { id:'c14', name:'Раф солёная карамель',          emoji:'🍮', note:'',                    badge:'',      sizes:[{l:'250мл', p:280},{l:'350мл', p:330}] },
+    { id:'c15', name:'Раф красный апельсин',          emoji:'🍊', note:'',                    badge:'',      sizes:[{l:'250мл', p:280},{l:'350мл', p:330}] },
+    { id:'c16', name:'Раф с урбечом',                 emoji:'🌰', note:'Миндаль / Арахис',    badge:'',      sizes:[{l:'250мл', p:300},{l:'350мл', p:350}] },
+    { id:'c17', name:'Раф сникерс',                   emoji:'🍫', note:'',                    badge:'',      sizes:[{l:'250мл', p:320},{l:'350мл', p:370}] },
+    { id:'c18', name:'Раф финиковый',                 emoji:'🌴', note:'',                    badge:'',      sizes:[{l:'250мл', p:300},{l:'350мл', p:350}] },
+    { id:'c19', name:'Раф Блаунти шоколад-кокос',    emoji:'🥥', note:'',                    badge:'',      sizes:[{l:'250мл', p:320},{l:'350мл', p:370}] },
+    { id:'c20', name:'Дубайский раф шоколад-фисташка',emoji:'🌟', note:'',                   badge:'⭐ Хит',sizes:[{l:'250мл', p:320},{l:'350мл', p:370}] },
   ],
   cold: [
-    { id:'cl1',  name:'Айс кофе',                      emoji:'🧊', note:'', sizes:[{l:'350мл', p:280}] },
-    { id:'cl2',  name:'Айс кофе с урбечом',            emoji:'🧊', note:'', sizes:[{l:'350мл', p:330}] },
-    { id:'cl3',  name:'Айс латте',                     emoji:'🧊', note:'', sizes:[{l:'270мл', p:280}] },
-    { id:'cl4',  name:'Колд брю в бутылке',            emoji:'🍶', note:'', sizes:[{l:'250мл', p:250}] },
-    { id:'cl5',  name:'Эспрессо тоник классика',       emoji:'🫧', note:'', sizes:[{l:'270мл', p:250}] },
-    { id:'cl6',  name:'Тоник гранат на фреше',         emoji:'🍇', note:'', sizes:[{l:'270мл', p:320}] },
-    { id:'cl7',  name:'Тоник цитрус',                  emoji:'🍋', note:'', sizes:[{l:'270мл', p:320}] },
-    { id:'cl8',  name:'Тоник гранат-малина',           emoji:'🍓', note:'', sizes:[{l:'270мл', p:320}] },
-    { id:'cl9',  name:'Бамбл на апельсиновом фреше',   emoji:'🍊', note:'', sizes:[{l:'270мл', p:320}] },
-    { id:'cl10', name:'Бамбл на гранатовом фреше',     emoji:'🍇', note:'', sizes:[{l:'270мл', p:320}] },
+    { id:'cl1',  name:'Айс кофе',                     emoji:'🧊', note:'', sizes:[{l:'350мл', p:280}] },
+    { id:'cl2',  name:'Айс кофе с урбечом',           emoji:'🧊', note:'', sizes:[{l:'350мл', p:330}] },
+    { id:'cl3',  name:'Айс латте',                    emoji:'🧊', note:'', sizes:[{l:'270мл', p:280}] },
+    { id:'cl4',  name:'Колд брю в бутылке',           emoji:'🍶', note:'', sizes:[{l:'250мл', p:250}] },
+    { id:'cl5',  name:'Эспрессо тоник классика',      emoji:'🫧', note:'', sizes:[{l:'270мл', p:250}] },
+    { id:'cl6',  name:'Тоник гранат на фреше',        emoji:'🍇', note:'', sizes:[{l:'270мл', p:320}] },
+    { id:'cl7',  name:'Тоник цитрус',                 emoji:'🍋', note:'', sizes:[{l:'270мл', p:320}] },
+    { id:'cl8',  name:'Тоник гранат-малина',          emoji:'🍓', note:'', sizes:[{l:'270мл', p:320}] },
+    { id:'cl9',  name:'Бамбл на апельсиновом фреше',  emoji:'🍊', note:'', sizes:[{l:'270мл', p:320}] },
+    { id:'cl10', name:'Бамбл на гранатовом фреше',    emoji:'🍇', note:'', sizes:[{l:'270мл', p:320}] },
   ],
-  tea_classic: [
-    { id:'tc1', name:'Чёрный чай Ассам',               emoji:'🍵', note:'', sizes:[{l:'0.3л', p:80},{l:'1л', p:250}] },
-    { id:'tc2', name:'Зелёный чай Сенча',              emoji:'🍵', note:'', sizes:[{l:'0.3л', p:80},{l:'1л', p:250}] },
-    { id:'tc3', name:'Сбор семь трав',                 emoji:'🌿', note:'', sizes:[{l:'0.3л', p:100},{l:'1л', p:280}] },
-    { id:'tc4', name:'Таёжный сбор',                   emoji:'🌲', note:'', sizes:[{l:'0.3л', p:100},{l:'1л', p:280}] },
-    { id:'tc5', name:'Молочный улун',                  emoji:'🥛', note:'', sizes:[{l:'0.3л', p:100},{l:'1л', p:280}] },
+  teaC: [
+    { id:'tc1', name:'Чёрный чай Ассам',  emoji:'🍵', note:'', sizes:[{l:'0.3л', p:80},{l:'1л', p:250}] },
+    { id:'tc2', name:'Зелёный чай Сенча', emoji:'🍵', note:'', sizes:[{l:'0.3л', p:80},{l:'1л', p:250}] },
+    { id:'tc3', name:'Сбор семь трав',    emoji:'🌿', note:'', sizes:[{l:'0.3л', p:100},{l:'1л', p:280}] },
+    { id:'tc4', name:'Таёжный сбор',      emoji:'🌲', note:'', sizes:[{l:'0.3л', p:100},{l:'1л', p:280}] },
+    { id:'tc5', name:'Молочный улун',     emoji:'🥛', note:'', sizes:[{l:'0.3л', p:100},{l:'1л', p:280}] },
   ],
-  tea_author: [
-    { id:'ta1', name:'Облепиховый',                    emoji:'🫐', note:'', sizes:[{l:'350мл', p:280},{l:'1л', p:550}] },
-    { id:'ta2', name:'Малина-имбирь',                  emoji:'🍓', note:'', sizes:[{l:'350мл', p:250},{l:'1л', p:450}] },
-    { id:'ta3', name:'Имбирно-лимонный с мёдом',       emoji:'🍯', note:'', sizes:[{l:'350мл', p:250},{l:'1л', p:450}] },
+  teaA: [
+    { id:'ta1', name:'Облепиховый',              emoji:'🫐', note:'', sizes:[{l:'350мл', p:280},{l:'1л', p:550}] },
+    { id:'ta2', name:'Малина-имбирь',            emoji:'🍓', note:'', sizes:[{l:'350мл', p:250},{l:'1л', p:450}] },
+    { id:'ta3', name:'Имбирно-лимонный с мёдом', emoji:'🍯', note:'', sizes:[{l:'350мл', p:250},{l:'1л', p:450}] },
   ],
-  tea_add: [
-    { id:'tadd1', name:'Чабрец, лимон, имбирь',        emoji:'🌿', note:'Добавка к чаю', sizes:[{l:'—', p:30}] },
-    { id:'tadd2', name:'Гвоздика, мята, тмин',          emoji:'🌱', note:'Добавка к чаю', sizes:[{l:'—', p:30}] },
+  teaD: [
+    { id:'td1', name:'Чабрец, лимон, имбирь', emoji:'🌿', note:'Добавка к чаю', sizes:[{l:'—', p:30}] },
+    { id:'td2', name:'Гвоздика, мята, тмин',  emoji:'🌱', note:'Добавка к чаю', sizes:[{l:'—', p:30}] },
   ],
-  noncoffee: [
-    { id:'nc1', name:'Какао турецкий',                 emoji:'🍫', note:'С бельгийским шоколадом', sizes:[{l:'250мл', p:220},{l:'350мл', p:270}] },
-    { id:'nc2', name:'Горячий шоколад Калебаут',       emoji:'🍫', note:'',                         sizes:[{l:'90мл', p:200}] },
-    { id:'nc3', name:'Варёная кукуруза в стакане',     emoji:'🌽', note:'',                         sizes:[{l:'300гр', p:250}] },
-    { id:'nc4', name:'Калмыкский чай',                 emoji:'🍵', note:'На свежесваренном молоке', sizes:[{l:'350мл', p:250}] },
+  nc: [
+    { id:'nc1', name:'Какао турецкий',          emoji:'🍫', note:'С бельгийским шоколадом', sizes:[{l:'250мл', p:220},{l:'350мл', p:270}] },
+    { id:'nc2', name:'Горячий шоколад Калебаут',emoji:'🍫', note:'',                         sizes:[{l:'90мл', p:200}] },
+    { id:'nc3', name:'Варёная кукуруза в стакане',emoji:'🌽',note:'',                        sizes:[{l:'300гр', p:250}] },
+    { id:'nc4', name:'Калмыкский чай',           emoji:'🍵', note:'На свежесваренном молоке',sizes:[{l:'350мл', p:250}] },
   ],
   matcha: [
-    { id:'m1', name:'Матча капучино',                  emoji:'🌿', note:'', sizes:[{l:'250мл', p:250},{l:'300мл', p:300}] },
-    { id:'m2', name:'Матча латте',                     emoji:'🌿', note:'', sizes:[{l:'250мл', p:250},{l:'300мл', p:300}] },
-    { id:'m3', name:'Айс матча',                       emoji:'🧊', note:'', sizes:[{l:'250мл', p:250},{l:'300мл', p:300}] },
-    { id:'m4', name:'Матча бамбл',                     emoji:'🌿', note:'', sizes:[{l:'250мл', p:320}] },
+    { id:'m1', name:'Матча капучино', emoji:'🌿', note:'', sizes:[{l:'250мл', p:250},{l:'300мл', p:300}] },
+    { id:'m2', name:'Матча латте',    emoji:'🌿', note:'', sizes:[{l:'250мл', p:250},{l:'300мл', p:300}] },
+    { id:'m3', name:'Айс матча',      emoji:'🧊', note:'', sizes:[{l:'250мл', p:250},{l:'300мл', p:300}] },
+    { id:'m4', name:'Матча бамбл',    emoji:'🌿', note:'', sizes:[{l:'250мл', p:320}] },
   ],
   cocktails: [
     { id:'co1',  name:'Молочный',           emoji:'🥛', note:'', sizes:[{l:'350мл', p:250}] },
@@ -1018,15 +1292,15 @@ const menu = {
     { id:'co9',  name:'Сникерс',            emoji:'🍫', note:'', sizes:[{l:'350мл', p:370}] },
     { id:'co10', name:'Черничное печенье',  emoji:'🫐', note:'', sizes:[{l:'350мл', p:370}] },
   ],
-  lemonades: [
-    { id:'l1', name:'Щавелевый',        emoji:'🍋', note:'', sizes:[{l:'0.3л', p:300},{l:'1л', p:600}] },
-    { id:'l2', name:'Мохито классика',  emoji:'🌿', note:'', sizes:[{l:'0.3л', p:300},{l:'1л', p:600}] },
-    { id:'l3', name:'Мохито клубника',  emoji:'🍓', note:'', sizes:[{l:'0.3л', p:300},{l:'1л', p:600}] },
-    { id:'l4', name:'Ягодный',          emoji:'🫐', note:'', sizes:[{l:'0.3л', p:300},{l:'1л', p:600}] },
-    { id:'l5', name:'Голубая лагуна',   emoji:'💙', note:'', sizes:[{l:'0.3л', p:300},{l:'1л', p:600}] },
-    { id:'l6', name:'Малина-имбирь',    emoji:'🍓', note:'', sizes:[{l:'0.3л', p:300},{l:'1л', p:600}] },
+  lemon: [
+    { id:'l1', name:'Щавелевый',       emoji:'🍋', note:'', sizes:[{l:'0.3л', p:300},{l:'1л', p:600}] },
+    { id:'l2', name:'Мохито классика', emoji:'🌿', note:'', sizes:[{l:'0.3л', p:300},{l:'1л', p:600}] },
+    { id:'l3', name:'Мохито клубника', emoji:'🍓', note:'', sizes:[{l:'0.3л', p:300},{l:'1л', p:600}] },
+    { id:'l4', name:'Ягодный',         emoji:'🫐', note:'', sizes:[{l:'0.3л', p:300},{l:'1л', p:600}] },
+    { id:'l5', name:'Голубая лагуна',  emoji:'💙', note:'', sizes:[{l:'0.3л', p:300},{l:'1л', p:600}] },
+    { id:'l6', name:'Малина-имбирь',   emoji:'🍓', note:'', sizes:[{l:'0.3л', p:300},{l:'1л', p:600}] },
   ],
-  smoothie: [
+  sm: [
     { id:'sm1', name:'Ягодный',        emoji:'🫐', note:'', sizes:[{l:'350мл', p:350}] },
     { id:'sm2', name:'Клубника-банан', emoji:'🍓', note:'', sizes:[{l:'350мл', p:350}] },
     { id:'sm3', name:'Банан-яблоко',   emoji:'🍌', note:'', sizes:[{l:'350мл', p:350}] },
@@ -1038,110 +1312,253 @@ const menu = {
     { id:'f4', name:'Гранатовый',      emoji:'🍷', note:'', sizes:[{l:'200мл', p:300}] },
     { id:'f5', name:'Яблоко-апельсин', emoji:'🍊', note:'', sizes:[{l:'200мл', p:300}] },
   ],
-  icecream: [
+  ice: [
     { id:'ic1', name:'Сливочное',  emoji:'🍦', note:'', sizes:[{l:'55гр', p:60}] },
     { id:'ic2', name:'Шоколадное', emoji:'🍫', note:'', sizes:[{l:'55гр', p:60}] },
     { id:'ic3', name:'Клубничное', emoji:'🍓', note:'', sizes:[{l:'55гр', p:60}] },
     { id:'ic4', name:'Банановое',  emoji:'🍌', note:'', sizes:[{l:'55гр', p:60}] },
   ],
-  icecream_add: [
+  iceAdd: [
     { id:'ia1', name:'Орехи',                     emoji:'🌰', note:'Добавка', sizes:[{l:'—', p:40}] },
     { id:'ia2', name:'Топинг шоколад и клубника', emoji:'🍓', note:'Добавка', sizes:[{l:'—', p:30}] },
   ],
 };
 
 // ================================================================
-// OPEN STATUS
+// STATE
 // ================================================================
-function checkOpenStatus() {
-    const badge = document.getElementById('openBadge');
-    if (!badge) return;
-    const now  = new Date();
-    const mins = now.getHours() * 60 + now.getMinutes();
-    const open = 9 * 60, close = 23 * 60;
-    const isOpen = mins >= open && mins < close;
-    if (isOpen) {
-        const left = close - mins;
-        const h = Math.floor(left/60), m = left%60;
-        badge.style.cssText = 'background:rgba(58,125,68,0.12);border:1px solid rgba(58,125,68,0.3);color:#3a7d44;';
-        badge.innerHTML = `<span class="wh-open-dot" style="background:#3a7d44"></span>Открыто · закрываемся через ${h>0?h+' ч ':''}${m} мин`;
-    } else {
-        const left = mins < open ? open-mins : (24*60-mins)+open;
-        const h = Math.floor(left/60), m = left%60;
-        badge.style.cssText = 'background:rgba(139,32,16,0.08);border:1px solid rgba(139,32,16,0.2);color:#8b2010;';
-        badge.innerHTML = `<span class="wh-open-dot" style="background:#8b2010;animation:none"></span>Закрыто · откроемся через ${h>0?h+' ч ':''}${m} мин`;
+let cart = [];
+// выбранные размеры: { itemId: sizeIndex }
+const selected = {};
+
+// ================================================================
+// RENDER ITEMS
+// ================================================================
+function renderList(items, containerId) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+
+    items.forEach(item => {
+        if (!(item.id in selected)) selected[item.id] = 0;
+    });
+
+    el.innerHTML = items.map(item => buildCard(item, containerId)).join('');
+}
+
+function buildCard(item, containerId) {
+    const si = selected[item.id] || 0;
+    const sz = item.sizes[si];
+
+    const sizeBtns = item.sizes.length > 1
+        ? `<div class="size-row">${item.sizes.map((s, i) =>
+            `<button class="sz-btn ${i === si ? 'on' : ''}"
+                onclick="selectSize('${item.id}','${containerId}',${i})">${s.l}</button>`
+          ).join('')}</div>`
+        : '';
+
+    return `
+    <div class="item-card" data-name="${item.name.toLowerCase()}">
+        <div class="item-strip"></div>
+        <div class="item-body">
+            <div class="item-row1">
+                <div class="item-info">
+                    <div class="item-name">${item.name}</div>
+                    ${item.note  ? `<div class="item-note">${item.note}</div>` : ''}
+                    ${item.badge ? `<span class="item-badge">${item.badge}</span>` : ''}
+                </div>
+                <div class="item-emoji">${item.emoji}</div>
+            </div>
+            <div class="item-divider">
+                <span class="idot"></span><span class="idot"></span><span class="idot"></span>
+            </div>
+            ${sizeBtns}
+            <div class="item-row2">
+                <div class="price-wrap">
+                    <div class="price-vol">${sz.l}</div>
+                    <div class="price-val">${sz.p} <span>р</span></div>
+                </div>
+                <button class="add-btn" id="addbtn-${item.id}"
+                    onclick="addItem('${item.id}','${containerId}')">+</button>
+            </div>
+        </div>
+    </div>`;
+}
+
+function selectSize(itemId, containerId, idx) {
+    selected[itemId] = idx;
+    // Перерисовать только эту карточку
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    const card = el.querySelector(`[data-name]`);
+    // Найти все карточки и обновить нужную
+    const cards = el.querySelectorAll('.item-card');
+    // Найти item из всех данных
+    const allItems = Object.values(MENU).flat();
+    const item = allItems.find(i => i.id === itemId);
+    if (!item) return;
+
+    cards.forEach(c => {
+        const nameEl = c.querySelector('.item-name');
+        if (nameEl && nameEl.textContent === item.name) {
+            c.outerHTML; // нельзя заменить через outerHTML внутри forEach
+        }
+    });
+
+    // Проще — перерисовать весь контейнер с нужными данными
+    // Определяем какой список в контейнере
+    const listKey = containerToKey[containerId];
+    if (listKey) renderList(MENU[listKey], containerId);
+}
+
+const containerToKey = {
+    'coffee-items': 'coffee',
+    'cold-items':   'cold',
+    'tea-c':        'teaC',
+    'tea-a':        'teaA',
+    'tea-d':        'teaD',
+    'nc-items':     'nc',
+    'matcha-items': 'matcha',
+    'cocktail-items':'cocktails',
+    'lemon-items':  'lemon',
+    'sm-items':     'sm',
+    'fresh-items':  'fresh',
+    'ice-items':    'ice',
+    'ice-add':      'iceAdd',
+};
+
+function addItem(itemId, containerId) {
+    const allItems = Object.values(MENU).flat();
+    const item = allItems.find(i => i.id === itemId);
+    if (!item) return;
+
+    const si  = selected[itemId] || 0;
+    const sz  = item.sizes[si];
+    const key = `${itemId}__${sz.l}`;
+    const ex  = cart.find(c => c.key === key);
+
+    if (ex) ex.qty++;
+    else cart.push({ key, id:itemId, name:item.name, emoji:item.emoji, size:sz.l, price:sz.p, qty:1 });
+
+    updateCartNum();
+    showToast(`${item.emoji} ${item.name} добавлен!`);
+
+    // Анимация кнопки
+    const btn = document.getElementById(`addbtn-${itemId}`);
+    if (btn) {
+        btn.classList.add('done');
+        btn.textContent = '✓';
+        setTimeout(() => {
+            btn.classList.remove('done');
+            btn.textContent = '+';
+        }, 1200);
     }
+}
+
+function doSearch(input, containerId) {
+    const q = input.value.toLowerCase();
+    const cards = document.querySelectorAll(`#${containerId} .item-card`);
+    cards.forEach(c => {
+        c.style.display = c.dataset.name.includes(q) ? '' : 'none';
+    });
 }
 
 // ================================================================
 // CART
 // ================================================================
-let cart = [];
-
-function addToCart(item, si) {
-    const sz = item.sizes[si], key = `${item.id}__${sz.l}`;
-    const ex = cart.find(c => c.key === key);
-    if (ex) ex.qty++;
-    else cart.push({ key, id:item.id, name:item.name, emoji:item.emoji, size:sz.l, price:sz.p, qty:1 });
-    updateUI(); showToast(`${item.emoji} ${item.name} добавлен!`);
+function updateCartNum() {
+    const n = cart.reduce((s,c) => s + c.qty, 0);
+    document.getElementById('cartNum').textContent = n;
 }
 
-function chQty(key, d) {
+function totalSum() { return cart.reduce((s,c) => s + c.price * c.qty, 0); }
+
+function renderCart() {
+    const body = document.getElementById('cartBody');
+    const foot = document.getElementById('cartFoot');
+    const tot  = document.getElementById('cartTotal');
+
+    if (!cart.length) {
+        body.innerHTML = `
+            <div class="cart-empty">
+                <span class="ei">🛒</span>
+                <strong>Корзина пуста</strong>
+                <span>Добавьте напитки из меню</span>
+            </div>`;
+        foot.style.display = 'none';
+        return;
+    }
+
+    foot.style.display = 'block';
+    tot.textContent = totalSum() + ' р';
+
+    body.innerHTML = cart.map(it => `
+        <div class="cart-item">
+            <div class="ci-emoji">${it.emoji}</div>
+            <div class="ci-info">
+                <div class="ci-name">${it.name}</div>
+                <div class="ci-meta">${it.size} · ${it.price} р/шт</div>
+            </div>
+            <div class="ci-ctrl">
+                <button class="ci-q" onclick="changeQty('${it.key}',-1)">−</button>
+                <span class="ci-n">${it.qty}</span>
+                <button class="ci-q" onclick="changeQty('${it.key}',1)">+</button>
+            </div>
+            <div class="ci-price">${it.price * it.qty} р</div>
+            <button class="ci-del" onclick="removeItem('${it.key}')">🗑</button>
+        </div>`).join('');
+}
+
+function changeQty(key, d) {
     const it = cart.find(c => c.key === key);
     if (!it) return;
     it.qty += d;
     if (it.qty <= 0) cart = cart.filter(c => c.key !== key);
-    updateUI(); renderCart();
+    updateCartNum();
+    renderCart();
 }
 
-function delItem(key) { cart = cart.filter(c => c.key !== key); updateUI(); renderCart(); }
-function clearCart()  { cart = []; updateUI(); renderCart(); }
-function total()      { return cart.reduce((s,c) => s+c.price*c.qty, 0); }
-function count()      { return cart.reduce((s,c) => s+c.qty, 0); }
-function updateUI()   { document.getElementById('cartCount').textContent = count(); }
-
-function renderCart() {
-    const body = document.getElementById('cartBody');
-    const ftr  = document.getElementById('cartFtr');
-    const tot  = document.getElementById('cartTotal');
-    if (!cart.length) {
-        body.innerHTML = `<div class="empty-cart"><span class="ei">🛒</span><strong>Корзина пуста</strong><span>Добавьте напитки из меню</span></div>`;
-        ftr.style.display = 'none'; return;
-    }
-    ftr.style.display = 'block';
-    tot.textContent   = total() + ' р';
-    body.innerHTML = cart.map(it => `
-        <div class="cart-row">
-            <div class="cr-emoji">${it.emoji}</div>
-            <div class="cr-info">
-                <div class="cr-name">${it.name}</div>
-                <div class="cr-meta">${it.size} · ${it.price} р/шт</div>
-            </div>
-            <div class="cr-ctrl">
-                <button class="cr-q" onclick="chQty('${it.key}',-1)">−</button>
-                <span class="cr-n">${it.qty}</span>
-                <button class="cr-q" onclick="chQty('${it.key}',1)">+</button>
-            </div>
-            <div class="cr-price">${it.price*it.qty} р</div>
-            <button class="cr-del" onclick="delItem('${it.key}')">🗑</button>
-        </div>`).join('');
+function removeItem(key) {
+    cart = cart.filter(c => c.key !== key);
+    updateCartNum();
+    renderCart();
 }
 
-function openCart()  { renderCart(); document.getElementById('overlay').classList.add('open'); document.body.style.overflow='hidden'; }
-function closeCart() { document.getElementById('overlay').classList.remove('open'); document.body.style.overflow=''; }
-function closeOL(e)  { if (e.target===document.getElementById('overlay')) closeCart(); }
+function clearCart() {
+    cart = [];
+    updateCartNum();
+    renderCart();
+}
+
+function openCart() {
+    renderCart();
+    document.getElementById('overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeCart() {
+    document.getElementById('overlay').classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+function overlayClick(e) {
+    if (e.target === document.getElementById('overlay')) closeCart();
+}
 
 // ================================================================
 // WHATSAPP
 // ================================================================
-function openWA(msg) { window.open(`https://wa.me/79280621727?text=${encodeURIComponent(msg)}`,'_blank'); }
+function openWA(msg) {
+    window.open(`https://wa.me/79280621727?text=${encodeURIComponent(msg)}`, '_blank');
+}
 
-function sendWA() {
+function sendToWA() {
     if (!cart.length) { showToast('❗ Корзина пуста!'); return; }
     const comment = document.getElementById('cartComment').value.trim();
     let msg = '⚔️ *ЗАКАЗ — САБЛЯ COFFEE*\n\n';
-    cart.forEach((it,i) => { msg += `${i+1}. ${it.emoji} ${it.name} (${it.size}) × ${it.qty} = ${it.price*it.qty} р\n`; });
-    msg += `\n💰 *Итого: ${total()} р*`;
+    cart.forEach((it, i) => {
+        msg += `${i+1}. ${it.emoji} ${it.name} (${it.size}) × ${it.qty} = ${it.price * it.qty} р\n`;
+    });
+    msg += `\n💰 *Итого: ${totalSum()} р*`;
     if (comment) msg += `\n\n💬 ${comment}`;
     openWA(msg);
 }
@@ -1149,120 +1566,84 @@ function sendWA() {
 // ================================================================
 // TOAST
 // ================================================================
-let toastT;
+let toastTimer;
 function showToast(msg) {
     const t = document.getElementById('toast');
-    t.textContent = msg; t.classList.add('show');
-    clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2400);
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
 }
 
 // ================================================================
 // PAGES
 // ================================================================
-const pages = ['home','coffee','cold','tea','noncoffee','matcha','cocktails','lemonades','smoothie','fresh','icecream','about'];
+const PAGE_IDS = ['home','coffee','cold','tea','noncoffee','matcha','cocktails','lemonades','smoothie','fresh','icecream','about'];
 
-function showPage(name) {
-    pages.forEach(k => document.getElementById('page-'+k).classList.toggle('active', k===name));
-    document.querySelectorAll('.cat-tab').forEach((b,i) => b.classList.toggle('active', pages[i]===name));
-    window.scrollTo({top:0, behavior:'smooth'});
-    if (name === 'about') checkOpenStatus();
-}
-
-// ================================================================
-// RENDER ITEMS
-// ================================================================
-function renderItems(items, listId) {
-    const el = document.getElementById(listId);const el = document.getElementById(listId);
-    if (!el) return;if (!el) return;
-    const sel = {};const sel = {};
-    items.forEach(it => sel[it.id] = 0);items.forEach(it => sel[it.id] = 0);
-    el._items = items; el._sel = sel;el._items = items; el._sel = sel;
-
-    function build() {функция build() {
-        el.innerHTML = items.map(it => {el.innerHTML = items.map(it => {
-            const si = sel[it.id]||0, sz = it.sizes[si];const si = sel[it.id]||0, sz = it.sizes[si];
-            const sizeHtml = it.sizes.length > 1const sizeHtml = it.sizes.length > 1
-                ? `<div class="size-row">${it.sizes.map((s,i) => `? `<div class="size-row"> ${it.sizes.map((s,i) => `
-                    <button class="sz-btn ${i===si?'on':''}"<button class="sz-btn ${i===si?'on':''}"
-                        onclick="selSize('${it.id}','${listId}',${i})">${s.l}</button>`).join('')}</div>`onclick="selSize('${it.id}','${listId}',${i})">${sl} `).join('')}</div> `
-                : '';: '';
-            return `возврат `
-            <div class="item-card" data-name="${it.name.toLowerCase()}"><div class="item-card" data-name="${it.name.toLowerCase()}">
-                <div class="card-top-strip"></div><div class="card-top-strip"></div>
-                <div class="item-body"><div class="item-body">
-                    <div class="item-head"><div class="item-head">
-                        <div class="item-left"><div class="item-left">
-                            <div class="item-name">${it.name}</div><div class="item-name">${it.name}</div>
-                            ${it.note  ? `<div class="item-note">${it.note}</div>` : ''}${it.note ? `<div class="item-note"> ${it.note}</div> ` : ''}
-                            ${it.badge ? `<span class="item-badge">${it.badge}</span>` : ''}${it.badge ? ` <span class="item-badge">${it.badge}</span> ` : ''}
-                        </div></div>
-                        <div class="item-emoji-wrap">${it.emoji}</div><div class="item-emoji-wrap">${it.emoji}</div>
-                    </div></div>
-                    <div class="item-divider"><div class="item-divider">
-                        <span class="idot"></span><span class="idot"></span><span class="idot"></span><span class="idot"></span><span class="idot"></span><span class="idot"></span>
-                    </div></div>
-                    ${sizeHtml}
-                    <div class="item-footer">
-                        <div class="price-block">
-                            <div class="pb-vol">${sz.l}</div>
-                            <div class="pb-price">${sz.p} <span>р</span></div>
-                        </div>
-                        <button class="add-btn" id="ab-${it.id}-${listId}"
-                            onclick="handleAdd('${it.id}','${listId}')">+</button>
-                    </div>
-                </div>
-            </div>`;
-        }).join('');
-    }
-
-    el._build = build; build();
-}
-
-function selSize(id, listId, idx) {
-    const el = document.getElementById(listId);
-    if (!el) return;
-    el._sel[id] = idx; el._build();
-}
-
-function handleAdd(id, listId) {
-    const el = document.getElementById(listId);
-    if (!el) return;
-    const item = el._items.find(i => i.id===id);
-    if (!item) return;
-    addToCart(item, el._sel[id]||0);
-    const btn = document.getElementById(`ab-${id}-${listId}`);
-    if (btn) {
-        btn.classList.add('done'); btn.textContent='✓';
-        setTimeout(() => { btn.classList.remove('done'); btn.textContent='+'; }, 1200);
-    }
-}
-
-function filterList(input, listId) {
-    const q = input.value.toLowerCase();
-    document.querySelectorAll(`#${listId} .item-card`).forEach(c => {
-        c.style.display = c.dataset.name.includes(q) ? '' : 'none';
+function goPage(name) {
+    PAGE_IDS.forEach(k => {
+        document.getElementById('p-' + k).classList.toggle('active', k === name);
     });
+
+    const tabs = document.querySelectorAll('.tab-btn');
+    tabs.forEach((b, i) => {
+        b.classList.toggle('active', PAGE_IDS[i] === name);
+    });
+
+    // Скролл таба в видимость
+    const activeTab = document.querySelector('.tab-btn.active');
+    if (activeTab) {
+        activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (name === 'about') checkOpen();
 }
 
 // ================================================================
-// INIT// НАГРЕВАТЬ
+// OPEN STATUS
+// ================================================================
+function checkOpen() {
+    const badge = document.getElementById('openBadge');
+    if (!badge) return;
+    const now  = new Date();
+    const mins = now.getHours() * 60 + now.getMinutes();
+    const O = 9 * 60, C = 23 * 60;
+    const isOpen = mins >= O && mins < C;
+
+    if (isOpen) {
+        const left = C - mins;
+        const h = Math.floor(left / 60), m = left % 60;
+        badge.style.cssText = 'background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.3);color:#27ae60;';
+        badge.innerHTML = `<span class="open-dot pulse" style="background:#27ae60"></span>Открыто · закрываемся через ${h > 0 ? h + ' ч ' : ''}${m} мин`;
+    } else {
+        const left = mins < O ? O - mins : (24 * 60 - mins) + O;
+        const h = Math.floor(left / 60), m = left % 60;
+        badge.style.cssText = 'background:rgba(192,57,43,0.08);border:1px solid rgba(192,57,43,0.2);color:#c0392b;';
+        badge.innerHTML = `<span class="open-dot" style="background:#c0392b"></span>Закрыто · откроемся через ${h > 0 ? h + ' ч ' : ''}${m} мин`;
+    }
+}
+
+// ================================================================
+// INIT
 // ================================================================
 document.addEventListener('DOMContentLoaded', () => {
-    renderItems(menu.coffee,       'coffee-list');
-    renderItems(menu.cold,         'cold-list');
-    renderItems(menu.tea_classic,  'tea-classic-list');
-    renderItems(menu.tea_author,   'tea-author-list');
-    renderItems(menu.tea_add,      'tea-add-list');
-    renderItems(menu.noncoffee,    'noncoffee-list');
-    renderItems(menu.matcha,       'matcha-list');
-    renderItems(menu.cocktails,    'cocktails-list');
-    renderItems(menu.lemonades,    'lemonades-list');
-    renderItems(menu.smoothie,     'smoothie-list');
-    renderItems(menu.fresh,        'fresh-list');
-    renderItems(menu.icecream,     'icecream-list');
-    renderItems(menu.icecream_add, 'icecream-add-list');
-    checkOpenStatus();
-
-
-</body></body></body></body>
+    renderList(MENU.coffee,   'coffee-items');
+    renderList(MENU.cold,     'cold-items');
+    renderList(MENU.teaC,     'tea-c');
+    renderList(MENU.teaA,     'tea-a');
+    renderList(MENU.teaD,     'tea-d');
+    renderList(MENU.nc,       'nc-items');
+    renderList(MENU.matcha,   'matcha-items');
+    renderList(MENU.cocktails,'cocktail-items');
+    renderList(MENU.lemon,    'lemon-items');
+    renderList(MENU.sm,       'sm-items');
+    renderList(MENU.fresh,    'fresh-items');
+    renderList(MENU.ice,      'ice-items');
+    renderList(MENU.iceAdd,   'ice-add');
+    checkOpen();
+});
+</script>
+</body>
 </html>

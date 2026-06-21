@@ -3,1208 +3,972 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Сабля Coffee</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap');
 
-        /* ===== RESET ===== */
         *, *::before, *::after {
-            margin: 0; padding: 0;
-            box-sizing: border-box;
+            margin: 0; padding: 0; box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
             -webkit-touch-callout: none;
         }
 
         :root {
-            --dark:   #120a03;
-            --dark2:  #1e1008;
-            --gold:   #c8963c;
-            --gold2:  #e8b84b;
-            --gold3:  #f5d47a;
-            --cream:  #faf3e8;
-            --cream2: #f0e2c8;
-            --cream3: #e0cba8;
-            --white:  #fff8ee;
-            --red:    #c0392b;
-            --muted:  #8a6a40;
-            --green:  #27ae60;
-            --shadow: rgba(60,30,5,0.12);
-            --brown:  #5c3317;
-
-            /* Минимальный размер касания 48px */
-            --touch: 52px;
+            --dark:   #080300;
+            --dark2:  #1a0e06;
+            --dark3:  #2a1608;
+            --brown:  #6a3018;
+            --gold:   #e0a830;
+            --gold2:  #f5c840;
+            --gold3:  #ffe868;
+            --gold4:  #fff4a0;
+            --cream:  #fef8ec;
+            --cr2:    #f8e8c8;
+            --cr3:    #e8d0a0;
+            --white:  #fffcf4;
+            --red:    #a01a08;
+            --red2:   #d83828;
+            --red3:   #ff5040;
+            --muted:  #8a6a3a;
+            --green:  #20b848;
+            --green2: #38e060;
+            --sh:     rgba(60,25,5,0.18);
+            --frame:  10px;
+            --glow-gold: rgba(224,168,48,.7);
+            --glow-gold2: rgba(245,200,64,.5);
+            --glow-red:  rgba(216,56,40,.5);
         }
 
-        html {
-            font-size: 16px;
-            scroll-behavior: smooth;
-            -webkit-text-size-adjust: 100%;
-        }
+        html { font-size: 16px; -webkit-text-size-adjust: 100%; }
 
         body {
-            background: var(--cream);
+            background: linear-gradient(180deg, var(--cream) 0%, #f5e8d0 100%);
             font-family: 'Inter', -apple-system, sans-serif;
             color: var(--dark);
-            min-height: 100vh;
             max-width: 480px;
             margin: 0 auto;
+            min-height: 100vh;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
         }
 
-        body::before {
-            content: '';
-            position: fixed; inset: 0; z-index: 0;
-            background-image:
-                repeating-linear-gradient(45deg,  rgba(200,150,60,0.035) 0, rgba(200,150,60,0.035) 1px, transparent 1px, transparent 16px),
-                repeating-linear-gradient(-45deg, rgba(200,150,60,0.035) 0, rgba(200,150,60,0.035) 1px, transparent 1px, transparent 16px);
-            pointer-events: none;
-        }
-
-        body > * { position: relative; z-index: 1; }
-
         ::-webkit-scrollbar { display: none; }
-        * { scrollbar-width: none; }
 
-        /* ===== HEADER ===== */
-        .header {
-            background: linear-gradient(180deg, #0a0502 0%, var(--dark2) 100%);
-            padding: 0 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky; top: 0; z-index: 1000;
-            border-bottom: 2px solid var(--gold);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-            height: 60px;
+        /* ═══ ЭТНО РАМКА ═══ */
+        .ef { position:fixed; z-index:9999; pointer-events:none; }
+        .ef-l { top:0; left:0; bottom:0; width:var(--frame); }
+        .ef-r { top:0; right:0; bottom:0; width:var(--frame); }
+        .ef-t { top:0; left:0; right:0; height:var(--frame); }
+        .ef-b { bottom:0; left:0; right:0; height:var(--frame); }
+        .ef svg { display:block; width:100%; height:100%; }
+        .ef-corner { position:fixed; width:calc(var(--frame) + 2px); height:calc(var(--frame) + 2px); z-index:10000; pointer-events:none; background:var(--gold); box-shadow: 0 0 8px var(--glow-gold); }
+        .ef-corner::before { content:''; position:absolute; inset:2px; background:var(--red); }
+        .ef-corner::after  { content:''; position:absolute; inset:4px; background:var(--gold2); }
+        .efc-tl{top:0;left:0} .efc-tr{top:0;right:0} .efc-bl{bottom:0;left:0} .efc-br{bottom:0;right:0}
+
+        .app { margin:0 var(--frame); min-height:100vh; position:relative; }
+
+        /* ═══ HEADER ═══ */
+        .hdr {
+            background: linear-gradient(160deg,#050200,var(--dark2) 50%,#120800);
+            height:70px; padding:0 16px;
+            display:flex; align-items:center; justify-content:space-between;
+            position:sticky; top:0; z-index:800;
+            border-bottom:3px solid var(--gold);
+            box-shadow:0 6px 30px rgba(0,0,0,.7), 0 3px 20px var(--glow-gold);
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            /* Большая зона касания */
-            min-height: var(--touch);
-            padding: 4px 8px 4px 0;
+        .hdr-logo {
+            display:flex; align-items:center;
+            height:100%; padding:6px 8px 6px 0;
+            cursor:pointer; touch-action:manipulation;
         }
 
-        /* ===== МЕСТО ДЛЯ ЛОГОТИПА =====
-           Замените src="LOGO" на путь к своему файлу
-           Например: src="logo.png"
-        */
         .logo-img {
-            height: 44px;
+            height: 56px;
             width: auto;
-            max-width: 160px;
+            max-width: 180px;
             object-fit: contain;
             display: block;
-        }
-
-        .logo-text {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .logo-text .ln {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: var(--gold2);
-            letter-spacing: 3px;
-            line-height: 1.1;
-        }
-
-        .logo-text .ls {
-            font-size: 0.5rem;
-            color: var(--gold);
-            letter-spacing: 5px;
-            text-transform: uppercase;
+            filter: drop-shadow(0 0 14px rgba(224,168,48,.6))
+                    drop-shadow(0 0 5px rgba(255,228,104,.4));
         }
 
         .cart-btn {
-            background: linear-gradient(135deg, var(--gold), var(--gold2));
-            color: var(--dark);
-            border: none;
-            border-radius: 8px;
-            min-width: var(--touch);
-            min-height: var(--touch);
-            padding: 0 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            font-family: 'Inter', sans-serif;
-            font-weight: 700;
-            font-size: 0.85rem;
-            cursor: pointer;
-            box-shadow: 0 2px 10px rgba(200,150,60,0.35);
-            transition: transform 0.15s;
-            flex-shrink: 0;
+            background:linear-gradient(135deg,var(--gold),var(--gold2),var(--gold3));
+            color:var(--dark); border:none;
+            height:48px; min-width:80px; padding:0 16px;
+            border-radius:14px;
+            font-family:'Inter',sans-serif; font-size:.9rem; font-weight:800;
+            display:flex; align-items:center; gap:8px;
+            cursor:pointer; touch-action:manipulation;
+            box-shadow:0 4px 20px var(--glow-gold), inset 0 1px 0 rgba(255,255,255,.4);
+            flex-shrink:0;
+            transition: transform .15s, box-shadow .15s;
+            text-shadow: 0 1px 2px rgba(0,0,0,.1);
         }
 
-        .cart-btn:active { transform: scale(0.93); }
+        .cart-btn:active { transform:scale(.92); box-shadow:0 2px 10px var(--glow-gold); }
 
-        .cart-num {
-            background: var(--red);
-            color: #fff;
-            border-radius: 50%;
-            width: 22px; height: 22px;
-            font-size: 0.72rem; font-weight: 700;
-            display: flex; align-items: center; justify-content: center;
+        .cart-n {
+            background:linear-gradient(135deg,var(--red2),var(--red3));
+            color:#fff;
+            border-radius:50%; width:24px; height:24px;
+            font-size:.72rem; font-weight:800;
+            display:flex; align-items:center; justify-content:center;
+            box-shadow: 0 0 10px var(--glow-red), 0 2px 6px rgba(0,0,0,.3);
+            animation: cartPulse 2s ease-in-out infinite;
         }
 
-        /* ===== CATEGORY SCROLL TABS ===== */
-        .tabs-wrap {
-            background: var(--dark2);
-            padding: 10px 8px 12px;
-            overflow-x: auto;
-            display: flex;
-            gap: 8px;
-            position: sticky;
-            top: 60px;
-            z-index: 999;
-            border-bottom: 2px solid rgba(200,150,60,0.3);
-            -webkit-overflow-scrolling: touch;
+        @keyframes cartPulse {
+            0%,100% { box-shadow: 0 0 8px var(--glow-red); transform:scale(1); }
+            50% { box-shadow: 0 0 18px var(--glow-red), 0 0 6px var(--red3); transform:scale(1.1); }
         }
 
-        .tab-btn {
-            flex-shrink: 0;
-            min-height: 44px;
-            padding: 0 16px;
-            border-radius: 22px;
-            border: 1.5px solid rgba(200,150,60,0.2);
-            background: rgba(255,255,255,0.05);
-            color: rgba(255,255,255,0.5);
-            font-family: 'Inter', sans-serif;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: all 0.2s;
+        /* ═══ BOTTOM NAV ═══ */
+        .bnav {
+            position:fixed; bottom:var(--frame);
+            left:var(--frame); right:var(--frame);
+            max-width:calc(480px - var(--frame)*2);
+            margin:0 auto;
+            background:linear-gradient(180deg,#1c1008,#080300);
+            border-top:3px solid var(--gold);
+            border-radius:22px 22px 0 0;
+            padding:10px 4px 18px;
+            display:flex; z-index:700;
+            box-shadow:0 -6px 30px rgba(0,0,0,.7), 0 -3px 20px var(--glow-gold);
         }
 
-        .tab-btn.active {
-            background: linear-gradient(135deg, var(--gold), var(--gold2));
-            color: var(--dark);
-            border-color: var(--gold3);
-            box-shadow: 0 2px 10px rgba(200,150,60,0.4);
-            font-weight: 700;
+        .bnav-btn {
+            flex:1; display:flex; flex-direction:column;
+            align-items:center; justify-content:center; gap:4px;
+            padding:6px 4px; cursor:pointer; touch-action:manipulation;
+            -webkit-user-select:none; user-select:none;
+            border-radius:14px;
+            transition: background .25s, transform .15s;
         }
 
-        /* ===== PAGES ===== */
-        .page { display: none; }
-        .page.active { display: block; animation: fadeUp 0.25s ease; }
+        .bnav-btn:active { transform:scale(.85); }
+        .bnav-btn.on { background: rgba(224,168,48,.12); }
+        .bnav-ico { font-size:1.5rem; line-height:1; transition:all .3s cubic-bezier(.34,1.56,.64,1); }
+        .bnav-lbl { font-size:.55rem; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:rgba(255,255,255,.3); transition: all .25s; }
+        .bnav-btn.on .bnav-lbl { color:var(--gold2); text-shadow: 0 0 10px rgba(245,200,64,.5); }
+        .bnav-btn.on .bnav-ico { transform:scale(1.25); filter: drop-shadow(0 0 8px rgba(245,200,64,.6)); }
+        .bnav-dot { width:6px; height:6px; border-radius:50%; background:var(--gold2); margin-top:2px; opacity:0; transition: opacity .25s; box-shadow: 0 0 8px var(--glow-gold); }
+        .bnav-btn.on .bnav-dot { opacity:1; }
 
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(6px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
+        /* ═══ PAGES ═══ */
+        .pg { display:none; padding-bottom:110px; }
+        .pg.on { display:block; animation:fu .35s ease; }
+        @keyframes fu { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
 
-        /* ===== HERO ===== */
+        /* ═══ HERO ═══ */
         .hero {
-            background: linear-gradient(180deg, #0a0502 0%, var(--dark) 60%, #241208 100%);
-            padding: 32px 20px 40px;
-            text-align: center;
-            position: relative; overflow: hidden;
+            background:linear-gradient(160deg,#050200 0%,#0e0702 30%,#1a0e04 60%,#120800 100%);
+            padding:44px 20px 56px;
+            text-align:center; position:relative; overflow:hidden;
         }
 
         .hero::before {
-            content: ''; position: absolute; inset: 0;
-            background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(200,150,60,0.18) 0%, transparent 70%);
-            pointer-events: none;
+            content:''; position:absolute; inset:0;
+            background:
+                radial-gradient(ellipse 130% 80% at 50% -20%,rgba(224,168,48,.3),transparent 60%),
+                radial-gradient(ellipse 80% 50% at 10% 100%,rgba(160,26,8,.25),transparent 50%),
+                radial-gradient(ellipse 70% 45% at 90% 80%,rgba(224,168,48,.18),transparent 45%),
+                radial-gradient(circle at 50% 50%,rgba(245,200,64,.05),transparent 70%);
+            pointer-events:none;
         }
 
-        .hero-content { position: relative; z-index: 1; }
-
-        /* ЛОГОТИП В ГЕРОЕ */
-        .hero-logo {
-            margin-bottom: 24px;
-            display: flex;
-            justify-content: center;
+        .hero::after {
+            content:''; position:absolute; inset:0;
+            background-image:linear-gradient(rgba(224,168,48,.06) 1px,transparent 1px),
+                             linear-gradient(90deg,rgba(224,168,48,.06) 1px,transparent 1px);
+            background-size:32px 32px; pointer-events:none;
         }
 
-        .hero-logo img {
-            width: 200px;
-            max-width: 75vw;
-            height: auto;
+        .hero-particles {
+            position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+        }
+        .hero-particles span {
+            position: absolute;
+            background: var(--gold2);
+            border-radius: 50%;
+            animation: floatP linear infinite;
+            opacity: 0;
+        }
+        .hero-particles span:nth-child(1) { width:3px;height:3px; left:8%; animation-delay:0s; animation-duration:8s; }
+        .hero-particles span:nth-child(2) { width:4px;height:4px; left:20%; animation-delay:1.2s; animation-duration:6s; }
+        .hero-particles span:nth-child(3) { width:2px;height:2px; left:35%; animation-delay:0.5s; animation-duration:9s; }
+        .hero-particles span:nth-child(4) { width:3px;height:3px; left:50%; animation-delay:2s; animation-duration:7s; }
+        .hero-particles span:nth-child(5) { width:4px;height:4px; left:65%; animation-delay:0.8s; animation-duration:6.5s; }
+        .hero-particles span:nth-child(6) { width:2px;height:2px; left:78%; animation-delay:3s; animation-duration:8.5s; }
+        .hero-particles span:nth-child(7) { width:3px;height:3px; left:88%; animation-delay:1.5s; animation-duration:7.5s; }
+        .hero-particles span:nth-child(8) { width:5px;height:5px; left:45%; animation-delay:4s; animation-duration:10s; }
+        .hero-particles span:nth-child(9) { width:2px;height:2px; left:12%; animation-delay:2.5s; animation-duration:5.5s; }
+        .hero-particles span:nth-child(10){ width:3px;height:3px; left:72%; animation-delay:0.3s; animation-duration:9.5s; }
+
+        @keyframes floatP {
+            0% { bottom:-10px; opacity:0; transform:translateX(0) scale(.5); }
+            10% { opacity:.8; }
+            50% { opacity:1; transform:translateX(20px) scale(1); }
+            90% { opacity:.4; }
+            100% { bottom:110%; opacity:0; transform:translateX(-15px) scale(.3); }
         }
 
-        /* Заглушка если нет логотипа */
-        .hero-logo-stub {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
+        .hero-c { position:relative; z-index:1; }
+
+        .hero-badge {
+            display:inline-flex; align-items:center; gap:8px;
+            background:linear-gradient(135deg,rgba(224,168,48,.18),rgba(224,168,48,.08));
+            border:2px solid rgba(224,168,48,.5);
+            color:var(--gold2); padding:7px 22px; border-radius:50px;
+            font-size:.66rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+            margin-bottom:24px;
+            box-shadow: 0 0 24px rgba(224,168,48,.2), inset 0 0 12px rgba(224,168,48,.05);
+            animation: badgeGlow 3s ease-in-out infinite;
         }
 
-        .hls-name {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.4rem;
-            font-weight: 700;
-            color: var(--gold2);
-            letter-spacing: 8px;
-            text-shadow: 0 2px 14px rgba(200,150,60,0.5);
+        @keyframes badgeGlow {
+            0%,100% { box-shadow: 0 0 18px rgba(224,168,48,.15); border-color:rgba(224,168,48,.4); }
+            50% { box-shadow: 0 0 32px rgba(224,168,48,.35); border-color:rgba(224,168,48,.7); }
         }
 
-        .hls-line {
-            display: flex; align-items: center; gap: 10px; width: 100%;
-        }
-
-        .hls-line::before, .hls-line::after {
-            content: ''; flex: 1; height: 1px;
-            background: linear-gradient(90deg, transparent, var(--gold), transparent);
-        }
-
-        .hls-sword { font-size: 1.6rem; }
-
-        .hls-sub {
-            font-size: 0.65rem;
-            color: var(--gold);
-            letter-spacing: 7px;
-            text-transform: uppercase;
-            opacity: 0.85;
-        }
-
-        .hero-tag {
-            font-size: 0.68rem;
-            color: rgba(255,255,255,0.3);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-        }
-
-        .hero p {
-            color: rgba(255,255,255,0.5);
-            font-size: 0.95rem;
-            line-height: 1.7;
+        .hero-logo-wrap {
             margin-bottom: 28px;
-            font-weight: 300;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        .hero-btns {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
+        .hero-logo-img {
+            width: 290px;
+            max-width: 90vw;
+            height: auto;
+            display: block;
+            filter: drop-shadow(0 8px 40px rgba(224,168,48,.6))
+                    drop-shadow(0 3px 12px rgba(255,232,104,.4))
+                    drop-shadow(0 0 60px rgba(224,168,48,.2));
+            animation: logoFloat 5s ease-in-out infinite;
         }
+
+        @keyframes logoFloat {
+            0%,100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-8px) scale(1.02); }
+        }
+
+        .hero-title {
+            font-family:'Playfair Display',serif;
+            font-size:clamp(2.1rem,9.5vw,3.2rem);
+            color:var(--white); font-style:italic; line-height:1.12; margin-bottom:10px;
+            text-shadow: 0 3px 20px rgba(0,0,0,.6), 0 0 40px rgba(224,168,48,.15);
+        }
+        .hero-title span {
+            background: linear-gradient(135deg, var(--gold), var(--gold2), var(--gold3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-sub {
+            font-size:.72rem; color:rgba(255,255,255,.45); letter-spacing:4px;
+            text-transform:uppercase; margin-bottom:20px;
+        }
+        .hero p {
+            color:rgba(255,255,255,.6); font-size:.96rem; line-height:1.85;
+            margin-bottom:32px; font-weight:300;
+        }
+        .hero-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
 
         .btn-gold {
-            background: linear-gradient(135deg, var(--gold), var(--gold2));
-            color: var(--dark);
-            border: none;
-            min-height: var(--touch);
-            padding: 0 28px;
-            border-radius: 8px;
-            font-family: 'Inter', sans-serif;
-            font-weight: 700;
-            font-size: 0.95rem;
-            cursor: pointer;
-            box-shadow: 0 4px 16px rgba(200,150,60,0.4);
-            transition: transform 0.15s;
-            display: flex; align-items: center; gap: 6px;
+            background:linear-gradient(135deg,var(--gold),var(--gold2),var(--gold3));
+            color:var(--dark); border:none;
+            height:56px; padding:0 30px; border-radius:16px;
+            font-family:'Inter',sans-serif; font-weight:800; font-size:.94rem;
+            display:flex; align-items:center; gap:9px;
+            cursor:pointer; touch-action:manipulation;
+            box-shadow:0 6px 28px var(--glow-gold), 0 2px 8px rgba(0,0,0,.2), inset 0 2px 0 rgba(255,255,255,.35);
+            transition: transform .15s, box-shadow .15s;
+        }
+        .btn-gold:active { transform:scale(.93); box-shadow:0 3px 14px var(--glow-gold); }
+
+        .btn-outline {
+            background:rgba(255,255,255,.06); color:rgba(255,255,255,.85);
+            border:2.5px solid rgba(224,168,48,.55);
+            height:56px; padding:0 26px; border-radius:16px;
+            font-family:'Inter',sans-serif; font-weight:600; font-size:.94rem;
+            display:flex; align-items:center; gap:8px;
+            cursor:pointer; touch-action:manipulation;
+            box-shadow: 0 0 20px rgba(224,168,48,.12);
+            transition: all .2s;
+        }
+        .btn-outline:active { border-color:var(--gold2); color:var(--gold2); background:rgba(224,168,48,.12); }
+
+        .hero-stats { display:flex; margin-top:36px; padding-top:26px; border-top:2px solid rgba(224,168,48,.25); }
+        .hst { flex:1; text-align:center; border-right:1px solid rgba(224,168,48,.18); }
+        .hst:last-child { border-right:none; }
+        .hst-n {
+            font-family:'Playfair Display',serif; font-size:1.7rem;
+            display:block; font-style:italic;
+            background: linear-gradient(135deg, var(--gold), var(--gold2), var(--gold3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 8px rgba(224,168,48,.3));
+        }
+        .hst-l { font-size:.55rem; color:rgba(255,255,255,.4); letter-spacing:1.5px; text-transform:uppercase; }
+
+        .hero-orn {
+            height:12px;
+            background:repeating-linear-gradient(90deg,
+                var(--red) 0,var(--red) 4px,var(--gold) 4px,var(--gold) 6px,
+                var(--cr2) 6px,var(--cr2) 10px,var(--gold) 10px,var(--gold) 12px,
+                var(--red) 12px,var(--red) 16px,var(--gold2) 16px,var(--gold2) 18px,
+                var(--cream) 18px,var(--cream) 22px,var(--gold2) 22px,var(--gold2) 24px);
+            box-shadow: 0 3px 14px rgba(224,168,48,.35);
         }
 
-        .btn-gold:active { transform: scale(0.95); }
-
-        .btn-ghost {
-            background: transparent;
-            color: rgba(255,255,255,0.75);
-            border: 1.5px solid rgba(200,150,60,0.35);
-            min-height: var(--touch);
-            padding: 0 24px;
-            border-radius: 8px;
-            font-family: 'Inter', sans-serif;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.15s;
-            display: flex; align-items: center; gap: 6px;
+        /* ═══ HOME CATS ═══ */
+        .home-body { padding:30px 14px; }
+        .sec-head { margin-bottom:22px; }
+        .sec-tag {
+            font-size:.62rem; font-weight:700; letter-spacing:3.5px;
+            text-transform:uppercase; color:var(--gold);
+            margin-bottom:8px; display:block;
+        }
+        .sec-title {
+            font-family:'Playfair Display',serif; font-size:1.8rem;
+            color:var(--dark); font-style:italic;
         }
 
-        .btn-ghost:active { border-color: var(--gold); color: var(--gold2); }
-
-        .hero-stats {
-            display: flex;
-            margin-top: 28px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(200,150,60,0.18);
-        }
-
-        .stat { flex: 1; text-align: center; border-right: 1px solid rgba(200,150,60,0.15); }
-        .stat:last-child { border-right: none; }
-        .stat-n { font-family: 'Playfair Display', serif; font-size: 1.45rem; color: var(--gold2); display: block; }
-        .stat-l { font-size: 0.58rem; color: rgba(255,255,255,0.28); letter-spacing: 1.5px; text-transform: uppercase; }
-
-        /* ===== HOME CATS ===== */
-        .home-sec { padding: 24px 14px 100px; }
-
-        .sec-head { margin-bottom: 18px; text-align: center; }
-        .sec-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; display: block; }
-        .sec-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--dark); }
-
-        .cats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
+        .cats-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
 
         .cat-card {
-            background: var(--white);
-            border: 1.5px solid var(--cream3);
-            border-radius: 14px;
-            /* Большая зона касания */
-            min-height: 110px;
-            padding: 20px 12px 18px;
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.15s;
-            box-shadow: 0 2px 10px var(--shadow);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            position: relative;
-            overflow: hidden;
-            -webkit-user-select: none;
-            user-select: none;
+            background:linear-gradient(150deg, var(--white), var(--cream), var(--cr2));
+            border:2px solid var(--cr3);
+            border-radius:22px; min-height:135px; padding:24px 14px 22px;
+            text-align:center; cursor:pointer; touch-action:manipulation;
+            box-shadow:0 5px 22px var(--sh);
+            display:flex; flex-direction:column;
+            align-items:center; justify-content:center; gap:10px;
+            position:relative; overflow:hidden;
+            -webkit-user-select:none; user-select:none;
+            transition: transform .2s, box-shadow .25s;
         }
-
         .cat-card::before {
-            content: '';
-            position: absolute; top: 0; left: 0; right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, var(--gold), transparent);
-            transform: scaleX(0); transition: transform 0.2s;
+            content:''; position:absolute; top:0; left:0; right:0; height:5px;
+            background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold3),var(--gold2),var(--gold));
+            transform:scaleX(0); transition:transform .3s cubic-bezier(.34,1.56,.64,1); transform-origin:left;
         }
-
-        .cat-card:active { transform: scale(0.94); }
-        .cat-card:active::before { transform: scaleX(1); }
-
-        .cat-icon { font-size: 2.4rem; line-height: 1; }
-        .cat-name { font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--dark); }
-        .cat-cnt  { font-size: 0.7rem; color: var(--muted); }
-
-        /* ===== MENU PAGE ===== */
-        .menu-wrap { padding: 18px 14px 100px; }
-
-        .menu-top {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 18px;
-            padding-bottom: 14px;
-            border-bottom: 1.5px solid var(--cream3);
+        .cat-card::after {
+            content:''; position:absolute; inset:0;
+            background:radial-gradient(circle at 50% -20%,rgba(224,168,48,.12),transparent 65%);
+            opacity:0; transition: opacity .25s;
         }
+        .cat-card:active { transform:scale(.92); box-shadow:0 3px 12px var(--sh), 0 0 20px var(--glow-gold); border-color:var(--gold); }
+        .cat-card:active::before { transform:scaleX(1); }
+        .cat-card:active::after { opacity:1; }
+        .cat-ico { font-size:3rem; line-height:1; filter: drop-shadow(0 3px 6px rgba(0,0,0,.12)); transition: transform .25s; }
+        .cat-card:active .cat-ico { transform: scale(1.2) rotate(-5deg); }
+        .cat-nm  { font-family:'Playfair Display',serif; font-size:.94rem; font-style:italic; color:var(--dark); font-weight:700; }
+        .cat-cnt { font-size:.68rem; color:var(--muted); font-weight:500; }
+        .cat-card.wide { grid-column:span 2; flex-direction:row; min-height:90px; padding:20px 24px; text-align:left; gap:18px; }
+        .cat-card.wide .cat-ico { font-size:2.6rem; flex-shrink:0; }
+        .cat-card.wide .cat-info { display:flex; flex-direction:column; gap:4px; }
 
-        .menu-top-icon {
-            width: 52px; height: 52px;
-            background: linear-gradient(135deg, var(--gold), var(--gold2));
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 4px 12px rgba(200,150,60,0.3);
-            flex-shrink: 0;
+        /* ═══ PAGE HEADER ═══ */
+        .pg-hdr {
+            background:linear-gradient(160deg,#050200,var(--dark2) 50%,#140a02);
+            padding:32px 18px 36px; position:relative; overflow:hidden;
         }
-
-        .menu-top-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--dark); }
-        .menu-top-sub   { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
-
-        /* SEARCH */
-        .search-wrap { position: relative; margin-bottom: 18px; }
-
-        .search-ico {
-            position: absolute; left: 16px; top: 50%;
-            transform: translateY(-50%);
-            font-size: 1rem; color: var(--muted); pointer-events: none;
+        .pg-hdr::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 100% 80% at 50% 0%,rgba(224,168,48,.25),transparent 60%); pointer-events:none; }
+        .pg-hdr::after  { content:''; position:absolute; inset:0; background-image:linear-gradient(rgba(224,168,48,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(224,168,48,.05) 1px,transparent 1px); background-size:24px 24px; pointer-events:none; }
+        .pg-hdr-c { position:relative; z-index:1; }
+        .pg-ico {
+            width:64px; height:64px;
+            background:linear-gradient(135deg,var(--gold),var(--gold2),var(--gold3));
+            border-radius:20px; margin-bottom:14px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:2rem;
+            box-shadow:0 6px 24px var(--glow-gold);
         }
+        .pg-tt  { font-family:'Playfair Display',serif; font-size:2rem; color:var(--white); font-style:italic; margin-bottom:8px; text-shadow: 0 3px 16px rgba(0,0,0,.5); }
+        .pg-sb  { font-size:.8rem; color:rgba(255,255,255,.55); font-weight:300; }
+        .pg-orn { height:8px; margin-top:24px; background:repeating-linear-gradient(90deg,var(--red) 0,var(--red) 4px,var(--gold) 4px,var(--gold) 6px,var(--cr2) 6px,var(--cr2) 10px,var(--gold) 10px,var(--gold) 12px); box-shadow: 0 2px 10px rgba(224,168,48,.25); }
 
-        .search-in {
-            width: 100%;
-            height: var(--touch);
-            padding: 0 16px 0 48px;
-            border: 1.5px solid var(--cream3);
-            border-radius: 12px;
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            background: var(--white);
-            color: var(--dark);
-            transition: border-color 0.2s;
-            box-shadow: 0 2px 8px var(--shadow);
+        /* ═══ STABS ═══ */
+        .stabs { display:flex; gap:8px; padding:16px 16px 0; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+        .stab {
+            flex-shrink:0; height:40px; padding:0 20px;
+            border-radius:20px; border:2px solid rgba(224,168,48,.35);
+            background:rgba(224,168,48,.06); color:var(--muted);
+            font-family:'Inter',sans-serif; font-size:.78rem; font-weight:600;
+            display:flex; align-items:center; cursor:pointer; touch-action:manipulation;
+            white-space:nowrap; -webkit-user-select:none; user-select:none;
+            transition: all .2s;
         }
+        .stab.on {
+            background:linear-gradient(135deg,var(--gold),var(--gold2),var(--gold3));
+            color:var(--dark); border-color:var(--gold2); font-weight:800;
+            box-shadow:0 4px 18px var(--glow-gold);
+        }
+        .stab:active { opacity:.8; transform:scale(.95); }
 
-        .search-in::placeholder { color: var(--muted); font-size: 0.9rem; }
-        .search-in:focus { outline: none; border-color: var(--gold); }
+        /* ═══ SEARCH ═══ */
+        .srch-wrap { padding:16px 14px 0; }
+        .srch { position:relative; }
+        .srch-ic { position:absolute; left:18px; top:50%; transform:translateY(-50%); font-size:.95rem; color:var(--muted); pointer-events:none; }
+        .srch-in {
+            width:100%; height:54px; padding:0 18px 0 50px;
+            border:2px solid var(--cr3); border-radius:18px;
+            font-family:'Inter',sans-serif; font-size:.95rem;
+            background:var(--white); color:var(--dark);
+            box-shadow:0 4px 18px var(--sh);
+            transition: border-color .2s, box-shadow .2s;
+        }
+        .srch-in::placeholder { color:var(--muted); }
+        .srch-in:focus { outline:none; border-color:var(--gold); box-shadow: 0 4px 18px var(--sh), 0 0 16px rgba(224,168,48,.25); }
 
-        /* ===== ITEM CARDS ===== */
-        .items-list { display: flex; flex-direction: column; gap: 14px; }
+        /* ═══ ITEM CARD ═══ */
+        .items-wrap { padding:14px; display:flex; flex-direction:column; gap:14px; }
 
         .item-card {
-            background: var(--white);
-            border-radius: 16px;
-            border: 1.5px solid var(--cream3);
-            box-shadow: 0 2px 12px var(--shadow);
-            overflow: hidden;
-            transition: transform 0.15s;
-            position: relative;
+            background:linear-gradient(150deg, var(--white), var(--cream));
+            border-radius:22px; border:2px solid var(--cr3);
+            box-shadow:0 5px 22px var(--sh);
+            overflow:hidden; position:relative; display:flex;
+            transition: transform .15s, box-shadow .2s;
         }
-
+        .item-card:active { transform: scale(.98); }
         .item-card::before {
-            content: '';
-            position: absolute; top: 0; left: 0; bottom: 0;
-            width: 4px;
-            background: linear-gradient(180deg, var(--gold), var(--gold2), var(--gold));
+            content:''; position:absolute; top:0; left:0; bottom:0; width:6px;
+            background:linear-gradient(180deg,var(--gold),var(--gold2),var(--gold3),var(--gold2),var(--gold));
+        }
+        .ic-top { height:4px; background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold3),var(--gold2),var(--gold)); }
+        .ic-content { display:flex; align-items:center; padding:20px 16px 20px 22px; gap:14px; width:100%; }
+        .ic-em {
+            width:62px; height:62px; flex-shrink:0;
+            background:linear-gradient(135deg,var(--cream),var(--cr2),var(--cr3));
+            border:2px solid var(--cr3); border-radius:18px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:2rem;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,.06), 0 2px 8px var(--sh);
+        }
+        .ic-mid { flex:1; min-width:0; }
+        .ic-name { font-family:'Playfair Display',serif; font-size:1.02rem; color:var(--dark); font-style:italic; line-height:1.3; margin-bottom:5px; font-weight:700; }
+        .ic-note { font-size:.74rem; color:var(--muted); margin-bottom:8px; }
+        .ic-badge {
+            display:inline-block;
+            background:linear-gradient(135deg,var(--red2),var(--red3));
+            color:#fff;
+            font-size:.62rem; font-weight:800; padding:4px 12px; border-radius:12px;
+            text-transform:uppercase; margin-bottom:6px;
+            box-shadow: 0 3px 10px var(--glow-red);
+            animation: badgePulse 2.5s ease-in-out infinite;
         }
 
-        .item-card:active { transform: scale(0.985); }
-
-        .item-strip {
-            height: 3px;
-            background: linear-gradient(90deg, var(--gold), var(--gold2), var(--gold));
+        @keyframes badgePulse {
+            0%,100% { box-shadow: 0 3px 10px var(--glow-red); transform:scale(1); }
+            50% { box-shadow: 0 3px 18px var(--glow-red), 0 0 8px rgba(255,80,64,.3); transform:scale(1.05); }
         }
 
-        .item-body { padding: 16px 16px 18px 20px; }
-
-        .item-row1 {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 14px;
+        .sz-row { display:flex; gap:8px; flex-wrap:wrap; }
+        .sz {
+            height:36px; padding:0 16px; border-radius:18px;
+            border:2px solid var(--cr3); background:var(--cream);
+            color:var(--muted); font-family:'Inter',sans-serif;
+            font-size:.74rem; font-weight:600;
+            display:flex; align-items:center;
+            cursor:pointer; touch-action:manipulation;
+            -webkit-user-select:none; user-select:none;
+            transition: all .18s;
         }
-
-        .item-emoji {
-            width: 52px; height: 52px;
-            background: linear-gradient(135deg, var(--cream), var(--cream2));
-            border: 1.5px solid var(--cream3);
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.7rem;
-            flex-shrink: 0;
+        .sz.on {
+            background:linear-gradient(135deg,var(--dark),var(--dark2));
+            color:var(--gold2); border-color:var(--gold);
+            box-shadow: 0 2px 10px rgba(14,7,2,.35);
         }
-
-        .item-info { flex: 1; }
-        .item-name { font-weight: 700; font-size: 1rem; color: var(--dark); line-height: 1.3; margin-bottom: 4px; }
-        .item-note { font-size: 0.78rem; color: var(--muted); font-style: italic; }
-
-        .item-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--gold), var(--gold2));
-            color: var(--dark); font-size: 0.65rem; font-weight: 700;
-            padding: 3px 10px; border-radius: 12px;
-            text-transform: uppercase; margin-top: 6px;
+        .sz:active { opacity:.8; transform:scale(.94); }
+        .ic-right { display:flex; flex-direction:column; align-items:flex-end; justify-content:space-between; gap:8px; flex-shrink:0; }
+        .ic-price {
+            font-family:'Playfair Display',serif;
+            font-size:1.55rem; color:var(--dark);
+            font-weight:700; line-height:1; font-style:italic;
         }
+        .ic-vol { font-size:.67rem; color:var(--muted); text-align:right; }
 
-        .item-divider {
-            display: flex; align-items: center; gap: 6px;
-            margin: 12px 0;
-        }
-
-        .item-divider::before, .item-divider::after {
-            content: ''; flex: 1; height: 1px;
-            background: linear-gradient(90deg, transparent, var(--cream3), transparent);
-        }
-
-        .idot { width: 4px; height: 4px; border-radius: 50%; background: var(--gold); opacity: 0.5; }
-
-        /* SIZES */
-        .size-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
-
-        .sz-btn {
-            /* Большие кнопки размеров */
-            min-height: 40px;
-            padding: 0 16px;
-            border-radius: 20px;
-            border: 1.5px solid var(--cream3);
-            background: var(--cream);
-            color: var(--muted);
-            font-family: 'Inter', sans-serif;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.15s;
-            display: flex; align-items: center;
-        }
-
-        .sz-btn.on {
-            background: var(--dark);
-            color: var(--gold2);
-            border-color: var(--dark);
-        }
-
-        .item-row2 {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .price-wrap { display: flex; flex-direction: column; }
-        .price-vol  { font-size: 0.72rem; color: var(--muted); margin-bottom: 2px; }
-        .price-val  { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--dark); font-weight: 700; line-height: 1; }
-        .price-val span { font-size: 0.8rem; font-family: 'Inter', sans-serif; font-weight: 400; color: var(--muted); }
-
-        /* ADD BUTTON — большая круглая кнопка */
         .add-btn {
-            width: 52px; height: 52px;
-            border-radius: 50%;
-            border: none;
-            background: linear-gradient(135deg, var(--dark), var(--dark2));
-            color: var(--gold2);
-            font-size: 1.6rem;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 14px rgba(18,10,3,0.3);
-            transition: all 0.2s;
-            flex-shrink: 0;
-            line-height: 1;
+            width:52px; height:52px; border-radius:50%; border:none;
+            background:linear-gradient(135deg,var(--dark),var(--dark2),var(--dark3));
+            color:var(--gold2); font-size:1.7rem;
+            display:flex; align-items:center; justify-content:center;
+            cursor:pointer; touch-action:manipulation;
+            box-shadow:0 5px 18px rgba(14,7,2,.45), 0 0 14px rgba(224,168,48,.15);
+            -webkit-user-select:none; user-select:none;
+            transition:all .18s;
+        }
+        .add-btn:active { transform:scale(.8); }
+        .add-btn.done {
+            background:linear-gradient(135deg,var(--green),var(--green2));
+            color:#fff;
+            box-shadow:0 5px 18px rgba(32,184,72,.45);
+            transform:scale(1.1);
         }
 
-        .add-btn:active { transform: scale(0.88); }
-        .add-btn.done   { background: linear-gradient(135deg, var(--green), #1e8449); color: #fff; }
-
-        /* SUB SECTION HEADER */
-        .sub-head {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.05rem;
-            color: var(--brown);
-            padding: 12px 16px;
-            background: var(--white);
-            border-radius: 10px;
-            border-left: 4px solid var(--gold);
-            border: 1.5px solid var(--cream3);
-            border-left: 4px solid var(--gold);
-            box-shadow: 0 2px 8px var(--shadow);
-            margin: 22px 0 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .sub-title { display:flex; align-items:center; gap:10px; margin:22px 14px 12px; }
+        .sub-title::before,.sub-title::after { content:''; flex:1; height:2px; background:linear-gradient(90deg,transparent,var(--cr3),transparent); }
+        .sub-title span {
+            font-family:'Playfair Display',serif; font-size:.96rem;
+            color:var(--brown); font-style:italic; white-space:nowrap;
+            padding:8px 16px; background:var(--white); border-radius:24px;
+            border:2px solid var(--cr3); box-shadow:0 3px 12px var(--sh);
         }
 
-        /* ===== CART SHEET ===== */
-        .overlay {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.65);
-            z-index: 2000; display: none;
-            align-items: flex-end;
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
+        /* ═══ ABOUT ═══ */
+        .ab-wrap { padding:0 0 100px; }
+        .ab-hero {
+            background:linear-gradient(160deg,#050200,var(--dark2) 50%,#140a02);
+            padding:36px 18px 44px; text-align:center;
+            position:relative; overflow:hidden;
+        }
+        .ab-hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 100% 70% at 50% 0%,rgba(224,168,48,.25),transparent 60%); pointer-events:none; }
+        .ab-hero::after  { content:''; position:absolute; inset:0; background-image:linear-gradient(rgba(224,168,48,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(224,168,48,.05) 1px,transparent 1px); background-size:24px 24px; pointer-events:none; }
+        .ab-hero-c { position:relative; z-index:1; }
+
+        .ab-logo-wrap { display:flex; justify-content:center; margin-bottom:20px; }
+        .ab-logo-img {
+            width: 230px;
+            height: auto;
+            filter: drop-shadow(0 6px 28px rgba(224,168,48,.55))
+                    drop-shadow(0 0 40px rgba(224,168,48,.2));
         }
 
-        .overlay.open { display: flex; }
+        .ab-hero p { color:rgba(255,255,255,.6); font-size:.92rem; line-height:1.85; font-weight:300; }
+        .ab-orn { height:10px; background:repeating-linear-gradient(90deg,var(--red) 0,var(--red) 4px,var(--gold) 4px,var(--gold) 6px,var(--cr2) 6px,var(--cr2) 10px,var(--gold) 10px,var(--gold) 12px,var(--red) 12px,var(--red) 16px,var(--gold2) 16px,var(--gold2) 18px,var(--cream) 18px,var(--cream) 22px,var(--gold2) 22px,var(--gold2) 24px); box-shadow: 0 3px 12px rgba(224,168,48,.3); }
+        .ab-body { padding:24px 14px; }
 
-        .cart-sheet {
-            background: var(--cream);
-            width: 100%;
-            max-height: 92vh;
-            border-radius: 24px 24px 0 0;
-            display: flex; flex-direction: column;
-            animation: slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);
-            box-shadow: 0 -20px 60px rgba(0,0,0,0.35);
-            border-top: 2px solid var(--gold);
+        .card {
+            background:linear-gradient(150deg, var(--white), var(--cream));
+            border:2px solid var(--cr3); border-radius:22px;
+            padding:22px; margin-bottom:16px;
+            box-shadow:0 5px 22px var(--sh);
+            position:relative; overflow:hidden;
+        }
+        .card::before { content:''; position:absolute; top:0; left:0; right:0; height:5px; background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold3),var(--gold2),var(--gold)); }
+        .card-title { font-family:'Playfair Display',serif; font-size:1.08rem; color:var(--dark); margin-bottom:16px; display:flex; align-items:center; gap:8px; font-style:italic; }
+
+        .hr-row {
+            display:flex; align-items:center; justify-content:space-between;
+            padding:16px 18px;
+            background:linear-gradient(135deg,var(--cream),var(--cr2));
+            border-radius:16px; border:2px solid var(--cr3);
+        }
+        .hr-l { display:flex; align-items:center; gap:12px; }
+        .hr-ico {
+            width:48px; height:48px;
+            background:linear-gradient(135deg,var(--gold),var(--gold2),var(--gold3));
+            border-radius:14px; display:flex; align-items:center; justify-content:center;
+            font-size:1.2rem;
+            box-shadow: 0 4px 14px var(--glow-gold);
+        }
+        .hr-day { font-weight:700; font-size:.92rem; color:var(--dark); }
+        .hr-note { font-size:.68rem; color:var(--muted); margin-top:2px; }
+        .hr-time { font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--dark); font-weight:700; font-style:italic; }
+        .ob { display:inline-flex; align-items:center; gap:7px; padding:8px 18px; border-radius:12px; font-size:.74rem; font-weight:700; margin-top:14px; }
+        .ob-dot { width:9px; height:9px; border-radius:50%; }
+        @keyframes pulse2 { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.6)} }
+
+        .ab-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+        .ab-c {
+            background:linear-gradient(150deg, var(--white), var(--cream));
+            border:2px solid var(--cr3); border-radius:20px;
+            padding:22px 14px; text-align:center;
+            box-shadow:0 4px 18px var(--sh);
+            position:relative; overflow:hidden;
+            transition: transform .15s;
+        }
+        .ab-c:active { transform: scale(.95); }
+        .ab-c::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,transparent,var(--gold),var(--gold2),var(--gold3),var(--gold2),var(--gold),transparent); }
+        .ab-c .ai {
+            width:58px; height:58px;
+            background:linear-gradient(135deg,var(--cream),var(--cr2));
+            border:2px solid var(--cr3); border-radius:18px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:1.8rem; margin:0 auto 12px;
+        }
+        .ab-c h4 { font-family:'Playfair Display',serif; font-size:.94rem; color:var(--dark); margin-bottom:6px; font-style:italic; }
+        .ab-c p  { font-size:.74rem; color:var(--muted); line-height:1.55; }
+
+        .ct-card {
+            background:linear-gradient(160deg,#050200,var(--dark2) 50%,#140a02);
+            border-radius:22px; padding:28px 22px; text-align:center;
+            position:relative; overflow:hidden;
+            border:2px solid rgba(224,168,48,.4); margin-bottom:16px;
+            box-shadow: 0 5px 24px rgba(0,0,0,.35), 0 0 24px rgba(224,168,48,.1);
+        }
+        .ct-card::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 25% 15%,rgba(224,168,48,.18),transparent 50%),radial-gradient(circle at 80% 85%,rgba(160,26,8,.12),transparent 45%); pointer-events:none; }
+        .ct-orn { height:6px; background:repeating-linear-gradient(90deg,var(--red) 0,var(--red) 4px,var(--gold) 4px,var(--gold) 6px,var(--cr2) 6px,var(--cr2) 10px,var(--gold) 10px,var(--gold) 12px); margin-bottom:24px; border-radius:4px; }
+        .ct-title { font-family:'Playfair Display',serif; color:var(--gold2); font-size:1.5rem; margin-bottom:6px; position:relative; z-index:1; font-style:italic; text-shadow: 0 0 18px rgba(224,168,48,.35); }
+        .ct-sub   { color:rgba(255,255,255,.35); font-size:.62rem; letter-spacing:3px; text-transform:uppercase; margin-bottom:24px; display:block; position:relative; z-index:1; }
+        .ct-list  { display:flex; flex-direction:column; gap:14px; margin-bottom:24px; position:relative; z-index:1; }
+        .ct-item  { display:flex; align-items:center; justify-content:center; gap:14px; color:rgba(255,255,255,.85); font-size:.94rem; font-weight:500; }
+        .ct-ico   {
+            width:44px; height:44px;
+            background:rgba(255,255,255,.08); border:2px solid rgba(224,168,48,.3);
+            border-radius:14px; display:flex; align-items:center; justify-content:center;
+            font-size:1.05rem; flex-shrink:0;
+        }
+        .ct-btns  { display:flex; flex-direction:column; gap:14px; position:relative; z-index:1; }
+
+        .wa-btn {
+            width:100%; height:58px;
+            background:linear-gradient(135deg,#25d366,#20c55c,#15a04a);
+            color:#fff; border:none; border-radius:18px;
+            font-family:'Inter',sans-serif; font-weight:800; font-size:.96rem;
+            display:flex; align-items:center; justify-content:center; gap:10px;
+            cursor:pointer; touch-action:manipulation;
+            box-shadow:0 6px 26px rgba(37,211,102,.45);
+            transition: transform .15s;
+        }
+        .wa-btn:active { opacity:.9; transform:scale(.96); }
+
+        .map-btn {
+            width:100%; height:58px;
+            background:linear-gradient(135deg,#4285f4,#3070e0,#1a65d8);
+            color:#fff; border:none; border-radius:18px;
+            font-family:'Inter',sans-serif; font-weight:800; font-size:.96rem;
+            display:flex; align-items:center; justify-content:center; gap:10px;
+            cursor:pointer; touch-action:manipulation;
+            box-shadow:0 6px 26px rgba(66,133,244,.45);
+            transition: transform .15s;
+        }
+        .map-btn:active { opacity:.9; transform:scale(.96); }
+
+        /* ═══ CART ═══ */
+        .ov { position:fixed; inset:0; background:rgba(0,0,0,.8); z-index:2000; display:none; align-items:flex-end; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+        .ov.on { display:flex; }
+        .cs {
+            background:var(--cream); width:100%; max-height:94vh;
+            border-radius:28px 28px 0 0; display:flex; flex-direction:column;
+            animation:su .35s cubic-bezier(.34,1.56,.64,1);
+            box-shadow:0 -24px 60px rgba(0,0,0,.6), 0 -4px 24px var(--glow-gold);
+            border-top:3px solid var(--gold);
+        }
+        @keyframes su { from{transform:translateY(100%)} to{transform:translateY(0)} }
+        .cs-orn { height:7px; background:repeating-linear-gradient(90deg,var(--red) 0,var(--red) 4px,var(--gold) 4px,var(--gold) 6px,var(--cr2) 6px,var(--cr2) 10px,var(--gold) 10px,var(--gold) 12px); border-radius:28px 28px 0 0; }
+        .cs-handle { width:50px; height:5px; background:var(--cr3); border-radius:10px; margin:14px auto 0; }
+        .cs-hd { padding:16px 20px; display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid var(--cr3); }
+        .cs-tt { font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--dark); font-style:italic; }
+        .cs-x  { width:50px; height:50px; border-radius:50%; background:var(--cr2); border:2px solid var(--cr3); color:var(--muted); font-size:1.1rem; display:flex; align-items:center; justify-content:center; cursor:pointer; touch-action:manipulation; }
+        .cs-x:active { background:var(--cr3); transform:scale(.9); }
+        .ot-sec { padding:18px 20px 0; border-top:2px solid var(--cr3); }
+        .ot-lbl { font-size:.82rem; font-weight:700; color:var(--dark); margin-bottom:12px; display:block; }
+        .ot-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:16px; }
+        .ot-btn {
+            height:60px; border-radius:18px; border:2.5px solid var(--cr3);
+            background:linear-gradient(150deg,var(--white),var(--cream));
+            display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+            cursor:pointer; touch-action:manipulation;
+            -webkit-user-select:none; user-select:none;
+            transition: all .18s;
+        }
+        .ot-btn .oi { font-size:1.5rem; line-height:1; }
+        .ot-btn .ot { font-size:.68rem; font-weight:600; color:var(--muted); }
+        .ot-btn.on {
+            background:linear-gradient(135deg,var(--dark),var(--dark2));
+            border-color:var(--gold); box-shadow: 0 0 16px rgba(224,168,48,.2);
+        }
+        .ot-btn.on .ot { color:var(--gold2); }
+        .ot-btn:active { transform:scale(.92); }
+        .cs-body { flex:1; overflow-y:auto; padding:4px 20px; -webkit-overflow-scrolling:touch; }
+        .c-empty { text-align:center; padding:56px 20px; color:var(--muted); }
+        .c-empty .ei { font-size:4rem; display:block; margin-bottom:16px; }
+        .c-empty strong { display:block; color:var(--dark); font-family:'Playfair Display',serif; font-size:1.1rem; margin-bottom:6px; font-style:italic; }
+        .c-row { display:flex; align-items:center; gap:12px; padding:15px 0; border-bottom:2px solid var(--cr2); }
+        .c-row:last-child { border-bottom:none; }
+        .c-em  { width:56px; height:56px; border-radius:16px; background:linear-gradient(135deg,var(--cream),var(--cr2)); border:2px solid var(--cr3); display:flex; align-items:center; justify-content:center; font-size:1.8rem; flex-shrink:0; }
+        .c-info { flex:1; min-width:0; }
+        .c-nm  { font-family:'Playfair Display',serif; font-weight:700; font-size:.94rem; color:var(--dark); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-style:italic; }
+        .c-mt  { font-size:.73rem; color:var(--muted); margin-top:4px; }
+        .c-ctrl { display:flex; align-items:center; gap:3px; background:var(--cr2); border:2px solid var(--cr3); border-radius:50px; padding:3px; }
+        .c-q   { width:40px; height:40px; border-radius:50%; border:none; background:var(--white); color:var(--dark); font-size:1.2rem; font-weight:700; display:flex; align-items:center; justify-content:center; cursor:pointer; touch-action:manipulation; }
+        .c-q:active { background:var(--dark); color:var(--gold2); }
+        .c-n   { font-weight:700; font-size:.96rem; min-width:24px; text-align:center; }
+        .c-pr  { font-family:'Playfair Display',serif; font-weight:700; font-size:1rem; min-width:60px; text-align:right; font-style:italic; }
+        .c-del { width:40px; height:40px; border-radius:50%; border:none; background:none; color:#bbb; font-size:1.05rem; display:flex; align-items:center; justify-content:center; cursor:pointer; touch-action:manipulation; }
+        .c-del:active { color:var(--red2); transform:scale(.85); }
+        .cs-ft { padding:18px 20px 34px; border-top:2px solid var(--cr3); background:linear-gradient(180deg,var(--cr2),var(--cream)); }
+        .c-comment { width:100%; padding:14px 18px; border:2px solid var(--cr3); border-radius:16px; font-family:'Inter',sans-serif; font-size:.94rem; resize:none; margin-bottom:14px; background:var(--white); color:var(--dark); }
+        .c-comment:focus { outline:none; border-color:var(--gold); box-shadow: 0 0 14px rgba(224,168,48,.2); }
+        .c-comment::placeholder { color:var(--muted); }
+        .c-total {
+            display:flex; justify-content:space-between; align-items:center;
+            padding:16px 20px;
+            background:linear-gradient(135deg,var(--white),var(--cream));
+            border-radius:16px; border:2px solid var(--cr3); margin-bottom:14px;
+        }
+        .c-tot-l { font-size:.92rem; color:var(--muted); font-weight:500; }
+        .c-tot-p {
+            font-family:'Playfair Display',serif; font-size:1.9rem; font-weight:700; font-style:italic;
+            background: linear-gradient(135deg, var(--dark), var(--brown));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to   { transform: translateY(0); }
-        }
-
-        .cart-handle {
-            width: 44px; height: 5px;
-            background: var(--cream3); border-radius: 10px;
-            margin: 14px auto 0;
-        }
-
-        .cart-head {
-            padding: 14px 20px 16px;
-            display: flex; align-items: center; justify-content: space-between;
-            border-bottom: 1.5px solid var(--cream3);
-        }
-
-        .cart-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--dark); }
-
-        .cart-close {
-            width: var(--touch); height: var(--touch);
-            border-radius: 50%;
-            background: var(--cream2); border: 1.5px solid var(--cream3);
-            color: var(--muted); font-size: 1.1rem;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: background 0.15s;
-        }
-
-        .cart-close:active { background: var(--cream3); }
-
-        .cart-body { flex: 1; overflow-y: auto; padding: 6px 20px; -webkit-overflow-scrolling: touch; }
-
-        .cart-empty { text-align: center; padding: 50px 20px; color: var(--muted); }
-        .cart-empty .ei { font-size: 3.5rem; display: block; margin-bottom: 12px; }
-        .cart-empty strong { display: block; color: var(--dark); font-size: 1rem; margin-bottom: 5px; }
-        .cart-empty span   { font-size: 0.85rem; }
-
-        .cart-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 0;
-            border-bottom: 1.5px solid var(--cream2);
-        }
-
-        .cart-item:last-child { border-bottom: none; }
-
-        .ci-emoji {
-            width: 54px; height: 54px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, var(--cream), var(--cream2));
-            border: 1.5px solid var(--cream3);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.8rem; flex-shrink: 0;
-        }
-
-        .ci-info { flex: 1; min-width: 0; }
-        .ci-name { font-weight: 600; font-size: 0.9rem; color: var(--dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .ci-meta { font-size: 0.75rem; color: var(--muted); margin-top: 3px; }
-
-        .ci-ctrl {
-            display: flex; align-items: center;
-            gap: 4px;
-            background: var(--cream2);
-            border: 1.5px solid var(--cream3);
-            border-radius: 50px; padding: 4px;
-        }
-
-        /* Большие кнопки +/- */
-        .ci-q {
-            width: 36px; height: 36px;
-            border-radius: 50%; border: none;
-            background: var(--white); color: var(--dark);
-            font-size: 1.1rem; font-weight: 700;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 1px 4px var(--shadow);
-            transition: all 0.15s;
-        }
-
-        .ci-q:active { background: var(--dark); color: var(--gold2); }
-        .ci-n { font-weight: 700; font-size: 0.95rem; min-width: 22px; text-align: center; }
-        .ci-price { font-weight: 700; font-size: 0.95rem; min-width: 60px; text-align: right; }
-
-        .ci-del {
-            width: 36px; height: 36px;
-            border-radius: 50%; border: none;
-            background: none; color: #ccc; font-size: 1rem;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.15s;
-        }
-
-        .ci-del:active { background: rgba(192,57,43,0.1); color: var(--red); }
-
-        /* CART FOOTER */
-        .cart-foot {
-            padding: 16px 20px 30px;
-            border-top: 1.5px solid var(--cream3);
-            background: var(--cream2);
-        }
-
-        .cart-comment {
-            width: 100%;
-            padding: 14px 16px;
-            border: 1.5px solid var(--cream3);
-            border-radius: 12px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.95rem;
-            resize: none;
-            margin-bottom: 14px;
-            background: var(--white);
-            color: var(--dark);
-            transition: border-color 0.2s;
-        }
-
-        .cart-comment::placeholder { color: var(--muted); }
-        .cart-comment:focus { outline: none; border-color: var(--gold); }
-
-        .cart-total {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 14px 18px;
-            background: var(--white); border-radius: 12px;
-            border: 1.5px solid var(--cream3); margin-bottom: 14px;
-        }
-
-        .ct-label { font-size: 0.9rem; color: var(--muted); font-weight: 500; }
-        .ct-price { font-family: 'Playfair Display', serif; font-size: 1.7rem; color: var(--dark); font-weight: 700; }
-
-        /* WHATSAPP BUTTON — большая */
         .wa-order {
-            width: 100%;
-            min-height: 58px;
-            background: linear-gradient(135deg, #25d366, #128c7e);
-            color: #fff; border: none;
-            border-radius: 14px;
-            font-family: 'Inter', sans-serif;
-            font-weight: 700; font-size: 1rem;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            box-shadow: 0 6px 20px rgba(37,211,102,0.35);
-            transition: transform 0.15s;
-            letter-spacing: 0.3px;
+            width:100%; height:60px;
+            background:linear-gradient(135deg,#25d366,#20c55c,#15a04a);
+            color:#fff; border:none; border-radius:18px;
+            font-family:'Inter',sans-serif; font-weight:800; font-size:1rem;
+            display:flex; align-items:center; justify-content:center; gap:10px;
+            cursor:pointer; touch-action:manipulation;
+            box-shadow:0 6px 26px rgba(37,211,102,.45);
         }
+        .wa-order:active { opacity:.9; transform:scale(.96); }
 
-        .wa-order:active { transform: scale(0.97); }
-
-        .cart-clear {
-            width: 100%; min-height: 48px;
-            background: none; border: 1.5px solid var(--cream3);
-            color: var(--muted);
-            border-radius: 12px;
-            font-family: 'Inter', sans-serif; font-size: 0.85rem;
-            cursor: pointer; margin-top: 10px;
-            transition: all 0.15s;
+        .c-clear {
+            width:100%; height:50px; background:none;
+            border:2px solid var(--cr3); color:var(--muted);
+            border-radius:16px; font-family:'Inter',sans-serif;
+            font-size:.86rem; cursor:pointer; touch-action:manipulation; margin-top:10px;
         }
+        .c-clear:active { border-color:var(--red2); color:var(--red2); }
 
-        .cart-clear:active { border-color: var(--red); color: var(--red); }
-
-        /* ===== ABOUT PAGE ===== */
-        .about-wrap { padding: 22px 14px 100px; }
-
-        .about-top {
-            background: linear-gradient(180deg, #0a0502 0%, var(--dark2) 100%);
-            border-radius: 18px; padding: 30px 20px;
-            text-align: center; margin-bottom: 16px;
-            position: relative; overflow: hidden;
-            border: 1px solid rgba(200,150,60,0.3);
-        }
-
-        .about-top::before {
-            content: ''; position: absolute; inset: 0;
-            background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(200,150,60,0.15) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        .about-logo-wrap {
-            display: flex; justify-content: center;
-            margin-bottom: 16px; position: relative; z-index: 1;
-        }
-
-        .about-logo-wrap img {
-            width: 160px; height: auto; object-fit: contain;
-        }
-
-        .about-logo-stub {
-            display: flex; flex-direction: column;
-            align-items: center; gap: 4px;
-        }
-
-        .als-icon { font-size: 2.8rem; }
-        .als-name { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--gold2); letter-spacing: 5px; }
-        .als-sub  { font-size: 0.6rem; color: var(--gold); letter-spacing: 6px; text-transform: uppercase; }
-
-        .about-top p {
-            color: rgba(255,255,255,0.5); font-size: 0.9rem;
-            line-height: 1.7; font-weight: 300; position: relative; z-index: 1;
-        }
-
-        /* HOURS */
-        .hours-card {
-            background: var(--white); border: 1.5px solid var(--cream3);
-            border-radius: 16px; padding: 20px;
-            margin-bottom: 14px; box-shadow: 0 2px 12px var(--shadow);
-            position: relative; overflow: hidden;
-        }
-
-        .hours-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-            background: linear-gradient(90deg, var(--gold), var(--gold2), var(--gold));
-        }
-
-        .hours-title {
-            font-weight: 700; font-size: 0.95rem; color: var(--dark);
-            margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
-        }
-
-        .hours-row {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 14px 16px;
-            background: var(--cream); border-radius: 10px; border: 1px solid var(--cream3);
-        }
-
-        .hours-left { display: flex; align-items: center; gap: 12px; }
-
-        .hours-ico {
-            width: 42px; height: 42px;
-            background: linear-gradient(135deg, var(--gold), var(--gold2));
-            border-radius: 10px;
-            display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
-        }
-
-        .hours-day  { font-weight: 700; font-size: 0.9rem; color: var(--dark); }
-        .hours-note { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
-        .hours-time { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: var(--dark); font-weight: 700; }
-
-        .open-badge {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 6px 14px; border-radius: 8px;
-            font-size: 0.72rem; font-weight: 700;
-            letter-spacing: 0.5px; margin-top: 14px;
-        }
-
-        .open-dot { width: 7px; height: 7px; border-radius: 50%; }
-        .open-dot.pulse { animation: pulse 2s infinite; }
-
-        @keyframes pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(0.7); } }
-
-        /* ABOUT CARDS */
-        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
-
-        .about-card {
-            background: var(--white); border: 1.5px solid var(--cream3);
-            border-radius: 14px; padding: 20px 14px;
-            text-align: center; box-shadow: 0 2px 8px var(--shadow);
-        }
-
-        .about-card .ai {
-            width: 52px; height: 52px;
-            background: linear-gradient(135deg, var(--cream), var(--cream2));
-            border: 1.5px solid var(--cream3); border-radius: 14px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.6rem; margin: 0 auto 12px;
-        }
-
-        .about-card h4 { font-weight: 700; font-size: 0.9rem; color: var(--dark); margin-bottom: 6px; }
-        .about-card p  { font-size: 0.75rem; color: var(--muted); line-height: 1.5; }
-
-        /* CONTACT */
-        .contact-card {
-            background: linear-gradient(180deg, #0a0502 0%, var(--dark2) 100%);
-            border-radius: 18px; padding: 28px 20px;
-            text-align: center; position: relative; overflow: hidden;
-            border: 1px solid rgba(200,150,60,0.3);
-        }
-
-        .contact-card::before {
-            content: ''; position: absolute; inset: 0;
-            background: radial-gradient(circle at 30% 30%, rgba(200,150,60,0.1) 0%, transparent 60%);
-            pointer-events: none;
-        }
-
-        .contact-title { font-family: 'Playfair Display', serif; color: var(--gold2); font-size: 1.3rem; margin-bottom: 4px; position: relative; z-index: 1; }
-        .contact-sub   { color: rgba(255,255,255,0.25); font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 22px; display: block; position: relative; z-index: 1; }
-
-        .contact-list  { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; position: relative; z-index: 1; }
-
-        .contact-item {
-            display: flex; align-items: center; justify-content: center;
-            gap: 12px; color: rgba(255,255,255,0.75); font-size: 0.95rem;
-        }
-
-        .contact-ico {
-            width: 38px; height: 38px;
-            background: rgba(255,255,255,0.07);
-            border: 1px solid rgba(200,150,60,0.2);
-            border-radius: 10px;
-            display: flex; align-items: center; justify-content: center; font-size: 1rem;
-        }
-
-        /* WA CONTACT BUTTON — большая */
-        .wa-contact {
-            background: linear-gradient(135deg, #25d366, #128c7e);
-            color: #fff; border: none;
-            min-height: 56px;
-            padding: 0 32px;
-            border-radius: 14px;
-            font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.95rem;
-            cursor: pointer;
-            box-shadow: 0 6px 18px rgba(37,211,102,0.35);
-            display: inline-flex; align-items: center; gap: 10px;
-            position: relative; z-index: 1;
-            transition: transform 0.15s;
-        }
-
-        .wa-contact:active { transform: scale(0.96); }
-
-        /* ===== TOAST ===== */
         .toast {
-            position: fixed; bottom: 28px; left: 50%;
-            transform: translateX(-50%) translateY(12px);
-            background: var(--dark); color: var(--gold2);
-            padding: 12px 22px; border-radius: 12px;
-            font-size: 0.88rem; font-weight: 600;
-            opacity: 0; transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
-            z-index: 3000; white-space: nowrap; pointer-events: none;
-            border: 1px solid rgba(200,150,60,0.35);
-            box-shadow: 0 6px 24px rgba(0,0,0,0.3);
-            max-width: 90vw;
+            position:fixed; bottom:104px; left:50%;
+            transform:translateX(-50%) translateY(16px);
+            background:linear-gradient(135deg,var(--dark),var(--dark2),var(--dark3));
+            color:var(--gold2); padding:14px 26px; border-radius:18px;
+            font-size:.9rem; font-weight:700; opacity:0;
+            transition:all .35s cubic-bezier(.34,1.56,.64,1);
+            z-index:4000; white-space:nowrap; pointer-events:none;
+            border:2px solid rgba(224,168,48,.5);
+            box-shadow:0 8px 36px rgba(0,0,0,.5), 0 0 20px rgba(224,168,48,.25);
+            max-width:90vw; font-style:italic;
         }
-
-        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-        /* ===== MEDIA — Extra small ===== */
-        @media (max-width: 360px) {
-            .cats-grid { gap: 10px; }
-            .cat-icon  { font-size: 2rem; }
-            .cat-name  { font-size: 0.72rem; }
-            .hls-name  { font-size: 2rem; }
-        }
+        .toast.on { opacity:1; transform:translateX(-50%) translateY(0); }
     </style>
 </head>
 <body>
 
-<!-- ╔═══════════════════════════════════════════════╗
-     ║  📌 КАК ДОБАВИТЬ ЛОГОТИП:                    ║
-     ║  1. Сохраните logo.png рядом с этим файлом   ║
-     ║  2. Найдите src="LOGO" (3 штуки)             ║
-     ║  3. Замените на src="logo.png"               ║
-     ╚═══════════════════════════════════════════════╝ -->
+<!-- ═══ ЭТНО РАМКА ═══ -->
+<div class="ef ef-l"><svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><defs><pattern id="fl" x="0" y="0" width="10" height="40" patternUnits="userSpaceOnUse"><rect width="10" height="40" fill="#e0a830"/><rect y="0" width="10" height="8" fill="#a01a08"/><rect y="16" width="10" height="8" fill="#a01a08"/><rect y="32" width="10" height="8" fill="#a01a08"/><rect y="9" width="10" height="6" fill="#f8e8c8"/><rect y="25" width="10" height="6" fill="#f8e8c8"/><rect y="8" width="10" height="1" fill="#f5c840"/><rect y="15" width="10" height="1" fill="#f5c840"/><rect y="24" width="10" height="1" fill="#f5c840"/><rect y="31" width="10" height="1" fill="#f5c840"/><line x1="0" y1="0" x2="10" y2="8" stroke="#ffe868" stroke-width=".8" opacity=".7"/><line x1="10" y1="0" x2="0" y2="8" stroke="#ffe868" stroke-width=".8" opacity=".7"/><line x1="0" y1="16" x2="10" y2="24" stroke="#ffe868" stroke-width=".8" opacity=".7"/><line x1="10" y1="16" x2="0" y2="24" stroke="#ffe868" stroke-width=".8" opacity=".7"/><line x1="0" y1="32" x2="10" y2="40" stroke="#ffe868" stroke-width=".8" opacity=".7"/><line x1="10" y1="32" x2="0" y2="40" stroke="#ffe868" stroke-width=".8" opacity=".7"/></pattern></defs><rect width="10" height="100%" fill="url(#fl)"/></svg></div>
+<div class="ef ef-r"><svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><defs><pattern id="fr" x="0" y="0" width="10" height="40" patternUnits="userSpaceOnUse"><rect width="10" height="40" fill="#e0a830"/><rect y="0" width="10" height="8" fill="#a01a08"/><rect y="16" width="10" height="8" fill="#a01a08"/><rect y="32" width="10" height="8" fill="#a01a08"/><rect y="9" width="10" height="6" fill="#f8e8c8"/><rect y="25" width="10" height="6" fill="#f8e8c8"/><rect y="8" width="10" height="1" fill="#f5c840"/><rect y="15" width="10" height="1" fill="#f5c840"/><rect y="24" width="10" height="1" fill="#f5c840"/><rect y="31" width="10" height="1" fill="#f5c840"/><line x1="0" y1="0" x2="10" y2="8" stroke="#ffe868" stroke-width=".8" opacity=".7"/><line x1="10" y1="0" x2="0" y2="8" stroke="#ffe868" stroke-width=".8" opacity=".7"/><line x1="0" y1="16" x2="10" y2="24" stroke="#ffe868" stroke-width=".8" opacity=".7"/><line x1="10" y1="16" x2="0" y2="24" stroke="#ffe868" stroke-width=".8" opacity=".7"/><line x1="0" y1="32" x2="10" y2="40" stroke="#ffe868" stroke-width=".8" opacity=".7"/><line x1="10" y1="32" x2="0" y2="40" stroke="#ffe868" stroke-width=".8" opacity=".7"/></pattern></defs><rect width="10" height="100%" fill="url(#fr)"/></svg></div>
+<div class="ef ef-t"><svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><defs><pattern id="ft" x="0" y="0" width="40" height="10" patternUnits="userSpaceOnUse"><rect width="40" height="10" fill="#e0a830"/><rect x="0" width="8" height="10" fill="#a01a08"/><rect x="16" width="8" height="10" fill="#a01a08"/><rect x="32" width="8" height="10" fill="#a01a08"/><rect x="9" width="6" height="10" fill="#f8e8c8"/><rect x="25" width="6" height="10" fill="#f8e8c8"/><rect x="8" width="1" height="10" fill="#f5c840"/><rect x="15" width="1" height="10" fill="#f5c840"/><rect x="24" width="1" height="10" fill="#f5c840"/><rect x="31" width="1" height="10" fill="#f5c840"/><line x1="0" y1="0" x2="8" y2="10" stroke="#ffe868" stroke-width=".8" opacity=".7"/><line x1="0" y1="10" x2="8" y2="0" stroke="#ffe868" stroke-width=".8" opacity=".7"/><line x1="16" y1="0" x2="24" y2="10" stroke="#ffe868" stroke-width=".8" opacity=".7"/><line x1="16" y1="10" x2="24" y2="0" stroke="#ffe868" stroke-width=".8" opacity=".7"/><line x1="32" y1="0" x2="40" y2="10" stroke="#ffe868" stroke-width=".8" opacity=".7"/><line x1="32" y1="10" x2="40" y2="0" stroke="#ffe868" stroke-width=".8" opacity=".7"/></pattern></defs><rect width="100%" height="10" fill="url(#ft)"/></svg></div>
+<div class="ef ef-b"><svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><defs><pattern id="fb" x="0" y="0" width="40" height="10" patternUnits="userSpaceOnUse"><rect width="40" height="10" fill="#e0a830"/><rect x="0" width="8" height="10" fill="#a01a08"/><rect x="16" width="8" height="10" fill="#a01a08"/><rect x="32" width="8" height="10" fill="#a01a08"/><rect x="9" width="6" height="10" fill="#f8e8c8"/><rect x="25" width="6" height="10" fill="#f8e8c8"/><rect x="8" width="1" height="10" fill="#f5c840"/><rect x="15" width="1" height="10" fill="#f5c840"/><rect x="24" width="1" height="10" fill="#f5c840"/><rect x="31" width="1" height="10" fill="#f5c840"/><line x1="0" y1="0" x2="8" y2="10" stroke="#ffe868" stroke-width=".8" opacity=".7"/><line x1="0" y1="10" x2="8" y2="0" stroke="#ffe868" stroke-width=".8" opacity=".7"/><line x1="16" y1="0" x2="24" y2="10" stroke="#ffe868" stroke-width=".8" opacity=".7"/><line x1="16" y1="10" x2="24" y2="0" stroke="#ffe868" stroke-width=".8" opacity=".7"/><line x1="32" y1="0" x2="40" y2="10" stroke="#ffe868" stroke-width=".8" opacity=".7"/><line x1="32" y1="10" x2="40" y2="0" stroke="#ffe868" stroke-width=".8" opacity=".7"/></pattern></defs><rect width="100%" height="10" fill="url(#fb)"/></svg></div>
+<div class="ef-corner efc-tl"></div>
+<div class="ef-corner efc-tr"></div>
+<div class="ef-corner efc-bl"></div>
+<div class="ef-corner efc-br"></div>
+
+<div class="app">
 
 <!-- HEADER -->
-<header class="header">
-    <div class="logo" onclick="goPage('home')">
-        <img class="logo-img" src="LOGO" alt="Сабля Coffee"
-             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-        <div class="logo-text" style="display:none">
-            <span class="ln">САБЛЯ</span>
-            <span class="ls">— coffee —</span>
-        </div>
+<header class="hdr">
+    <div class="hdr-logo" id="btnHome">
+        <img class="logo-img" src="https://i.postimg.cc/QxhW9w4L/photo-2026-06-21-03-39-45-removebg-preview.png" alt="Сабля Coffee">
     </div>
-    <button class="cart-btn" onclick="openCart()">
-        🛒
-        <span class="cart-num" id="cartNum">0</span>
+    <button class="cart-btn" id="btnCart">
+        🛒 <span class="cart-n" id="cNum">0</span>
     </button>
 </header>
 
-<!-- TABS -->
-<div class="tabs-wrap" id="tabsWrap">
-    <button class="tab-btn active" onclick="goPage('home')">🏠 Главная</button>
-    <button class="tab-btn" onclick="goPage('coffee')">☕ Кофе</button>
-    <button class="tab-btn" onclick="goPage('cold')">🧊 Холодный</button>
-    <button class="tab-btn" onclick="goPage('tea')">🍵 Чаи</button>
-    <button class="tab-btn" onclick="goPage('noncoffee')">🍫 Не кофе</button>
-    <button class="tab-btn" onclick="goPage('matcha')">🌿 Матча</button>
-    <button class="tab-btn" onclick="goPage('cocktails')">🥤 Коктейли</button>
-    <button class="tab-btn" onclick="goPage('lemonades')">🍋 Лимонады</button>
-    <button class="tab-btn" onclick="goPage('smoothie')">🫐 Смузи</button>
-    <button class="tab-btn" onclick="goPage('fresh')">🍊 Фреши</button>
-    <button class="tab-btn" onclick="goPage('icecream')">🍨 Мороженое</button>
-    <button class="tab-btn" onclick="goPage('about')">📍 О нас</button>
-</div>
-
-<!-- ======== HOME ======== -->
-<div class="page active" id="p-home">
+<!-- ГЛАВНАЯ -->
+<div class="pg on" id="pg-home">
     <div class="hero">
-        <div class="hero-content">
-            <div class="hero-logo">
-                <img src="LOGO" alt="Сабля Coffee"
-                     style="width:200px; max-width:75vw; height:auto;"
-                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                <div class="hero-logo-stub" style="display:none">
-                    <div class="hls-name">САБЛЯ</div>
-                    <div class="hls-line"><span class="hls-sword">⚔️</span></div>
-                    <div class="hls-sub">— coffee —</div>
-                </div>
+        <div class="hero-particles">
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div class="hero-c">
+            <div class="hero-badge">⚔️ Сабля Coffee · Бабаюрт</div>
+            <div class="hero-logo-wrap">
+                <img class="hero-logo-img" src="https://i.postimg.cc/QxhW9w4L/photo-2026-06-21-03-39-45-removebg-preview.png" alt="Сабля Coffee">
             </div>
-            <div class="hero-tag">✦ Кофейня с характером ✦</div>
-            <p>Авторские напитки, натуральные ингредиенты.<br>Заказывайте прямо через WhatsApp!</p>
+            <div class="hero-title">Кофе с <span>душой</span></div>
+            <div class="hero-sub">Авторские напитки · Натурально · Уютно</div>
+            <p>Выберите из меню и закажите прямо через WhatsApp!</p>
             <div class="hero-btns">
-                <button class="btn-gold" onclick="goPage('coffee')">☕ Меню</button>
-                <button class="btn-ghost" onclick="goPage('about')">📍 О нас</button>
+                <button class="btn-gold" data-go="hot">☕ Смотреть меню</button>
+                <button class="btn-outline" data-go="about">📍 О нас</button>
             </div>
             <div class="hero-stats">
-                <div class="stat"><span class="stat-n">60+</span><span class="stat-l">Позиций</span></div>
-                <div class="stat"><span class="stat-n">10</span><span class="stat-l">Разделов</span></div>
-                <div class="stat"><span class="stat-n">100%</span><span class="stat-l">Натурально</span></div>
-                <div class="stat"><span class="stat-n">9–23</span><span class="stat-l">Работаем</span></div>
+                <div class="hst"><span class="hst-n">60+</span><span class="hst-l">Позиций</span></div>
+                <div class="hst"><span class="hst-n">8</span><span class="hst-l">Разделов</span></div>
+                <div class="hst"><span class="hst-n">9–23</span><span class="hst-l">Ежедневно</span></div>
+                <div class="hst"><span class="hst-n">100%</span><span class="hst-l">Вкусно</span></div>
             </div>
         </div>
     </div>
-    <div class="home-sec">
+    <div class="hero-orn"></div>
+    <div class="home-body">
         <div class="sec-head">
-            <span class="sec-label">✦ Меню Сабля Coffee ✦</span>
-            <div class="sec-title">Выберите категорию</div>
+            <span class="sec-tag">✦ Выберите раздел ✦</span>
+            <div class="sec-title">Наше меню</div>
         </div>
         <div class="cats-grid">
-            <div class="cat-card" onclick="goPage('coffee')"><span class="cat-icon">☕</span><div class="cat-name">Кофе</div><div class="cat-cnt">20 позиций</div></div>
-            <div class="cat-card" onclick="goPage('cold')"><span class="cat-icon">🧊</span><div class="cat-name">Холодный кофе</div><div class="cat-cnt">10 позиций</div></div>
-            <div class="cat-card" onclick="goPage('tea')"><span class="cat-icon">🍵</span><div class="cat-name">Чаи</div><div class="cat-cnt">8 позиций</div></div>
-            <div class="cat-card" onclick="goPage('noncoffee')"><span class="cat-icon">🍫</span><div class="cat-name">Не кофе</div><div class="cat-cnt">4 позиции</div></div>
-            <div class="cat-card" onclick="goPage('matcha')"><span class="cat-icon">🌿</span><div class="cat-name">Матча</div><div class="cat-cnt">4 позиции</div></div>
-            <div class="cat-card" onclick="goPage('cocktails')"><span class="cat-icon">🥤</span><div class="cat-name">Коктейли</div><div class="cat-cnt">10 позиций</div></div>
-            <div class="cat-card" onclick="goPage('lemonades')"><span class="cat-icon">🍋</span><div class="cat-name">Лимонады</div><div class="cat-cnt">6 позиций</div></div>
-            <div class="cat-card" onclick="goPage('smoothie')"><span class="cat-icon">🫐</span><div class="cat-name">Смузи</div><div class="cat-cnt">3 позиции</div></div>
-            <div class="cat-card" onclick="goPage('fresh')"><span class="cat-icon">🍊</span><div class="cat-name">Фреши</div><div class="cat-cnt">5 позиций</div></div>
-            <div class="cat-card" onclick="goPage('icecream')"><span class="cat-icon">🍨</span><div class="cat-name">Мороженое</div><div class="cat-cnt">4 вкуса</div></div>
+            <div class="cat-card" data-go="hot"><span class="cat-ico">☕</span><div class="cat-nm">Горячий кофе</div><div class="cat-cnt">20 напитков</div></div>
+            <div class="cat-card" data-go="cold"><span class="cat-ico">🧊</span><div class="cat-nm">Холодный кофе</div><div class="cat-cnt">10 напитков</div></div>
+            <div class="cat-card" data-go="tea"><span class="cat-ico">🍵</span><div class="cat-nm">Чаи</div><div class="cat-cnt">8 видов</div></div>
+            <div class="cat-card" data-go="noncoffee"><span class="cat-ico">🍫</span><div class="cat-nm">Не кофе</div><div class="cat-cnt">4 напитка</div></div>
+            <div class="cat-card" data-go="matcha"><span class="cat-ico">🌿</span><div class="cat-nm">Матча</div><div class="cat-cnt">4 напитка</div></div>
+            <div class="cat-card" data-go="cocktails"><span class="cat-ico">🥤</span><div class="cat-nm">Коктейли</div><div class="cat-cnt">10 видов</div></div>
+            <div class="cat-card" data-go="lemon"><span class="cat-ico">🍋</span><div class="cat-nm">Лимонады</div><div class="cat-cnt">6 видов</div></div>
+            <div class="cat-card" data-go="other"><span class="cat-ico">🍊</span><div class="cat-nm">Смузи и Фреши</div><div class="cat-cnt">8 видов</div></div>
+            <div class="cat-card wide" data-go="icecream"><span class="cat-ico">🍨</span><div class="cat-info"><div class="cat-nm">Мороженое</div><div class="cat-cnt">4 вкуса + добавки</div></div></div>
         </div>
     </div>
 </div>
 
-<!-- COFFEE -->
-<div class="page" id="p-coffee">
-    <div class="menu-wrap">
-        <div class="menu-top"><div class="menu-top-icon">☕</div><div><div class="menu-top-title">Кофе</div><div class="menu-top-sub">Эспрессо, латте, раф и авторские</div></div></div>
-        <div class="search-wrap"><span class="search-ico">🔍</span><input class="search-in" type="text" placeholder="Найти напиток..." oninput="doSearch(this,'coffee-items')"></div>
-        <div class="items-list" id="coffee-items"></div>
+<!-- ГОРЯЧИЙ КОФЕ -->
+<div class="pg" id="pg-hot">
+    <div class="pg-hdr"><div class="pg-hdr-c"><div class="pg-ico">☕</div><div class="pg-tt">Горячий кофе</div><div class="pg-sb">Эспрессо, капучино, латте и рафы</div></div><div class="pg-orn"></div></div>
+    <div class="srch-wrap"><div class="srch"><span class="srch-ic">🔍</span><input class="srch-in" type="text" placeholder="Найти напиток..." data-list="lst-hot"></div></div>
+    <div class="stabs" id="stabs-hot">
+        <div class="stab on" data-sub="all">Все</div>
+        <div class="stab" data-sub="espresso">Эспрессо</div>
+        <div class="stab" data-sub="latte">Латте</div>
+        <div class="stab" data-sub="raf">Рафы</div>
+        <div class="stab" data-sub="other">Другие</div>
     </div>
+    <div class="items-wrap" id="lst-hot"></div>
 </div>
 
-<!-- COLD -->
-<div class="page" id="p-cold">
-    <div class="menu-wrap">
-        <div class="menu-top"><div class="menu-top-icon">🧊</div><div><div class="menu-top-title">Холодный кофе</div><div class="menu-top-sub">Айс латте, колд брю, тоники</div></div></div>
-        <div class="search-wrap"><span class="search-ico">🔍</span><input class="search-in" type="text" placeholder="Найти..." oninput="doSearch(this,'cold-items')"></div>
-        <div class="items-list" id="cold-items"></div>
-    </div>
+<div class="pg" id="pg-cold">
+    <div class="pg-hdr"><div class="pg-hdr-c"><div class="pg-ico">🧊</div><div class="pg-tt">Холодный кофе</div><div class="pg-sb">Айс латте, колд брю, тоники и бамблы</div></div><div class="pg-orn"></div></div>
+    <div class="srch-wrap"><div class="srch"><span class="srch-ic">🔍</span><input class="srch-in" type="text" placeholder="Найти..." data-list="lst-cold"></div></div>
+    <div class="items-wrap" id="lst-cold"></div>
 </div>
 
-<!-- TEA -->
-<div class="page" id="p-tea">
-    <div class="menu-wrap">
-        <div class="menu-top"><div class="menu-top-icon">🍵</div><div><div class="menu-top-title">Чаи</div><div class="menu-top-sub">Классические и авторские</div></div></div>
-        <div class="sub-head">🍃 Классические чаи</div><div class="items-list" id="tea-c"></div>
-        <div class="sub-head">✨ Авторские чаи</div><div class="items-list" id="tea-a"></div>
-        <div class="sub-head">➕ Добавки к чаю</div><div class="items-list" id="tea-d"></div>
-    </div>
+<div class="pg" id="pg-tea">
+    <div class="pg-hdr"><div class="pg-hdr-c"><div class="pg-ico">🍵</div><div class="pg-tt">Чаи</div><div class="pg-sb">Классические, авторские и добавки</div></div><div class="pg-orn"></div></div>
+    <div class="sub-title"><span>🍃 Классические чаи</span></div><div class="items-wrap" id="lst-teaC"></div>
+    <div class="sub-title"><span>✨ Авторские чаи</span></div><div class="items-wrap" id="lst-teaA"></div>
+    <div class="sub-title"><span>➕ Добавки к чаю</span></div><div class="items-wrap" id="lst-teaD"></div>
 </div>
 
-<!-- NON-COFFEE -->
-<div class="page" id="p-noncoffee">
-    <div class="menu-wrap">
-        <div class="menu-top"><div class="menu-top-icon">🍫</div><div><div class="menu-top-title">Не кофе</div><div class="menu-top-sub">Какао, шоколад и другое</div></div></div>
-        <div class="items-list" id="nc-items"></div>
-    </div>
+<div class="pg" id="pg-noncoffee">
+    <div class="pg-hdr"><div class="pg-hdr-c"><div class="pg-ico">🍫</div><div class="pg-tt">Не кофе</div><div class="pg-sb">Какао, горячий шоколад и другое</div></div><div class="pg-orn"></div></div>
+    <div class="items-wrap" id="lst-nc"></div>
 </div>
 
-<!-- MATCHA -->
-<div class="page" id="p-matcha">
-    <div class="menu-wrap">
-        <div class="menu-top"><div class="menu-top-icon">🌿</div><div><div class="menu-top-title">Матча</div><div class="menu-top-sub">Альтернатива кофе из Японии</div></div></div>
-        <div class="items-list" id="matcha-items"></div>
-    </div>
+<div class="pg" id="pg-matcha">
+    <div class="pg-hdr"><div class="pg-hdr-c"><div class="pg-ico">🌿</div><div class="pg-tt">Матча</div><div class="pg-sb">Японская альтернатива кофе</div></div><div class="pg-orn"></div></div>
+    <div class="items-wrap" id="lst-matcha"></div>
 </div>
 
-<!-- COCKTAILS -->
-<div class="page" id="p-cocktails">
-    <div class="menu-wrap">
-        <div class="menu-top"><div class="menu-top-icon">🥤</div><div><div class="menu-top-title">Коктейли</div><div class="menu-top-sub">Молочные коктейли на любой вкус</div></div></div>
-        <div class="items-list" id="cocktail-items"></div>
-    </div>
+<div class="pg" id="pg-cocktails">
+    <div class="pg-hdr"><div class="pg-hdr-c"><div class="pg-ico">🥤</div><div class="pg-tt">Коктейли</div><div class="pg-sb">Молочные коктейли на любой вкус</div></div><div class="pg-orn"></div></div>
+    <div class="items-wrap" id="lst-co"></div>
 </div>
 
-<!-- LEMONADES -->
-<div class="page" id="p-lemonades">
-    <div class="menu-wrap">
-        <div class="menu-top"><div class="menu-top-icon">🍋</div><div><div class="menu-top-title">Лимонады</div><div class="menu-top-sub">Свежие авторские лимонады</div></div></div>
-        <div class="items-list" id="lemon-items"></div>
-    </div>
+<div class="pg" id="pg-lemon">
+    <div class="pg-hdr"><div class="pg-hdr-c"><div class="pg-ico">🍋</div><div class="pg-tt">Лимонады</div><div class="pg-sb">Свежие авторские лимонады 0.3л / 1л</div></div><div class="pg-orn"></div></div>
+    <div class="items-wrap" id="lst-lemon"></div>
 </div>
 
-<!-- SMOOTHIE -->
-<div class="page" id="p-smoothie">
-    <div class="menu-wrap">
-        <div class="menu-top"><div class="menu-top-icon">🫐</div><div><div class="menu-top-title">Смузи</div><div class="menu-top-sub">Натуральные ягодные смузи</div></div></div>
-        <div class="items-list" id="sm-items"></div>
-    </div>
+<div class="pg" id="pg-other">
+    <div class="pg-hdr"><div class="pg-hdr-c"><div class="pg-ico">🍊</div><div class="pg-tt">Смузи и Фреши</div><div class="pg-sb">Натуральные соки и ягодные смузи</div></div><div class="pg-orn"></div></div>
+    <div class="sub-title"><span>🫐 Смузи</span></div><div class="items-wrap" id="lst-sm"></div>
+    <div class="sub-title"><span>🍊 Свежевыжатые соки</span></div><div class="items-wrap" id="lst-fresh"></div>
 </div>
 
-<!-- FRESH -->
-<div class="page" id="p-fresh">
-    <div class="menu-wrap">
-        <div class="menu-top"><div class="menu-top-icon">🍊</div><div><div class="menu-top-title">Фреши</div><div class="menu-top-sub">Свежевыжатые соки</div></div></div>
-        <div class="items-list" id="fresh-items"></div>
-    </div>
+<div class="pg" id="pg-icecream">
+    <div class="pg-hdr"><div class="pg-hdr-c"><div class="pg-ico">🍨</div><div class="pg-tt">Мороженое</div><div class="pg-sb">Шарики 55 гр и топинги</div></div><div class="pg-orn"></div></div>
+    <div class="sub-title"><span>🍦 Шарики</span></div><div class="items-wrap" id="lst-ice"></div>
+    <div class="sub-title"><span>➕ Добавки</span></div><div class="items-wrap" id="lst-iceA"></div>
 </div>
 
-<!-- ICECREAM -->
-<div class="page" id="p-icecream">
-    <div class="menu-wrap">
-        <div class="menu-top"><div class="menu-top-icon">🍨</div><div><div class="menu-top-title">Мороженое</div><div class="menu-top-sub">Шарики и топинги</div></div></div>
-        <div class="sub-head">🍦 Шарики (55 гр)</div><div class="items-list" id="ice-items"></div>
-        <div class="sub-head">➕ Добавки</div><div class="items-list" id="ice-add"></div>
-    </div>
-</div>
-
-<!-- ABOUT -->
-<div class="page" id="p-about">
-    <div class="about-wrap">
-        <div class="about-top">
-            <div class="about-logo-wrap">
-                <img src="LOGO" alt="Сабля Coffee"
-                     style="width:160px; height:auto;"
-                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                <div class="about-logo-stub" style="display:none">
-                    <span class="als-icon">⚔️</span>
-                    <span class="als-name">САБЛЯ</span>
-                    <span class="als-sub">— coffee —</span>
+<!-- О НАС -->
+<div class="pg" id="pg-about">
+    <div class="ab-wrap">
+        <div class="ab-hero">
+            <div class="ab-hero-c">
+                <div class="ab-logo-wrap">
+                    <img class="ab-logo-img" src="https://i.postimg.cc/QxhW9w4L/photo-2026-06-21-03-39-45-removebg-preview.png" alt="Сабля Coffee">
+                </div>
+                <p>Кофейня с характером и душой. Варим кофе с любовью, используем качественные зёрна и натуральные ингредиенты.</p>
+            </div>
+        </div>
+        <div class="ab-orn"></div>
+        <div class="ab-body">
+            <div class="card">
+                <div class="card-title">🕐 Время работы</div>
+                <div class="hr-row">
+                    <div class="hr-l"><div class="hr-ico">📅</div><div><div class="hr-day">Ежедневно</div><div class="hr-note">Пн — Вс, без выходных</div></div></div>
+                    <div class="hr-time">09:00 — 23:00</div>
+                </div>
+                <div style="text-align:center"><span class="ob" id="openBadge"><span class="ob-dot"></span> Проверяем...</span></div>
+            </div>
+            <div class="ab-grid" style="margin-bottom:16px">
+                <div class="ab-c"><div class="ai">☕</div><h4>Качество</h4><p>Свежеобжаренные зёрна</p></div>
+                <div class="ab-c"><div class="ai">🌿</div><h4>Натурально</h4><p>Натуральные ингредиенты</p></div>
+                <div class="ab-c"><div class="ai">❤️</div><h4>С заботой</h4><p>Альтернативное молоко</p></div>
+                <div class="ab-c"><div class="ai">📱</div><h4>Удобно</h4><p>Заказ через WhatsApp</p></div>
+            </div>
+            <div class="ct-card">
+                <div class="ct-orn"></div>
+                <div class="ct-title">Контакты</div>
+                <span class="ct-sub">✦ ВСЕГДА НА СВЯЗИ ✦</span>
+                <div class="ct-list">
+                    <div class="ct-item"><div class="ct-ico">📱</div><span>+7 (928) 456-77-76</span></div>
+                    <div class="ct-item"><div class="ct-ico">💬</div><span>WhatsApp и звонки</span></div>
+                    <div class="ct-item"><div class="ct-ico">📍</div><span>Бабаюрт, ул. Ирчи Казака, 54</span></div>
+                    <div class="ct-item"><div class="ct-ico">🕐</div><span>Ежедневно 09:00 — 23:00</span></div>
+                </div>
+                <div class="ct-btns">
+                    <button class="wa-btn" id="btnWaContact">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        Написать в WhatsApp
+                    </button>
+                    <button class="map-btn" id="btnMap">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                        Показать на карте
+                    </button>
                 </div>
             </div>
-            <p>Кофейня с характером и душой. Варим кофе с любовью, используем качественные зёрна и натуральные ингредиенты.</p>
-        </div>
-
-        <div class="hours-card">
-            <div class="hours-title">🕐 Время работы</div>
-            <div class="hours-row">
-                <div class="hours-left">
-                    <div class="hours-ico">📅</div>
-                    <div>
-                        <div class="hours-day">Ежедневно</div>
-                        <div class="hours-note">Пн — Вс, без выходных</div>
-                    </div>
-                </div>
-                <div class="hours-time">09:00 — 23:00</div>
-            </div>
-            <div style="text-align:center;">
-                <span class="open-badge" id="openBadge">
-                    <span class="open-dot pulse"></span> Проверяем...
-                </span>
-            </div>
-        </div>
-
-        <div class="about-grid">
-            <div class="about-card"><div class="ai">☕</div><h4>Качество</h4><p>Свежеобжаренные зёрна и проф. оборудование</p></div>
-            <div class="about-card"><div class="ai">🌿</div><h4>Натурально</h4><p>Натуральные фрукты и специи</p></div>
-            <div class="about-card"><div class="ai">❤️</div><h4>С заботой</h4><p>Альтернативное молоко и авторские рецепты</p></div>
-            <div class="about-card"><div class="ai">📱</div><h4>Удобно</h4><p>Заказ через WhatsApp за пару кликов</p></div>
-        </div>
-
-        <div class="contact-card">
-            <div class="contact-title">Контакты</div>
-            <span class="contact-sub">✦ ВСЕГДА НА СВЯЗИ ✦</span>
-            <div class="contact-list">
-                <div class="contact-item"><div class="contact-ico">📱</div>+7 (928) 062-17-27</div>
-                <div class="contact-item"><div class="contact-ico">💬</div>WhatsApp и звонки</div>
-                <div class="contact-item"><div class="contact-ico">🕐</div>Ежедневно 09:00 — 23:00</div>
-            </div>
-            <button class="wa-contact" onclick="openWA('Здравствуйте! Хочу узнать подробнее о кофейне Сабля Coffee.')">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                Написать в WhatsApp
-            </button>
         </div>
     </div>
+</div>
+
+<nav class="bnav">
+    <div class="bnav-btn on" data-pg="home"><span class="bnav-ico">🏠</span><span class="bnav-lbl">Главная</span><span class="bnav-dot"></span></div>
+    <div class="bnav-btn" data-pg="hot"><span class="bnav-ico">☕</span><span class="bnav-lbl">Горячее</span><span class="bnav-dot"></span></div>
+    <div class="bnav-btn" data-pg="cold"><span class="bnav-ico">🧊</span><span class="bnav-lbl">Холодное</span><span class="bnav-dot"></span></div>
+    <div class="bnav-btn" data-pg="lemon"><span class="bnav-ico">🍹</span><span class="bnav-lbl">Напитки</span><span class="bnav-dot"></span></div>
+    <div class="bnav-btn" data-pg="about"><span class="bnav-ico">📍</span><span class="bnav-lbl">О нас</span><span class="bnav-dot"></span></div>
+</nav>
+
 </div>
 
 <!-- CART -->
-<div class="overlay" id="overlay" onclick="overlayClick(event)">
-    <div class="cart-sheet">
-        <div class="cart-handle"></div>
-        <div class="cart-head">
-            <div class="cart-title">🛒 Ваш заказ</div>
-            <button class="cart-close" onclick="closeCart()">✕</button>
+<div class="ov" id="overlay">
+    <div class="cs">
+        <div class="cs-orn"></div>
+        <div class="cs-handle"></div>
+        <div class="cs-hd">
+            <div class="cs-tt">🛒 Ваш заказ</div>
+            <button class="cs-x" id="btnCloseCart">✕</button>
         </div>
-        <div class="cart-body" id="cartBody"></div>
-        <div class="cart-foot" id="cartFoot" style="display:none">
-            <textarea class="cart-comment" id="cartComment" rows="2" placeholder="💬 Комментарий к заказу..."></textarea>
-            <div class="cart-total">
-                <span class="ct-label">Итого</span>
-                <span class="ct-price" id="cartTotal">0 р</span>
+        <div class="ot-sec">
+            <span class="ot-lbl">Тип заказа:</span>
+            <div class="ot-row">
+                <div class="ot-btn on" data-type="hall"><span class="oi">🪑</span><span class="ot">В зале</span></div>
+                <div class="ot-btn" data-type="takeaway"><span class="oi">🛍</span><span class="ot">С собой</span></div>
+                <div class="ot-btn" data-type="delivery"><span class="oi">🛵</span><span class="ot">Доставка</span></div>
             </div>
-            <button class="wa-order" onclick="sendToWA()">
+        </div>
+        <div class="cs-body" id="cartBody"></div>
+        <div class="cs-ft" id="cartFoot" style="display:none">
+            <textarea class="c-comment" id="cartComment" rows="2" placeholder="💬 Комментарий к заказу..."></textarea>
+            <div class="c-total">
+                <span class="c-tot-l">Итого</span>
+                <span class="c-tot-p" id="cartTotal">0 р</span>
+            </div>
+            <button class="wa-order" id="btnSendWA">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                 Заказать через WhatsApp
             </button>
-            <button class="cart-clear" onclick="clearCart()">🗑 Очистить корзину</button>
+            <button class="c-clear" id="btnClearCart">🗑 Очистить корзину</button>
         </div>
     </div>
 </div>
@@ -1212,438 +976,193 @@
 <div class="toast" id="toast"></div>
 
 <script>
+(function(){
 'use strict';
 
-// ================================================================
-// ДАННЫЕ МЕНЮ
-// ================================================================
-const MENU = {
-  coffee: [
-    { id:'c1',  name:'Двойной эспрессо',             emoji:'☕', note:'',                    badge:'',      sizes:[{l:'50мл',  p:170}] },
-    { id:'c2',  name:'Лунго',                         emoji:'☕', note:'',                    badge:'',      sizes:[{l:'80мл',  p:170}] },
-    { id:'c3',  name:'Американо',                     emoji:'☕', note:'',                    badge:'',      sizes:[{l:'180мл', p:170}] },
-    { id:'c4',  name:'Американэмбл',                 emoji:'☕', note:'',                    badge:'',      sizes:[{l:'200мл', p:200}] },
-    { id:'c5',  name:'Капучино',                      emoji:'☕', note:'',                    badge:'',      sizes:[{l:'250мл', p:200},{l:'350мл', p:250}] },
-    { id:'c6',  name:'Фильтр',                        emoji:'☕', note:'',                    badge:'',      sizes:[{l:'200мл', p:180},{l:'300мл', p:200}] },
-    { id:'c7',  name:'Флэт уайт',                     emoji:'☕', note:'',                    badge:'',      sizes:[{l:'250мл', p:220},{l:'300мл', p:270}] },
-    { id:'c8',  name:'Латте',                         emoji:'🥛', note:'',                    badge:'',      sizes:[{l:'250мл', p:220},{l:'350мл', p:270}] },
-    { id:'c9',  name:'Гляссе',                        emoji:'🍦', note:'',                    badge:'',      sizes:[{l:'200мл', p:250}] },
-    { id:'c10', name:'Кофе Pele',                     emoji:'☕', note:'Легенда из детства',  badge:'',      sizes:[{l:'250мл', p:100}] },
-    { id:'c11', name:'Гляссе шоколадный',             emoji:'🍫', note:'',                    badge:'',      sizes:[{l:'200мл', p:300}] },
-    { id:'c12', name:'Мокко с натуральным шоколадом', emoji:'🍫', note:'',                    badge:'',      sizes:[{l:'250мл', p:250},{l:'350мл', p:300}] },
-    { id:'c13', name:'Раф классика',                  emoji:'🥛', note:'Без сахара',          badge:'',      sizes:[{l:'250мл', p:250},{l:'350мл', p:300}] },
-    { id:'c14', name:'Раф солёная карамель',          emoji:'🍮', note:'',                    badge:'',      sizes:[{l:'250мл', p:280},{l:'350мл', p:330}] },
-    { id:'c15', name:'Раф красный апельсин',          emoji:'🍊', note:'',                    badge:'',      sizes:[{l:'250мл', p:280},{l:'350мл', p:330}] },
-    { id:'c16', name:'Раф с урбечом',                 emoji:'🌰', note:'Миндаль / Арахис',    badge:'',      sizes:[{l:'250мл', p:300},{l:'350мл', p:350}] },
-    { id:'c17', name:'Раф сникерс',                   emoji:'🍫', note:'',                    badge:'',      sizes:[{l:'250мл', p:320},{l:'350мл', p:370}] },
-    { id:'c18', name:'Раф финиковый',                 emoji:'🌴', note:'',                    badge:'',      sizes:[{l:'250мл', p:300},{l:'350мл', p:350}] },
-    { id:'c19', name:'Раф Блаунти шоколад-кокос',    emoji:'🥥', note:'',                    badge:'',      sizes:[{l:'250мл', p:320},{l:'350мл', p:370}] },
-    { id:'c20', name:'Дубайский раф шоколад-фисташка',emoji:'🌟', note:'',                   badge:'⭐ Хит',sizes:[{l:'250мл', p:320},{l:'350мл', p:370}] },
-  ],
-  cold: [
-    { id:'cl1',  name:'Айс кофе',                     emoji:'🧊', note:'', sizes:[{l:'350мл', p:280}] },
-    { id:'cl2',  name:'Айс кофе с урбечом',           emoji:'🧊', note:'', sizes:[{l:'350мл', p:330}] },
-    { id:'cl3',  name:'Айс латте',                    emoji:'🧊', note:'', sizes:[{l:'270мл', p:280}] },
-    { id:'cl4',  name:'Колд брю в бутылке',           emoji:'🍶', note:'', sizes:[{l:'250мл', p:250}] },
-    { id:'cl5',  name:'Эспрессо тоник классика',      emoji:'🫧', note:'', sizes:[{l:'270мл', p:250}] },
-    { id:'cl6',  name:'Тоник гранат на фреше',        emoji:'🍇', note:'', sizes:[{l:'270мл', p:320}] },
-    { id:'cl7',  name:'Тоник цитрус',                 emoji:'🍋', note:'', sizes:[{l:'270мл', p:320}] },
-    { id:'cl8',  name:'Тоник гранат-малина',          emoji:'🍓', note:'', sizes:[{l:'270мл', p:320}] },
-    { id:'cl9',  name:'Бамбл на апельсиновом фреше',  emoji:'🍊', note:'', sizes:[{l:'270мл', p:320}] },
-    { id:'cl10', name:'Бамбл на гранатовом фреше',    emoji:'🍇', note:'', sizes:[{l:'270мл', p:320}] },
-  ],
-  teaC: [
-    { id:'tc1', name:'Чёрный чай Ассам',  emoji:'🍵', note:'', sizes:[{l:'0.3л', p:80},{l:'1л', p:250}] },
-    { id:'tc2', name:'Зелёный чай Сенча', emoji:'🍵', note:'', sizes:[{l:'0.3л', p:80},{l:'1л', p:250}] },
-    { id:'tc3', name:'Сбор семь трав',    emoji:'🌿', note:'', sizes:[{l:'0.3л', p:100},{l:'1л', p:280}] },
-    { id:'tc4', name:'Таёжный сбор',      emoji:'🌲', note:'', sizes:[{l:'0.3л', p:100},{l:'1л', p:280}] },
-    { id:'tc5', name:'Молочный улун',     emoji:'🥛', note:'', sizes:[{l:'0.3л', p:100},{l:'1л', p:280}] },
-  ],
-  teaA: [
-    { id:'ta1', name:'Облепиховый',              emoji:'🫐', note:'', sizes:[{l:'350мл', p:280},{l:'1л', p:550}] },
-    { id:'ta2', name:'Малина-имбирь',            emoji:'🍓', note:'', sizes:[{l:'350мл', p:250},{l:'1л', p:450}] },
-    { id:'ta3', name:'Имбирно-лимонный с мёдом', emoji:'🍯', note:'', sizes:[{l:'350мл', p:250},{l:'1л', p:450}] },
-  ],
-  teaD: [
-    { id:'td1', name:'Чабрец, лимон, имбирь', emoji:'🌿', note:'Добавка к чаю', sizes:[{l:'—', p:30}] },
-    { id:'td2', name:'Гвоздика, мята, тмин',  emoji:'🌱', note:'Добавка к чаю', sizes:[{l:'—', p:30}] },
-  ],
-  nc: [
-    { id:'nc1', name:'Какао турецкий',          emoji:'🍫', note:'С бельгийским шоколадом', sizes:[{l:'250мл', p:220},{l:'350мл', p:270}] },
-    { id:'nc2', name:'Горячий шоколад Калебаут',emoji:'🍫', note:'',                         sizes:[{l:'90мл', p:200}] },
-    { id:'nc3', name:'Варёная кукуруза в стакане',emoji:'🌽',note:'',                        sizes:[{l:'300гр', p:250}] },
-    { id:'nc4', name:'Калмыкский чай',           emoji:'🍵', note:'На свежесваренном молоке',sizes:[{l:'350мл', p:250}] },
-  ],
-  matcha: [
-    { id:'m1', name:'Матча капучино', emoji:'🌿', note:'', sizes:[{l:'250мл', p:250},{l:'300мл', p:300}] },
-    { id:'m2', name:'Матча латте',    emoji:'🌿', note:'', sizes:[{l:'250мл', p:250},{l:'300мл', p:300}] },
-    { id:'m3', name:'Айс матча',      emoji:'🧊', note:'', sizes:[{l:'250мл', p:250},{l:'300мл', p:300}] },
-    { id:'m4', name:'Матча бамбл',    emoji:'🌿', note:'', sizes:[{l:'250мл', p:320}] },
-  ],
-  cocktails: [
-    { id:'co1',  name:'Молочный',           emoji:'🥛', note:'', sizes:[{l:'350мл', p:250}] },
-    { id:'co2',  name:'Шоколадный',         emoji:'🍫', note:'', sizes:[{l:'350мл', p:300}] },
-    { id:'co3',  name:'Молочно-банановый',  emoji:'🍌', note:'', sizes:[{l:'350мл', p:300}] },
-    { id:'co4',  name:'Шоколад-банан',      emoji:'🍫', note:'', sizes:[{l:'350мл', p:300}] },
-    { id:'co5',  name:'Клубничный',         emoji:'🍓', note:'', sizes:[{l:'350мл', p:300}] },
-    { id:'co6',  name:'Финиково-банановый', emoji:'🌴', note:'', sizes:[{l:'350мл', p:320}] },
-    { id:'co7',  name:'Клубника-банан',     emoji:'🍓', note:'', sizes:[{l:'350мл', p:320}] },
-    { id:'co8',  name:'Финиковый',          emoji:'🌴', note:'', sizes:[{l:'350мл', p:300}] },
-    { id:'co9',  name:'Сникерс',            emoji:'🍫', note:'', sizes:[{l:'350мл', p:370}] },
-    { id:'co10', name:'Черничное печенье',  emoji:'🫐', note:'', sizes:[{l:'350мл', p:370}] },
-  ],
-  lemon: [
-    { id:'l1', name:'Щавелевый',       emoji:'🍋', note:'', sizes:[{l:'0.3л', p:300},{l:'1л', p:600}] },
-    { id:'l2', name:'Мохито классика', emoji:'🌿', note:'', sizes:[{l:'0.3л', p:300},{l:'1л', p:600}] },
-    { id:'l3', name:'Мохито клубника', emoji:'🍓', note:'', sizes:[{l:'0.3л', p:300},{l:'1л', p:600}] },
-    { id:'l4', name:'Ягодный',         emoji:'🫐', note:'', sizes:[{l:'0.3л', p:300},{l:'1л', p:600}] },
-    { id:'l5', name:'Голубая лагуна',  emoji:'💙', note:'', sizes:[{l:'0.3л', p:300},{l:'1л', p:600}] },
-    { id:'l6', name:'Малина-имбирь',   emoji:'🍓', note:'', sizes:[{l:'0.3л', p:300},{l:'1л', p:600}] },
-  ],
-  sm: [
-    { id:'sm1', name:'Ягодный',        emoji:'🫐', note:'', sizes:[{l:'350мл', p:350}] },
-    { id:'sm2', name:'Клубника-банан', emoji:'🍓', note:'', sizes:[{l:'350мл', p:350}] },
-    { id:'sm3', name:'Банан-яблоко',   emoji:'🍌', note:'', sizes:[{l:'350мл', p:350}] },
-  ],
-  fresh: [
-    { id:'f1', name:'Апельсиновый',    emoji:'🍊', note:'', sizes:[{l:'200мл', p:300}] },
-    { id:'f2', name:'Апельсин-гранат', emoji:'🍊', note:'', sizes:[{l:'200мл', p:300}] },
-    { id:'f3', name:'Яблочный',        emoji:'🍏', note:'', sizes:[{l:'200мл', p:250}] },
-    { id:'f4', name:'Гранатовый',      emoji:'🍷', note:'', sizes:[{l:'200мл', p:300}] },
-    { id:'f5', name:'Яблоко-апельсин', emoji:'🍊', note:'', sizes:[{l:'200мл', p:300}] },
-  ],
-  ice: [
-    { id:'ic1', name:'Сливочное',  emoji:'🍦', note:'', sizes:[{l:'55гр', p:60}] },
-    { id:'ic2', name:'Шоколадное', emoji:'🍫', note:'', sizes:[{l:'55гр', p:60}] },
-    { id:'ic3', name:'Клубничное', emoji:'🍓', note:'', sizes:[{l:'55гр', p:60}] },
-    { id:'ic4', name:'Банановое',  emoji:'🍌', note:'', sizes:[{l:'55гр', p:60}] },
-  ],
-  iceAdd: [
-    { id:'ia1', name:'Орехи',                     emoji:'🌰', note:'Добавка', sizes:[{l:'—', p:40}] },
-    { id:'ia2', name:'Топинг шоколад и клубника', emoji:'🍓', note:'Добавка', sizes:[{l:'—', p:30}] },
-  ],
+const WA='79284567776',ADDR='Бабаюрт, ул. Ирчи Казака, 54',LAT=43.5994,LNG=46.7884;
+
+const MENU={
+hot:[
+{id:'c1',name:'Двойной эспрессо',em:'☕',note:'',badge:'',group:'espresso',sz:[{l:'50мл',p:170}]},
+{id:'c2',name:'Лунго',em:'☕',note:'Длинный эспрессо',badge:'',group:'espresso',sz:[{l:'80мл',p:170}]},
+{id:'c3',name:'Американо',em:'☕',note:'',badge:'',group:'espresso',sz:[{l:'180мл',p:170}]},
+{id:'c4',name:'Американ эмбл',em:'☕',note:'',badge:'',group:'espresso',sz:[{l:'200мл',p:200}]},
+{id:'c5',name:'Фильтр',em:'☕',note:'',badge:'',group:'espresso',sz:[{l:'200мл',p:180},{l:'300мл',p:200}]},
+{id:'c6',name:'Капучино',em:'☕',note:'',badge:'',group:'latte',sz:[{l:'250мл',p:200},{l:'350мл',p:250}]},
+{id:'c7',name:'Флэт уайт',em:'☕',note:'Насыщенный молочный',badge:'',group:'latte',sz:[{l:'250мл',p:220},{l:'300мл',p:270}]},
+{id:'c8',name:'Латте',em:'🥛',note:'',badge:'',group:'latte',sz:[{l:'250мл',p:220},{l:'350мл',p:270}]},
+{id:'c9',name:'Гляссе',em:'🍦',note:'Кофе с мороженым',badge:'',group:'latte',sz:[{l:'200мл',p:250}]},
+{id:'c10',name:'Гляссе шоколадный',em:'🍫',note:'',badge:'',group:'latte',sz:[{l:'200мл',p:300}]},
+{id:'c11',name:'Мокко с шоколадом',em:'🍫',note:'Натуральный шоколад',badge:'',group:'latte',sz:[{l:'250мл',p:250},{l:'350мл',p:300}]},
+{id:'c12',name:'Кофе Pele',em:'☕',note:'Легенда из детства',badge:'',group:'other',sz:[{l:'250мл',p:100}]},
+{id:'c13',name:'Раф классика',em:'🥛',note:'Без сахара',badge:'',group:'raf',sz:[{l:'250мл',p:250},{l:'350мл',p:300}]},
+{id:'c14',name:'Раф солёная карамель',em:'🍮',note:'',badge:'',group:'raf',sz:[{l:'250мл',p:280},{l:'350мл',p:330}]},
+{id:'c15',name:'Раф красный апельсин',em:'🍊',note:'',badge:'',group:'raf',sz:[{l:'250мл',p:280},{l:'350мл',p:330}]},
+{id:'c16',name:'Раф с урбечом',em:'🌰',note:'Миндаль или Арахис',badge:'',group:'raf',sz:[{l:'250мл',p:300},{l:'350мл',p:350}]},
+{id:'c17',name:'Раф сникерс',em:'🍫',note:'',badge:'',group:'raf',sz:[{l:'250мл',p:320},{l:'350мл',p:370}]},
+{id:'c18',name:'Раф финиковый',em:'🌴',note:'',badge:'',group:'raf',sz:[{l:'250мл',p:300},{l:'350мл',p:350}]},
+{id:'c19',name:'Раф Блаунти кокос',em:'🥥',note:'Шоколад-кокос',badge:'',group:'raf',sz:[{l:'250мл',p:320},{l:'350мл',p:370}]},
+{id:'c20',name:'Дубайский раф',em:'🌟',note:'Шоколад и фисташка',badge:'⭐ Хит',group:'raf',sz:[{l:'250мл',p:320},{l:'350мл',p:370}]},
+],
+cold:[
+{id:'cl1',name:'Айс кофе',em:'🧊',note:'',sz:[{l:'350мл',p:280}]},
+{id:'cl2',name:'Айс кофе с урбечом',em:'🧊',note:'',sz:[{l:'350мл',p:330}]},
+{id:'cl3',name:'Айс латте',em:'🧊',note:'',sz:[{l:'270мл',p:280}]},
+{id:'cl4',name:'Колд брю в бутылке',em:'🍶',note:'',sz:[{l:'250мл',p:250}]},
+{id:'cl5',name:'Эспрессо тоник классика',em:'🫧',note:'',sz:[{l:'270мл',p:250}]},
+{id:'cl6',name:'Тоник гранат на фреше',em:'🍇',note:'',sz:[{l:'270мл',p:320}]},
+{id:'cl7',name:'Тоник цитрус',em:'🍋',note:'',sz:[{l:'270мл',p:320}]},
+{id:'cl8',name:'Тоник гранат-малина',em:'🍓',note:'',sz:[{l:'270мл',p:320}]},
+{id:'cl9',name:'Бамбл апельсин',em:'🍊',note:'На апельсиновом фреше',sz:[{l:'270мл',p:320}]},
+{id:'cl10',name:'Бамбл гранат',em:'🍇',note:'На гранатовом фреше',sz:[{l:'270мл',p:320}]},
+],
+teaC:[
+{id:'tc1',name:'Чёрный чай Ассам',em:'🍵',note:'',sz:[{l:'0.3л',p:80},{l:'1л',p:250}]},
+{id:'tc2',name:'Зелёный чай Сенча',em:'🍵',note:'',sz:[{l:'0.3л',p:80},{l:'1л',p:250}]},
+{id:'tc3',name:'Сбор семь трав',em:'🌿',note:'',sz:[{l:'0.3л',p:100},{l:'1л',p:280}]},
+{id:'tc4',name:'Таёжный сбор',em:'🌲',note:'',sz:[{l:'0.3л',p:100},{l:'1л',p:280}]},
+{id:'tc5',name:'Молочный улун',em:'🥛',note:'',sz:[{l:'0.3л',p:100},{l:'1л',p:280}]},
+],
+teaA:[
+{id:'ta1',name:'Облепиховый',em:'🫐',note:'',sz:[{l:'350мл',p:280},{l:'1л',p:550}]},
+{id:'ta2',name:'Малина-имбирь',em:'🍓',note:'',sz:[{l:'350мл',p:250},{l:'1л',p:450}]},
+{id:'ta3',name:'Имбирно-лимонный с мёдом',em:'🍯',note:'',sz:[{l:'350мл',p:250},{l:'1л',p:450}]},
+],
+teaD:[
+{id:'td1',name:'Чабрец, лимон, имбирь',em:'🌿',note:'Добавка к чаю',sz:[{l:'—',p:30}]},
+{id:'td2',name:'Гвоздика, мята, тмин',em:'🌱',note:'Добавка к чаю',sz:[{l:'—',p:30}]},
+],
+nc:[
+{id:'nc1',name:'Какао турецкий',em:'🍫',note:'С бельгийским шоколадом',sz:[{l:'250мл',p:220},{l:'350мл',p:270}]},
+{id:'nc2',name:'Горячий шоколад Калебаут',em:'🍫',note:'',sz:[{l:'90мл',p:200}]},
+{id:'nc3',name:'Варёная кукуруза',em:'🌽',note:'В стакане',sz:[{l:'300гр',p:250}]},
+{id:'nc4',name:'Калмыкский чай',em:'🍵',note:'На свежесваренном молоке',sz:[{l:'350мл',p:250}]},
+],
+matcha:[
+{id:'m1',name:'Матча капучино',em:'🌿',note:'',sz:[{l:'250мл',p:250},{l:'300мл',p:300}]},
+{id:'m2',name:'Матча латте',em:'🌿',note:'',sz:[{l:'250мл',p:250},{l:'300мл',p:300}]},
+{id:'m3',name:'Айс матча',em:'🧊',note:'',sz:[{l:'250мл',p:250},{l:'300мл',p:300}]},
+{id:'m4',name:'Матча бамбл',em:'🌿',note:'',sz:[{l:'250мл',p:320}]},
+],
+co:[
+{id:'co1',name:'Молочный',em:'🥛',note:'',sz:[{l:'350мл',p:250}]},
+{id:'co2',name:'Шоколадный',em:'🍫',note:'',sz:[{l:'350мл',p:300}]},
+{id:'co3',name:'Молочно-банановый',em:'🍌',note:'',sz:[{l:'350мл',p:300}]},
+{id:'co4',name:'Шоколад-банан',em:'🍫',note:'',sz:[{l:'350мл',p:300}]},
+{id:'co5',name:'Клубничный',em:'🍓',note:'',sz:[{l:'350мл',p:300}]},
+{id:'co6',name:'Финиково-банановый',em:'🌴',note:'',sz:[{l:'350мл',p:320}]},
+{id:'co7',name:'Клубника-банан',em:'🍓',note:'',sz:[{l:'350мл',p:320}]},
+{id:'co8',name:'Финиковый',em:'🌴',note:'',sz:[{l:'350мл',p:300}]},
+{id:'co9',name:'Сникерс',em:'🍫',note:'',sz:[{l:'350мл',p:370}]},
+{id:'co10',name:'Черничное печенье',em:'🫐',note:'',sz:[{l:'350мл',p:370}]},
+],
+lemon:[
+{id:'l1',name:'Щавелевый',em:'🍋',note:'',sz:[{l:'0.3л',p:300},{l:'1л',p:600}]},
+{id:'l2',name:'Мохито классика',em:'🌿',note:'',sz:[{l:'0.3л',p:300},{l:'1л',p:600}]},
+{id:'l3',name:'Мохито клубника',em:'🍓',note:'',sz:[{l:'0.3л',p:300},{l:'1л',p:600}]},
+{id:'l4',name:'Ягодный',em:'🫐',note:'',sz:[{l:'0.3л',p:300},{l:'1л',p:600}]},
+{id:'l5',name:'Голубая лагуна',em:'💙',note:'',sz:[{l:'0.3л',p:300},{l:'1л',p:600}]},
+{id:'l6',name:'Малина-имбирь',em:'🍓',note:'',sz:[{l:'0.3л',p:300},{l:'1л',p:600}]},
+],
+sm:[
+{id:'sm1',name:'Ягодный',em:'🫐',note:'',sz:[{l:'350мл',p:350}]},
+{id:'sm2',name:'Клубника-банан',em:'🍓',note:'',sz:[{l:'350мл',p:350}]},
+{id:'sm3',name:'Банан-яблоко',em:'🍌',note:'',sz:[{l:'350мл',p:350}]},
+],
+fresh:[
+{id:'f1',name:'Апельсиновый',em:'🍊',note:'',sz:[{l:'200мл',p:300}]},
+{id:'f2',name:'Апельсин-гранат',em:'🍊',note:'',sz:[{l:'200мл',p:300}]},
+{id:'f3',name:'Яблочный',em:'🍏',note:'',sz:[{l:'200мл',p:250}]},
+{id:'f4',name:'Гранатовый',em:'🍷',note:'',sz:[{l:'200мл',p:300}]},
+{id:'f5',name:'Яблоко-апельсин',em:'🍊',note:'',sz:[{l:'200мл',p:300}]},
+],
+ice:[
+{id:'ic1',name:'Сливочное',em:'🍦',note:'',sz:[{l:'55гр',p:60}]},
+{id:'ic2',name:'Шоколадное',em:'🍫',note:'',sz:[{l:'55гр',p:60}]},
+{id:'ic3',name:'Клубничное',em:'🍓',note:'',sz:[{l:'55гр',p:60}]},
+{id:'ic4',name:'Банановое',em:'🍌',note:'',sz:[{l:'55гр',p:60}]},
+],
+iceA:[
+{id:'ia1',name:'Орехи',em:'🌰',note:'Добавка',sz:[{l:'—',p:40}]},
+{id:'ia2',name:'Топинг шоколад и клубника',em:'🍓',note:'Добавка',sz:[{l:'—',p:30}]},
+],
 };
 
-// ================================================================
-// STATE
-// ================================================================
-let cart = [];
-// выбранные размеры: { itemId: sizeIndex }
-const selected = {};
+let cart=[],orderType='hall';
+const sel={};
+const typeLabels={hall:'🪑 В зале',takeaway:'🛍 С собой',delivery:'🛵 Доставка'};
+const PAGES=['home','hot','cold','tea','noncoffee','matcha','cocktails','lemon','other','icecream','about'];
+const bnav_map={home:['home'],hot:['hot'],cold:['cold'],lemon:['lemon','tea','noncoffee','matcha','cocktails','other','icecream'],about:['about']};
 
-// ================================================================
-// RENDER ITEMS
-// ================================================================
-function renderList(items, containerId) {
-    const el = document.getElementById(containerId);
-    if (!el) return;
+function goPage(n){if(!PAGES.includes(n))return;PAGES.forEach(k=>{const e=document.getElementById('pg-'+k);if(e)e.classList.toggle('on',k===n);});document.querySelectorAll('.bnav-btn').forEach(b=>{const p=bnav_map[b.dataset.pg]||[b.dataset.pg];b.classList.toggle('on',p.includes(n));});window.scrollTo({top:0,behavior:'smooth'});if(n==='about')checkOpen();}
+function allItems(){return Object.values(MENU).flat();}
 
-    items.forEach(item => {
-        if (!(item.id in selected)) selected[item.id] = 0;
-    });
-
-    el.innerHTML = items.map(item => buildCard(item, containerId)).join('');
+function buildCard(item,listId){
+    const si=sel[item.id]!==undefined?sel[item.id]:0,sz=item.sz[si];
+    const szBtns=item.sz.length>1?`<div class="sz-row">${item.sz.map((s,i)=>`<button class="sz ${i===si?'on':''}" data-item="${item.id}" data-list="${listId}" data-si="${i}">${s.l}</button>`).join('')}</div>`:`<div style="font-size:.7rem;color:var(--muted)">${sz.l}</div>`;
+    return `<div class="item-card" data-name="${item.name.toLowerCase()}" data-id="${item.id}" data-list="${listId}" data-group="${item.group||''}"><div class="ic-top"></div><div class="ic-content"><div class="ic-em">${item.em}</div><div class="ic-mid">${item.badge?`<span class="ic-badge">${item.badge}</span>`:''}<div class="ic-name">${item.name}</div>${item.note?`<div class="ic-note">${item.note}</div>`:''}${szBtns}</div><div class="ic-right"><div><div class="ic-price">${sz.p} р</div><div class="ic-vol">${sz.l}</div></div><button class="add-btn" data-item="${item.id}" data-list="${listId}">+</button></div></div></div>`;
 }
 
-function buildCard(item, containerId) {
-    const si = selected[item.id] || 0;
-    const sz = item.sizes[si];
+function renderList(items,listId){const el=document.getElementById(listId);if(!el)return;items.forEach(it=>{if(sel[it.id]===undefined)sel[it.id]=0;});el.innerHTML=items.map(it=>buildCard(it,listId)).join('');}
+function rerenderCard(item,listId){const el=document.getElementById(listId);if(!el)return;const old=el.querySelector(`[data-id="${item.id}"]`);if(old)old.outerHTML=buildCard(item,listId);}
+function filterHotGroup(g){document.querySelectorAll('#lst-hot .item-card').forEach(c=>{c.style.display=(g==='all'||c.dataset.group===g)?'':'none';});document.querySelectorAll('#stabs-hot .stab').forEach(b=>{b.classList.toggle('on',b.dataset.sub===g);});}
+function getTotal(){return cart.reduce((s,c)=>s+c.p*c.qty,0);}
+function getCount(){return cart.reduce((s,c)=>s+c.qty,0);}
+function updateNum(){document.getElementById('cNum').textContent=getCount();}
 
-    const sizeBtns = item.sizes.length > 1
-        ? `<div class="size-row">${item.sizes.map((s, i) =>
-            `<button class="sz-btn ${i === si ? 'on' : ''}"
-                onclick="selectSize('${item.id}','${containerId}',${i})">${s.l}</button>`
-          ).join('')}</div>`
-        : '';
-
-    return `
-    <div class="item-card" data-name="${item.name.toLowerCase()}">
-        <div class="item-strip"></div>
-        <div class="item-body">
-            <div class="item-row1">
-                <div class="item-info">
-                    <div class="item-name">${item.name}</div>
-                    ${item.note  ? `<div class="item-note">${item.note}</div>` : ''}
-                    ${item.badge ? `<span class="item-badge">${item.badge}</span>` : ''}
-                </div>
-                <div class="item-emoji">${item.emoji}</div>
-            </div>
-            <div class="item-divider">
-                <span class="idot"></span><span class="idot"></span><span class="idot"></span>
-            </div>
-            ${sizeBtns}
-            <div class="item-row2">
-                <div class="price-wrap">
-                    <div class="price-vol">${sz.l}</div>
-                    <div class="price-val">${sz.p} <span>р</span></div>
-                </div>
-                <button class="add-btn" id="addbtn-${item.id}"
-                    onclick="addItem('${item.id}','${containerId}')">+</button>
-            </div>
-        </div>
-    </div>`;
+function renderCart(){
+    const body=document.getElementById('cartBody'),foot=document.getElementById('cartFoot'),tot=document.getElementById('cartTotal');
+    if(!cart.length){body.innerHTML=`<div class="c-empty"><span class="ei">🛒</span><strong>Корзина пуста</strong><span>Добавьте напитки из меню</span></div>`;foot.style.display='none';return;}
+    foot.style.display='block';tot.textContent=getTotal()+' р';
+    body.innerHTML=cart.map(it=>`<div class="c-row"><div class="c-em">${it.em}</div><div class="c-info"><div class="c-nm">${it.name}</div><div class="c-mt">${it.size} · ${it.p} р/шт</div></div><div class="c-ctrl"><button class="c-q" data-k="${it.key}" data-d="-1">−</button><span class="c-n">${it.qty}</span><button class="c-q" data-k="${it.key}" data-d="1">+</button></div><div class="c-pr">${it.p*it.qty} р</div><button class="c-del" data-k="${it.key}">🗑</button></div>`).join('');
 }
 
-function selectSize(itemId, containerId, idx) {
-    selected[itemId] = idx;
-    // Перерисовать только эту карточку
-    const el = document.getElementById(containerId);
-    if (!el) return;
-    const card = el.querySelector(`[data-name]`);
-    // Найти все карточки и обновить нужную
-    const cards = el.querySelectorAll('.item-card');
-    // Найти item из всех данных
-    const allItems = Object.values(MENU).flat();
-    const item = allItems.find(i => i.id === itemId);
-    if (!item) return;
+function addToCart(item,si){const s=item.sz[si],key=item.id+'__'+s.l;const ex=cart.find(c=>c.key===key);if(ex)ex.qty++;else cart.push({key,name:item.name,em:item.em,size:s.l,p:s.p,qty:1});updateNum();showToast(item.em+' '+item.name+' добавлен!');}
+function openCart(){renderCart();document.getElementById('overlay').classList.add('on');document.body.style.overflow='hidden';}
+function closeCart(){document.getElementById('overlay').classList.remove('on');document.body.style.overflow='';}
+function setOrderType(t){orderType=t;document.querySelectorAll('.ot-btn').forEach(b=>b.classList.toggle('on',b.dataset.type===t));}
 
-    cards.forEach(c => {
-        const nameEl = c.querySelector('.item-name');
-        if (nameEl && nameEl.textContent === item.name) {
-            c.outerHTML; // нельзя заменить через outerHTML внутри forEach
-        }
-    });
+let toastT;
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2200);}
 
-    // Проще — перерисовать весь контейнер с нужными данными
-    // Определяем какой список в контейнере
-    const listKey = containerToKey[containerId];
-    if (listKey) renderList(MENU[listKey], containerId);
+function checkOpen(){
+    const badge=document.getElementById('openBadge');if(!badge)return;
+    const mins=new Date().getHours()*60+new Date().getMinutes(),O=9*60,C=23*60,open=mins>=O&&mins<C;
+    if(open){const l=C-mins,h=Math.floor(l/60),m=l%60;badge.style.cssText='background:rgba(32,184,72,.12);border:2px solid rgba(32,184,72,.4);color:#20b848;';badge.innerHTML=`<span class="ob-dot" style="background:#20b848;box-shadow:0 0 8px rgba(32,184,72,.5);animation:pulse2 2s infinite"></span> Открыто · закрываемся через ${h?h+' ч ':''}${m} мин`;}
+    else{const l=mins<O?O-mins:(24*60-mins)+O,h=Math.floor(l/60),m=l%60;badge.style.cssText='background:rgba(160,26,8,.1);border:2px solid rgba(160,26,8,.3);color:#a01a08;';badge.innerHTML=`<span class="ob-dot" style="background:#a01a08;box-shadow:0 0 6px rgba(160,26,8,.4)"></span> Закрыто · откроемся через ${h?h+' ч ':''}${m} мин`;}
 }
 
-const containerToKey = {
-    'coffee-items': 'coffee',
-    'cold-items':   'cold',
-    'tea-c':        'teaC',
-    'tea-a':        'teaA',
-    'tea-d':        'teaD',
-    'nc-items':     'nc',
-    'matcha-items': 'matcha',
-    'cocktail-items':'cocktails',
-    'lemon-items':  'lemon',
-    'sm-items':     'sm',
-    'fresh-items':  'fresh',
-    'ice-items':    'ice',
-    'ice-add':      'iceAdd',
-};
+function openMap(){const iOS=/iPad|iPhone|iPod/.test(navigator.userAgent),And=/Android/.test(navigator.userAgent);if(iOS)window.open(`maps://maps.apple.com/?q=${encodeURIComponent(ADDR)}&ll=${LAT},${LNG}`,'_blank');else if(And)window.open(`geo:${LAT},${LNG}?q=${encodeURIComponent(ADDR)}`,'_blank');else window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ADDR)}`,'_blank');}
 
-function addItem(itemId, containerId) {
-    const allItems = Object.values(MENU).flat();
-    const item = allItems.find(i => i.id === itemId);
-    if (!item) return;
-
-    const si  = selected[itemId] || 0;
-    const sz  = item.sizes[si];
-    const key = `${itemId}__${sz.l}`;
-    const ex  = cart.find(c => c.key === key);
-
-    if (ex) ex.qty++;
-    else cart.push({ key, id:itemId, name:item.name, emoji:item.emoji, size:sz.l, price:sz.p, qty:1 });
-
-    updateCartNum();
-    showToast(`${item.emoji} ${item.name} добавлен!`);
-
-    // Анимация кнопки
-    const btn = document.getElementById(`addbtn-${itemId}`);
-    if (btn) {
-        btn.classList.add('done');
-        btn.textContent = '✓';
-        setTimeout(() => {
-            btn.classList.remove('done');
-            btn.textContent = '+';
-        }, 1200);
-    }
+function onTap(e){
+    const T=e.target;
+    const bnav=T.closest('.bnav-btn');if(bnav&&bnav.dataset.pg){goPage(bnav.dataset.pg);return;}
+    const go=T.closest('[data-go]');if(go){goPage(go.dataset.go);return;}
+    if(T.closest('#btnHome')){goPage('home');return;}
+    if(T.closest('#btnCart')){openCart();return;}
+    if(T.closest('#btnCloseCart')){closeCart();return;}
+    if(T===document.getElementById('overlay')){closeCart();return;}
+    const otBtn=T.closest('.ot-btn');if(otBtn&&otBtn.dataset.type){setOrderType(otBtn.dataset.type);return;}
+    const stab=T.closest('.stab');if(stab&&stab.closest('#stabs-hot')){filterHotGroup(stab.dataset.sub);return;}
+    const szBtn=T.closest('.sz');if(szBtn){const id=szBtn.dataset.item,listId=szBtn.dataset.list,si=parseInt(szBtn.dataset.si,10);sel[id]=si;const item=allItems().find(x=>x.id===id);if(item)rerenderCard(item,listId);return;}
+    const addBtn=T.closest('.add-btn');if(addBtn){const id=addBtn.dataset.item,listId=addBtn.dataset.list;const item=allItems().find(x=>x.id===id);if(!item)return;addToCart(item,sel[id]||0);addBtn.classList.add('done');addBtn.textContent='✓';setTimeout(()=>{addBtn.classList.remove('done');addBtn.textContent='+';},1200);return;}
+    const qBtn=T.closest('.c-q');if(qBtn){const key=qBtn.dataset.k,d=parseInt(qBtn.dataset.d,10);const it=cart.find(c=>c.key===key);if(it){it.qty+=d;if(it.qty<=0)cart=cart.filter(c=>c.key!==key);}updateNum();renderCart();return;}
+    const delBtn=T.closest('.c-del');if(delBtn){cart=cart.filter(c=>c.key!==delBtn.dataset.k);updateNum();renderCart();return;}
+    if(T.closest('#btnClearCart')){cart=[];updateNum();renderCart();return;}
+    if(T.closest('#btnSendWA')){if(!cart.length){showToast('❗ Корзина пуста!');return;}const comment=document.getElementById('cartComment').value.trim();const typeTxt=typeLabels[orderType]||orderType;let msg=`⚔️ *ЗАКАЗ — САБЛЯ COFFEE*\n📍 ${ADDR}\n🏷 ${typeTxt}\n\n`;cart.forEach((it,i)=>{msg+=`${i+1}. ${it.em} ${it.name} (${it.size}) × ${it.qty} = ${it.p*it.qty} р\n`;});msg+=`\n💰 *Итого: ${getTotal()} р*`;if(comment)msg+=`\n\n💬 ${comment}`;window.open('https://wa.me/'+WA+'?text='+encodeURIComponent(msg),'_blank');return;}
+    if(T.closest('#btnWaContact')){window.open('https://wa.me/'+WA+'?text='+encodeURIComponent('Здравствуйте! Хочу узнать подробнее о кофейне Сабля Coffee.'),'_blank');return;}
+    if(T.closest('#btnMap')){openMap();return;}
 }
 
-function doSearch(input, containerId) {
-    const q = input.value.toLowerCase();
-    const cards = document.querySelectorAll(`#${containerId} .item-card`);
-    cards.forEach(c => {
-        c.style.display = c.dataset.name.includes(q) ? '' : 'none';
-    });
-}
+document.addEventListener('touchend',onTap,{passive:true});
+document.addEventListener('click',onTap);
+document.addEventListener('input',function(e){if(!e.target.classList.contains('srch-in'))return;const listId=e.target.dataset.list,q=e.target.value.toLowerCase();document.querySelectorAll('#'+listId+' .item-card').forEach(c=>{c.style.display=c.dataset.name.includes(q)?'':'none';});});
 
-// ================================================================
-// CART
-// ================================================================
-function updateCartNum() {
-    const n = cart.reduce((s,c) => s + c.qty, 0);
-    document.getElementById('cartNum').textContent = n;
-}
-
-function totalSum() { return cart.reduce((s,c) => s + c.price * c.qty, 0); }
-
-function renderCart() {
-    const body = document.getElementById('cartBody');
-    const foot = document.getElementById('cartFoot');
-    const tot  = document.getElementById('cartTotal');
-
-    if (!cart.length) {
-        body.innerHTML = `
-            <div class="cart-empty">
-                <span class="ei">🛒</span>
-                <strong>Корзина пуста</strong>
-                <span>Добавьте напитки из меню</span>
-            </div>`;
-        foot.style.display = 'none';
-        return;
-    }
-
-    foot.style.display = 'block';
-    tot.textContent = totalSum() + ' р';
-
-    body.innerHTML = cart.map(it => `
-        <div class="cart-item">
-            <div class="ci-emoji">${it.emoji}</div>
-            <div class="ci-info">
-                <div class="ci-name">${it.name}</div>
-                <div class="ci-meta">${it.size} · ${it.price} р/шт</div>
-            </div>
-            <div class="ci-ctrl">
-                <button class="ci-q" onclick="changeQty('${it.key}',-1)">−</button>
-                <span class="ci-n">${it.qty}</span>
-                <button class="ci-q" onclick="changeQty('${it.key}',1)">+</button>
-            </div>
-            <div class="ci-price">${it.price * it.qty} р</div>
-            <button class="ci-del" onclick="removeItem('${it.key}')">🗑</button>
-        </div>`).join('');
-}
-
-function changeQty(key, d) {
-    const it = cart.find(c => c.key === key);
-    if (!it) return;
-    it.qty += d;
-    if (it.qty <= 0) cart = cart.filter(c => c.key !== key);
-    updateCartNum();
-    renderCart();
-}
-
-function removeItem(key) {
-    cart = cart.filter(c => c.key !== key);
-    updateCartNum();
-    renderCart();
-}
-
-function clearCart() {
-    cart = [];
-    updateCartNum();
-    renderCart();
-}
-
-function openCart() {
-    renderCart();
-    document.getElementById('overlay').classList.add('open');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeCart() {
-    document.getElementById('overlay').classList.remove('open');
-    document.body.style.overflow = '';
-}
-
-function overlayClick(e) {
-    if (e.target === document.getElementById('overlay')) closeCart();
-}
-
-// ================================================================
-// WHATSAPP
-// ================================================================
-function openWA(msg) {
-    window.open(`https://wa.me/79280621727?text=${encodeURIComponent(msg)}`, '_blank');
-}
-
-function sendToWA() {
-    if (!cart.length) { showToast('❗ Корзина пуста!'); return; }
-    const comment = document.getElementById('cartComment').value.trim();
-    let msg = '⚔️ *ЗАКАЗ — САБЛЯ COFFEE*\n\n';
-    cart.forEach((it, i) => {
-        msg += `${i+1}. ${it.emoji} ${it.name} (${it.size}) × ${it.qty} = ${it.price * it.qty} р\n`;
-    });
-    msg += `\n💰 *Итого: ${totalSum()} р*`;
-    if (comment) msg += `\n\n💬 ${comment}`;
-    openWA(msg);
-}
-
-// ================================================================
-// TOAST
-// ================================================================
-let toastTimer;
-function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
-}
-
-// ================================================================
-// PAGES
-// ================================================================
-const PAGE_IDS = ['home','coffee','cold','tea','noncoffee','matcha','cocktails','lemonades','smoothie','fresh','icecream','about'];
-
-function goPage(name) {
-    PAGE_IDS.forEach(k => {
-        document.getElementById('p-' + k).classList.toggle('active', k === name);
-    });
-
-    const tabs = document.querySelectorAll('.tab-btn');
-    tabs.forEach((b, i) => {
-        b.classList.toggle('active', PAGE_IDS[i] === name);
-    });
-
-    // Скролл таба в видимость
-    const activeTab = document.querySelector('.tab-btn.active');
-    if (activeTab) {
-        activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-    }
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    if (name === 'about') checkOpen();
-}
-
-// ================================================================
-// OPEN STATUS
-// ================================================================
-function checkOpen() {
-    const badge = document.getElementById('openBadge');
-    if (!badge) return;
-    const now  = new Date();
-    const mins = now.getHours() * 60 + now.getMinutes();
-    const O = 9 * 60, C = 23 * 60;
-    const isOpen = mins >= O && mins < C;
-
-    if (isOpen) {
-        const left = C - mins;
-        const h = Math.floor(left / 60), m = left % 60;
-        badge.style.cssText = 'background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.3);color:#27ae60;';
-        badge.innerHTML = `<span class="open-dot pulse" style="background:#27ae60"></span>Открыто · закрываемся через ${h > 0 ? h + ' ч ' : ''}${m} мин`;
-    } else {
-        const left = mins < O ? O - mins : (24 * 60 - mins) + O;
-        const h = Math.floor(left / 60), m = left % 60;
-        badge.style.cssText = 'background:rgba(192,57,43,0.08);border:1px solid rgba(192,57,43,0.2);color:#c0392b;';
-        badge.innerHTML = `<span class="open-dot" style="background:#c0392b"></span>Закрыто · откроемся через ${h > 0 ? h + ' ч ' : ''}${m} мин`;
-    }
-}
-
-// ================================================================
-// INIT
-// ================================================================
-document.addEventListener('DOMContentLoaded', () => {
-    renderList(MENU.coffee,   'coffee-items');
-    renderList(MENU.cold,     'cold-items');
-    renderList(MENU.teaC,     'tea-c');
-    renderList(MENU.teaA,     'tea-a');
-    renderList(MENU.teaD,     'tea-d');
-    renderList(MENU.nc,       'nc-items');
-    renderList(MENU.matcha,   'matcha-items');
-    renderList(MENU.cocktails,'cocktail-items');
-    renderList(MENU.lemon,    'lemon-items');
-    renderList(MENU.sm,       'sm-items');
-    renderList(MENU.fresh,    'fresh-items');
-    renderList(MENU.ice,      'ice-items');
-    renderList(MENU.iceAdd,   'ice-add');
-    checkOpen();
+document.addEventListener('DOMContentLoaded',function(){
+    renderList(MENU.hot,'lst-hot');renderList(MENU.cold,'lst-cold');renderList(MENU.teaC,'lst-teaC');renderList(MENU.teaA,'lst-teaA');renderList(MENU.teaD,'lst-teaD');renderList(MENU.nc,'lst-nc');renderList(MENU.matcha,'lst-matcha');renderList(MENU.co,'lst-co');renderList(MENU.lemon,'lst-lemon');renderList(MENU.sm,'lst-sm');renderList(MENU.fresh,'lst-fresh');renderList(MENU.ice,'lst-ice');renderList(MENU.iceA,'lst-iceA');checkOpen();
 });
+
+})();
 </script>
 </body>
 </html>

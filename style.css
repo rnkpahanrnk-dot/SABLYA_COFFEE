@@ -1,106 +1,184 @@
 :root {
-    --bg: #F9F6F0; /* Мягкий кремовый */
-    --text: #2D1B14;
-    --wine: #8B0000; /* Бордовый */
-    --accent: #C4A35A; /* Спокойное золото */
+    --bg-color: #FDFBF7;
+    --text-color: #2B1812;
+    --wine: #7D1D1D;
+    --gold: #C4A35A;
+    --gold-light: #E5D5B5;
     --white: #FFFFFF;
+    --font-main: 'Manrope', sans-serif;
+    --font-title: 'Playfair Display', serif;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
 body {
-    font-family: 'Manrope', sans-serif;
-    background-color: var(--bg);
-    color: var(--text);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-main);
+    overflow-x: hidden;
     line-height: 1.6;
 }
 
-.container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
-/* Шапка */
+/* Этно-декор */
+.global-ornament {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    border: 15px solid transparent;
+    border-image: url('https://www.transparenttextures.com/patterns/az-subtle.png') 30 repeat;
+    pointer-events: none; z-index: 9999; opacity: 0.1;
+}
+
+/* Header */
 .header {
-    background: rgba(249, 246, 240, 0.95);
-    position: fixed;
-    top: 0; width: 100%; z-index: 1000;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    background: rgba(253, 251, 247, 0.98);
+    height: 80px; display: flex; align-items: center;
+    position: fixed; top: 0; width: 100%; z-index: 1000;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.05);
 }
-.header-inner { height: 70px; display: flex; justify-content: space-between; align-items: center; }
-.logo-img { height: 50px; }
+.header-inner { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+.logo-img { height: 60px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+
 .nav a {
-    text-decoration: none; color: var(--text);
-    margin-left: 25px; font-weight: 600; font-size: 14px;
-    text-transform: uppercase; letter-spacing: 1px;
+    text-decoration: none; color: var(--text-color);
+    margin-left: 30px; font-weight: 700; font-size: 13px;
+    text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;
 }
-.cart-btn { background: none; border: none; cursor: pointer; position: relative; font-size: 20px; }
-#cart-count {
-    position: absolute; top: -10px; right: -10px;
-    background: var(--wine); color: white; border-radius: 50%;
-    width: 18px; height: 18px; font-size: 10px;
-    display: flex; align-items: center; justify-content: center;
-}
+.nav a:hover { color: var(--wine); }
 
-/* Главный экран */
+.cart-trigger {
+    cursor: pointer; position: relative; background: var(--wine);
+    padding: 10px 15px; border-radius: 50px; color: white;
+}
+#cart-count { margin-left: 5px; font-weight: 800; color: var(--gold); }
+
+/* Hero */
 .hero {
-    height: 80vh;
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('./images/mountains.jpg') center/cover;
-    display: flex; align-items: center; justify-content: center; text-align: center; color: white;
+    height: 90vh;
+    background: url('images/mountains.jpg') center/cover no-repeat;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; text-align: center; color: white; margin-top: 80px;
 }
-.ethno-title { font-family: 'Cormorant Garamond', serif; font-size: 4rem; }
-.hero-subtitle { font-size: 1.2rem; opacity: 0.9; margin-bottom: 30px; }
+.hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(43,24,18,0.7), rgba(43,24,18,0.4));
+}
+.hero-content { position: relative; z-index: 2; max-width: 800px; padding: 20px; }
+.ethno-title {
+    font-family: var(--font-title); font-size: clamp(3rem, 8vw, 6rem);
+    margin-bottom: 10px; letter-spacing: 4px; text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+.hero-desc { font-size: 1.4rem; font-weight: 300; margin-bottom: 40px; }
 
-/* Разделы */
-.section { padding: 80px 0; }
-.section-alt { background: #F0EDE7; }
-.section-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2.5rem; text-align: center; margin-bottom: 40px; color: var(--wine);
-}
-
-/* Кнопки соцсетей */
-.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
-.contact-list { margin-top: 25px; }
-.contact-item { margin-bottom: 15px; }
-.contact-item a { color: var(--wine); font-weight: 700; text-decoration: none; }
-.about-social-btns { display: flex; flex-direction: column; gap: 10px; }
-.social-link-btn {
-    text-decoration: none; color: white; padding: 15px; text-align: center;
-    border-radius: 5px; font-weight: 600; transition: 0.3s;
-}
-.social-link-btn.wa { background: #25D366; }
-.social-link-btn.ig { background: #E1306C; }
-.social-link-btn.group { background: var(--accent); }
-
-/* Карточки меню */
-.menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
-.product-card {
-    background: var(--white); padding: 20px; border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center;
-}
-.product-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; margin-bottom: 10px; }
-
-/* Формы */
-.simple-form { max-width: 500px; margin: 0 auto; display: grid; gap: 15px; }
-.simple-form input, .simple-form textarea {
-    padding: 12px; border: 1px solid #DDD; border-radius: 4px; font-family: inherit;
-}
+/* Кнопки */
 .btn {
-    padding: 15px 30px; cursor: pointer; text-transform: uppercase;
-    font-weight: 700; border: none; border-radius: 4px; text-decoration: none;
+    padding: 16px 35px; border-radius: 4px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1px; cursor: pointer;
+    transition: 0.3s; text-decoration: none; display: inline-block; border: none;
 }
-.btn-primary { background: var(--wine); color: white; }
-.btn-outline { border: 2px solid white; color: white; background: none; }
+.btn-gold { background: var(--gold); color: var(--text-color); }
+.btn-gold:hover { background: var(--wine); color: white; transform: translateY(-3px); }
+.btn-outline { border: 2px solid white; color: white; margin-left: 15px; }
 .full { width: 100%; }
 
-/* Модалка */
+/* Меню */
+.section { padding: 100px 0; }
+.section-alt { background: #F4EFE6; }
+.section-title {
+    font-family: var(--font-title); font-size: 3rem; text-align: center;
+    margin-bottom: 50px; color: var(--wine);
+}
+.section-title.left { text-align: left; margin-bottom: 20px; }
+
+.categories-scroll { overflow-x: auto; padding-bottom: 20px; margin-bottom: 30px; }
+.categories-flex { display: flex; justify-content: center; gap: 10px; min-width: max-content; }
+.cat-btn {
+    padding: 10px 20px; border: 1px solid var(--gold); background: white;
+    font-weight: 700; cursor: pointer; transition: 0.3s;
+}
+.cat-btn.active { background: var(--wine); color: white; border-color: var(--wine); }
+
+.menu-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+.product-card {
+    background: white; border: 1px solid #EEE6D8; padding: 25px;
+    position: relative; transition: 0.3s;
+}
+.product-card:hover { border-color: var(--gold); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+.badge-new {
+    position: absolute; top: 15px; right: 15px; background: var(--wine);
+    color: white; font-size: 10px; padding: 4px 10px; border-radius: 20px;
+}
+.product-card h3 { font-family: var(--font-title); font-size: 1.6rem; margin-bottom: 5px; }
+.product-vol { color: #888; font-size: 0.9rem; margin-bottom: 15px; }
+
+.price-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 15px; padding-top: 15px; border-top: 1px solid #F0F0F0;
+}
+.price-val { font-weight: 800; font-size: 1.3rem; color: var(--wine); }
+
+/* About & Contacts */
+.about-card {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+    background: white; padding: 50px; border: 1px solid var(--gold-light);
+}
+.contact-item { display: flex; gap: 15px; margin-top: 25px; }
+.contact-item span { font-size: 1.5rem; }
+.contact-item a { color: var(--wine); font-weight: 800; text-decoration: none; }
+
+.about-links { display: flex; flex-direction: column; gap: 15px; }
+.social-btn {
+    padding: 18px; text-align: center; color: white; text-decoration: none;
+    font-weight: 700; border-radius: 4px; transition: 0.3s;
+}
+.social-btn.wa { background: #25D366; }
+.social-btn.ig { background: #E1306C; }
+.social-btn.group { background: var(--gold); color: var(--text-color); }
+
+/* Модалка корзины */
 .modal {
-    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+    display: none; position: fixed; inset: 0; background: rgba(43,24,18,0.9);
     z-index: 2000; padding: 20px; overflow-y: auto;
 }
-.modal-content { background: var(--bg); max-width: 500px; margin: 50px auto; padding: 30px; position: relative; }
-.close { position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; }
+.modal-content {
+    background: var(--bg-color); max-width: 500px; margin: 50px auto;
+    padding: 40px; position: relative; border: 2px solid var(--gold);
+}
+.close-modal {
+    position: absolute; top: 20px; right: 20px; font-size: 30px; cursor: pointer;
+}
+.cart-list { margin: 30px 0; }
+.cart-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px 0; border-bottom: 1px solid #EEE;
+}
+.qty-controls { display: flex; align-items: center; gap: 15px; }
+.qty-btn {
+    width: 30px; height: 30px; border: 1px solid var(--gold);
+    background: none; cursor: pointer; font-weight: 800;
+}
+.cart-summary { margin-bottom: 30px; text-align: right; font-size: 1.5rem; font-weight: 800; }
+
+.ethno-form input, .ethno-form textarea, .ethno-form select {
+    width: 100%; padding: 15px; margin-bottom: 15px;
+    border: 1px solid #DDD; background: white; font-family: inherit;
+}
+.order-tabs { display: flex; gap: 15px; margin-bottom: 20px; font-size: 0.9rem; }
 .hidden { display: none; }
 
+/* Mobile */
 @media (max-width: 768px) {
-    .nav { display: none; }
-    .about-grid { grid-template-columns: 1fr; }
-    .ethno-title { font-size: 3rem; }
+    .nav {
+        display: none; position: absolute; top: 80px; left: 0; width: 100%;
+        background: var(--bg-color); flex-direction: column; padding: 20px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .nav.active { display: flex; }
+    .nav a { margin: 10px 0; font-size: 18px; }
+    .about-card { grid-template-columns: 1fr; padding: 30px; }
+    .btn-outline { margin-left: 0; margin-top: 10px; width: 100%; }
+    .burger { display: block; cursor: pointer; }
+    .burger span { display: block; width: 25px; height: 3px; background: var(--text-color); margin-bottom: 5px; }
 }

@@ -3,179 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SABLYA COFFEE — этническая кофейня</title>
-    <meta name="description" content="SABLYA COFFEE — кофейня с кавказским характером. Кофе, авторские чаи, лимонады и бронирование столика.">
-    <link rel="stylesheet" href="./style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>SABLYA COFFEE — Кофейня в этническом стиле</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Manrope:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="page-ornament"></div>
 
     <header class="header">
         <div class="container header-inner">
-            <a href="#home" class="logo">
-                <img src="./images/logo.png" alt="SABLYA COFFEE" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').hidden=false;">
-                <span id="logo-fallback" class="logo-text" hidden>SABLYA COFFEE</span>
+            <a href="#" class="logo">
+                <img src="./images/logo.png" alt="SABLYA COFFEE" class="logo-img">
             </a>
-
             <nav class="nav" id="nav">
                 <a href="#home">Главная</a>
                 <a href="#menu">Меню</a>
                 <a href="#about">О нас</a>
                 <a href="#booking">Бронирование</a>
-                <a href="#contacts">Контакты</a>
             </nav>
-
             <div class="header-actions">
-                <button class="cart-btn" id="cart-open" type="button" aria-label="Открыть корзину">
+                <button class="cart-btn" id="cart-open">
                     <span class="cart-icon">🛒</span>
                     <span id="cart-count">0</span>
                 </button>
-                <button class="burger" id="burger" type="button" aria-label="Меню">
-                    <span></span><span></span><span></span>
-                </button>
+                <button class="burger" id="burger"><span></span><span></span><span></span></button>
             </div>
         </div>
     </header>
 
     <section id="home" class="hero">
-        <div class="hero-frame">
-            <p class="hero-kicker">кофейня с характером гор</p>
-            <h1>SABLYA COFFEE</h1>
-            <div class="saber-line" aria-hidden="true"></div>
-            <p class="hero-text">Крепкий кофе, авторские рафы и кавказское гостеприимство. Современная кофейня в этническом стиле.</p>
-            <div class="hero-actions">
-                <a class="btn btn-primary" href="#menu">Посмотреть меню</a>
-                <button class="btn btn-ghost" type="button" id="hero-order">Заказать</button>
-                <a class="btn btn-gold" href="#booking">Забронировать столик</a>
+        <div class="hero-content">
+            <h1 class="ethno-title">SABLYA COFFEE</h1>
+            <p class="hero-subtitle">Кофейня с кавказским характером</p>
+            <div class="hero-btns">
+                <a href="#menu" class="btn btn-primary">Меню</a>
+                <a href="#booking" class="btn btn-outline">Бронь стола</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="section about-section">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-text">
+                    <h2 class="section-title">О нас</h2>
+                    <p>SABLYA COFFEE — это не просто кофе, это атмосфера гор, гостеприимства и традиций в современном исполнении. Мы используем лучшие зерна и локальные ингредиенты, такие как настоящий урбеч и горные травы.</p>
+                    <div class="contact-list">
+                        <div class="contact-item">
+                            <strong>WhatsApp / Телефон:</strong>
+                            <a href="https://wa.me/79284567776">+7 928 456-77-76</a>
+                        </div>
+                        <div class="contact-item">
+                            <strong>Наш Instagram:</strong>
+                            <a href="https://www.instagram.com/sabllyaa?utm_source=qr" target="_blank">@sabllyaa</a>
+                        </div>
+                        <div class="contact-item">
+                            <strong>WhatsApp Группа:</strong>
+                            <a href="https://chat.whatsapp.com/LUt8cAMwP643f9Od00mOk7?s=sh&p=a&ilr=1" target="_blank">Вступить в группу</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-social-btns">
+                    <a href="https://wa.me/79284567776" class="social-link-btn wa">WhatsApp Заказ</a>
+                    <a href="https://www.instagram.com/sabllyaa?utm_source=qr" class="social-link-btn ig">Instagram</a>
+                    <a href="https://chat.whatsapp.com/LUt8cAMwP643f9Od00mOk7?s=sh&p=a&ilr=1" class="social-link-btn group">Наша группа в WA</a>
+                </div>
             </div>
         </div>
     </section>
 
     <section id="menu" class="section">
         <div class="container">
-            <div class="section-head">
-                <p class="eyebrow">актуальное меню</p>
-                <h2>Наше меню</h2>
-                <p>Цены и объёмы — как в бумажном меню SABLYA COFFEE.</p>
-            </div>
+            <h2 class="section-title">Меню</h2>
             <div class="categories" id="categories"></div>
             <div class="menu-grid" id="menu-grid"></div>
         </div>
     </section>
 
-    <section id="about" class="section section-alt">
-        <div class="container about-grid">
-            <div>
-                <p class="eyebrow">о кофейне</p>
-                <h2>SABLYA COFFEE</h2>
-                <p>Мы собрали вкус гор в чашке: плотный эспрессо, рафы на урбече, калмыцкий чай и лимонады на щавеле.</p>
-                <p>Интерьер и меню вдохновлены Кавказом — горы, сабля, тёплый свет и спокойная атмосфера, в которую хочется возвращаться.</p>
-            </div>
-            <div class="about-card">
-                <h3>Что нас отличает</h3>
-                <ul>
-                    <li>Фирменные рафы и дубайский раф</li>
-                    <li>Авторские чаи и калмыцкий чай</li>
-                    <li>Заказ в зале, с собой и доставка</li>
-                    <li>Бронирование столика через WhatsApp</li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <section id="booking" class="section">
-        <div class="container booking-wrap">
-            <div class="section-head">
-                <p class="eyebrow">стол в кофейне</p>
-                <h2>Забронировать столик</h2>
-                <p>Оставьте данные — мы отправим заявку в WhatsApp.</p>
-            </div>
-            <form id="booking-form" class="form-card">
-                <div class="form-row">
-                    <input type="text" id="book-name" placeholder="Ваше имя" required>
-                    <input type="number" id="book-guests" min="1" max="20" placeholder="Количество гостей" required>
-                </div>
+    <section id="booking" class="section section-alt">
+        <div class="container">
+            <h2 class="section-title">Забронировать столик</h2>
+            <form id="booking-form" class="simple-form">
+                <input type="text" id="book-name" placeholder="Ваше имя" required>
+                <input type="number" id="book-guests" placeholder="Кол-во гостей" required>
                 <div class="form-row">
                     <input type="date" id="book-date" required>
                     <input type="time" id="book-time" required>
                 </div>
-                <textarea id="book-comment" placeholder="Комментарий"></textarea>
-                <button class="btn btn-primary full" type="submit">Забронировать через WhatsApp</button>
+                <textarea id="book-comment" placeholder="Пожелания"></textarea>
+                <button type="submit" class="btn btn-primary full">Забронировать через WhatsApp</button>
             </form>
         </div>
     </section>
 
-    <section id="contacts" class="section section-alt">
-        <div class="container contacts-grid">
-            <div>
-                <p class="eyebrow">контакты</p>
-                <h2>SABLYA COFFEE</h2>
-                <p>Адрес: уточните у администратора или в Instagram</p>
-                <p>Телефон / WhatsApp: <a href="https://wa.me/79284567776">+7 928 456-77-76</a></p>
-                <p>Время работы: уточняйте в Instagram</p>
-                <div class="contact-actions">
-                    <a class="btn btn-primary" href="https://wa.me/79284567776" target="_blank" rel="noopener">WhatsApp заказа</a>
-                    <a class="btn btn-ghost" href="https://www.instagram.com/sabllyaa?utm_source=qr" target="_blank" rel="noopener">Instagram</a>
-                </div>
-            </div>
-            <div class="social-card" id="socials">
-                <h3>Мы в социальных сетях</h3>
-                <a href="https://www.instagram.com/sabllyaa?utm_source=qr" target="_blank" rel="noopener">Instagram</a>
-                <a href="https://wa.me/79284567776" target="_blank" rel="noopener">WhatsApp</a>
-                <a href="https://chat.whatsapp.com/LUt8cAMwP643f9Od00mOk7?s=sh&p=a&ilr=1" target="_blank" rel="noopener">Наша группа в WhatsApp</a>
-            </div>
-        </div>
-    </section>
-
-    <footer class="footer">
-        <div class="container footer-inner">
-            <div>
-                <strong>SABLYA COFFEE</strong>
-                <p>Этническая кофейня</p>
-            </div>
-            <div class="footer-links">
-                <a href="https://www.instagram.com/sabllyaa?utm_source=qr" target="_blank" rel="noopener">Instagram</a>
-                <a href="https://wa.me/79284567776" target="_blank" rel="noopener">WhatsApp</a>
-                <a href="https://chat.whatsapp.com/LUt8cAMwP643f9Od00mOk7?s=sh&p=a&ilr=1" target="_blank" rel="noopener">Группа WhatsApp</a>
-            </div>
-        </div>
-    </footer>
-
     <div class="modal" id="cart-modal">
         <div class="modal-content">
-            <button class="close" id="cart-close" type="button">&times;</button>
+            <span class="close" id="cart-close">&times;</span>
             <h3>Ваш заказ</h3>
             <div id="cart-items"></div>
             <div class="cart-total">Итого: <span id="cart-total-price">0</span> ₽</div>
-            <button class="btn btn-light full" id="clear-cart" type="button">Очистить корзину</button>
-
-            <div class="order-type">
-                <label><input type="radio" name="delivery-type" value="В зале" checked> В зале</label>
-                <label><input type="radio" name="delivery-type" value="С собой"> С собой</label>
-                <label><input type="radio" name="delivery-type" value="Доставка"> Доставка</label>
-            </div>
-
-            <form id="order-form" class="order-form">
-                <input type="text" id="order-name" placeholder="Ваше имя" required>
-                <input type="tel" id="order-phone" placeholder="Телефон" required>
-                <input type="text" id="order-table" placeholder="Номер столика">
-                <input type="text" id="order-address" class="hidden" placeholder="Адрес доставки">
-                <textarea id="order-comment" placeholder="Комментарий"></textarea>
-                <div id="payment-wrap">
-                    <select id="order-payment">
-                        <option value="Наличными">Наличными</option>
-                        <option value="Картой">Картой</option>
-                    </select>
+            <form id="order-form" class="simple-form">
+                <div class="order-type-tabs">
+                    <label><input type="radio" name="delivery-type" value="В зале" checked> В зале</label>
+                    <label><input type="radio" name="delivery-type" value="С собой"> С собой</label>
+                    <label><input type="radio" name="delivery-type" value="Доставка"> Доставка</label>
                 </div>
-                <button class="btn btn-primary full" type="submit">Оформить заказ</button>
+                <input type="text" id="order-name" placeholder="Имя" required>
+                <input type="tel" id="order-phone" placeholder="Телефон" required>
+                <input type="text" id="order-address" class="hidden" placeholder="Адрес доставки">
+                <button type="submit" class="btn btn-primary full">Оформить в WhatsApp</button>
             </form>
         </div>
     </div>
 
-    <div class="toast" id="toast"></div>
-    <script src="./script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

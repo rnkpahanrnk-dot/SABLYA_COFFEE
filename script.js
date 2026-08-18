@@ -1,17 +1,17 @@
 /* ==========================================================================
-   SABLYA COFFEE — логика сайта
+   SABLYA COFFEE — логика сайта (общие модули для всех страниц)
    --------------------------------------------------------------------------
-   Все данные меню — в одном массиве `products` внизу файла.
-   Чтобы изменить название, цену, объём или добавить товар —
-   достаточно отредактировать нужную запись массива.
+   Файл подключается на ВСЕ страницы: index, menu, about, booking, reviews,
+   contacts. Шапка, нижняя навигация, подвал и корзина создаются скриптом
+   автоматически и выглядят одинаково на каждой странице.
+
+   ВСЁ меню — в массиве `products` ниже. Чтобы изменить название, цену,
+   объём или добавить товар — отредактируйте нужную запись массива.
    ========================================================================== */
 
 (function () {
   "use strict";
 
-  /* ------------------------------------------------------------------
-     1. НАСТРОЙКИ (контакты кофейни)
-     ------------------------------------------------------------------ */
   var CONFIG = {
     // Номер кофейни для приёма заказов и брони (WhatsApp, без + и скобок)
     whatsappNumber: "79284567776",
@@ -212,19 +212,24 @@
     { name: "Амина", rating: 5, text: "Уютно, тихо и очень вкусно. Раф с урбечом — любовь! Спасибо за тёплый приём.", date: "02.08.2026" },
     { name: "Рамазан", rating: 5, text: "Лучший кофе в Бабаюрте. Брал капучино и варёную кукурузу — всё на высоте. Рекомендую!", date: "27.07.2026" },
     { name: "Мадина", rating: 4, text: "Красивое место и внимательный персонал. Лимонад «Голубая лагуна» очень освежает.", date: "18.07.2026" },
-  ];
+  ]
 
   /* ------------------------------------------------------------------
-     6. СОСТОЯНИЕ ПРИЛОЖЕНИЯ
+     СОСТОЯНИЕ ПРИЛОЖЕНИЯ
      ------------------------------------------------------------------ */
   var STORAGE_KEY = "sablya_cart_v1";
-  var cart = loadCart();
+  var cart = loadCart(); // loadCart объявлена ниже (function hoisting)
+
   var activeCategory = "all";
   var searchQuery = "";
   var orderType = "dine"; // dine | takeaway | delivery
   var reviewRating = 5;
-
   var pm = null; // состояние модального окна товара
+
+  var PAGE = "home";
+  if (typeof document !== "undefined" && document.body && document.body.dataset && document.body.dataset.page) {
+    PAGE = document.body.dataset.page;
+  }
 
   var ORDER_TYPES = {
     dine: { label: "В заведении" },
@@ -233,7 +238,7 @@
   };
 
   /* ------------------------------------------------------------------
-     7. ПОМОЩНИКИ
+     ПОМОЩНИКИ
      ------------------------------------------------------------------ */
   function $(sel) { return document.querySelector(sel); }
   function $$(sel) { return Array.prototype.slice.call(document.querySelectorAll(sel)); }
@@ -251,33 +256,33 @@
     return c ? c.label : id;
   }
 
-  function normalizePhone(v) {
-    return String(v || "").replace(/[^\d+]/g, "");
-  }
-  function isValidPhone(v) {
-    var digits = normalizePhone(v).replace(/\D/g, "");
-    return digits.length >= 10;
+  function isoToday() {
+    var d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
   }
 
   /* --- Toast-уведомления --- */
   var toastTimer = null;
   function toast(msg) {
     var el = $("#toast");
+    if (!el) return;
     el.textContent = msg;
     el.classList.add("show");
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () { el.classList.remove("show"); }, 2600);
+    toastTimer = setTimeout(function () { el.classList.remove("show"); }, 2800);
   }
 
   /* --- Модальные окна --- */
   function openModal(el, opener) {
-    if (opener) el.dataset.opener = opener.id || null;
+    if (!el) return;
+    if (opener) el.dataset.opener = opener.id || "";
     el.classList.add("open");
     document.body.style.overflow = "hidden";
     var focusable = el.querySelector("button, input, select, textarea, a[href]");
-    if (focusable) focusable.focus({ preventScroll: true });
+    if (focusable) { try { focusable.focus({ preventScroll: true }); } catch (e) {} }
   }
   function closeModal(el) {
+    if (!el) return;
     el.classList.remove("open");
     document.body.style.overflow = "";
     var opener = el.dataset.opener ? document.getElementById(el.dataset.opener) : null;
@@ -287,18 +292,27 @@
     $$(".modal.open").forEach(closeModal);
   }
 
-  /* --- WhatsApp --- */
+  /* --- WhatsApp (корректное кодирование сообщения) --- */
   function waLink(text) {
     return "https://wa.me/" + CONFIG.whatsappNumber + "?text=" + encodeURIComponent(text);
   }
   function openWhatsApp(text) {
     var url = waLink(text);
-    var w = window.open(url, "_blank", "noopener");
-    if (!w) { location.href = url; }
+    var w = null;
+    try { w = window.open(url, "_blank"); } catch (e) { w = null; }
+    if (!w) {
+      var a = document.createElement("a");
+      a.href = url;
+      a.target = "_blank";
+      a.rel = "noopener";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
   }
 
   /* ------------------------------------------------------------------
-     8. КОРЗИНА (localStorage)
+     КОРЗИНА (localStorage — общая для всех страниц)
      ------------------------------------------------------------------ */
   function loadCart() {
     try {
@@ -401,20 +415,18 @@
     var emptyEl = $("#cartEmpty");
     var bodyEl = $("#cartBody");
     var totalEl = $("#cartTotal");
-    var submitBtn = $("#submitOrderBtn");
+    if (!itemsEl) return;
 
     if (!cart.length) {
       itemsEl.innerHTML = "";
-      emptyEl.hidden = false;
-      bodyEl.hidden = true;
+      if (emptyEl) emptyEl.hidden = false;
+      if (bodyEl) bodyEl.hidden = true;
       if (totalEl) totalEl.textContent = money(0);
-      if (submitBtn) submitBtn.disabled = true;
       return;
     }
 
-    emptyEl.hidden = true;
-    bodyEl.hidden = false;
-    if (submitBtn) submitBtn.disabled = false;
+    if (emptyEl) emptyEl.hidden = true;
+    if (bodyEl) bodyEl.hidden = false;
 
     itemsEl.innerHTML = cart.map(function (item) {
       var addonsMeta = (item.addons || [])
@@ -440,179 +452,26 @@
       );
     }).join("");
 
-    totalEl.textContent = money(cartTotal());
+    if (totalEl) totalEl.textContent = money(cartTotal());
   }
 
   /* ------------------------------------------------------------------
-     9. ОТРИСОВКА МЕНЮ: категории, поиск, карточки
+     ОФОРМЛЕНИЕ ЗАКАЗА
      ------------------------------------------------------------------ */
-  function renderChips() {
-    var wrap = $("#categoryChips");
-    wrap.innerHTML = categories.map(function (c) {
-      var count = c.id === "all" ? products.length : products.filter(function (p) { return p.category === c.id; }).length;
-      var cls = "chip" + (c.id === activeCategory ? " active" : "");
-      return (
-        '<button type="button" class="' + cls + '" data-cat="' + c.id + '" role="tab" aria-selected="' + (c.id === activeCategory) + '">' +
-          esc(c.label) +
-          '<span class="chip-count">' + count + "</span>" +
-        "</button>"
-      );
-    }).join("");
+  function fieldHtml(id, label, placeholder, type, required) {
+    var hint = required
+      ? ' <i class="field-required">обязательно</i>'
+      : ' <i class="optional">необязательно</i>';
+    return (
+      '<label class="field"><span class="field-label">' + label + hint + "</span>" +
+      '<input type="' + type + '" id="' + id + '" maxlength="40" placeholder="' + esc(placeholder) + '"' + (required ? " required" : "") + "></label>"
+    );
   }
 
-  // Поиск с учётом русских словоформ: «коктейль» находит «Коктейли», «рафы» — «Раф»
-  function normSearch(s) {
-    return String(s || "").toLowerCase().replace(/ё/g, "е");
-  }
-  function stemSearch(s) {
-    return s.replace(/(ами|ями|ией|ия|ию|ие|ий|ах|ях|ов|ев|ом|ем|ой|ей|ам|ям|ы|и|а|я|у|ю|о|е|ь)$/g, "");
-  }
-
-  function filteredProducts() {
-    var q = normSearch(searchQuery.trim());
-    return products.filter(function (p) {
-      var byCat = activeCategory === "all" || p.category === activeCategory;
-      if (!byCat) return false;
-      if (!q) return true;
-      var hay = normSearch(p.name + " " + categoryLabel(p.category) + " " + (p.desc || ""));
-      if (hay.indexOf(q) !== -1) return true;
-      // доп. проверка по основе слова
-      return stemSearch(hay).indexOf(stemSearch(q)) !== -1;
-    });
-  }
-
-  function renderMenu() {
-    var grid = $("#productGrid");
-    var list = filteredProducts();
-    var empty = $("#menuEmpty");
-    var count = $("#menuCount");
-
-    if (count) count.textContent = products.length;
-
-    if (!list.length) {
-      grid.innerHTML = "";
-      empty.hidden = false;
-      $("#emptyQuery").textContent = searchQuery.trim();
-      return;
-    }
-
-    empty.hidden = true;
-
-    grid.innerHTML = list.map(function (p) {
-      var sizesHtml = p.sizes.map(function (s, i) {
-        return (
-          '<div class="size-row" data-size="' + i + '" role="button" tabindex="0" aria-label="' + esc(s.volume) + " — " + money(s.price) + '">' +
-            '<span class="size-vol">' + esc(s.volume) + "</span>" +
-            '<span class="size-price">' + money(s.price) + "</span>" +
-          "</div>"
-        );
-      }).join("");
-
-      var imageHtml = "";
-      if (p.image) {
-        imageHtml = '<div class="pc-img"><img src="' + esc(p.image) + '" alt="' + esc(p.name) + '" loading="lazy"></div>';
-      }
-
-      return (
-        '<article class="product-card" data-id="' + p.id + '">' +
-          imageHtml +
-          '<span class="pc-cat">' + esc(categoryLabel(p.category)) + "</span>" +
-          '<h3 class="pc-name">' + esc(p.name) + "</h3>" +
-          '<p class="pc-desc">' + esc(p.desc || "") + "</p>" +
-          '<div class="pc-sizes">' + sizesHtml + "</div>" +
-          '<button type="button" class="btn btn--outline btn--sm pc-add" data-id="' + p.id + '">Добавить</button>' +
-        "</article>"
-      );
-    }).join("");
-  }
-
-  /* ------------------------------------------------------------------
-     10. МОДАЛЬНОЕ ОКНО ТОВАРА
-     ------------------------------------------------------------------ */
-  function openProductModal(productId, presetSize) {
-    var p = products.find(function (x) { return x.id === productId; });
-    if (!p) return;
-
-    pm = {
-      product: p,
-      sizeIndex: Math.min(presetSize || 0, p.sizes.length - 1),
-      addons: [],   // ключи вида "milk:0"
-      qty: 1,
-    };
-
-    $("#pmodalName").textContent = p.name;
-    $("#pmodalDesc").textContent = p.desc || "";
-    $("#pmodalCat").textContent = categoryLabel(p.category);
-    $("#pqValue").textContent = "1";
-
-    // Объёмы
-    var sizesWrap = $("#pmodalSizes");
-    sizesWrap.innerHTML = p.sizes.map(function (s, i) {
-      return (
-        '<button type="button" class="size-opt" data-size="' + i + '">' +
-          '<span class="opt-label"><span class="radio" aria-hidden="true"></span>' + esc(s.volume) + "</span>" +
-          '<span class="opt-price">' + money(s.price) + "</span>" +
-        "</button>"
-      );
-    }).join("");
-
-    // Добавки
-    var addonsWrap = $("#pmodalAddons");
-    var addonsBlock = $("#pmodalAddonsBlock");
-    var groups = p.addons || [];
-    if (groups.length) {
-      addonsWrap.innerHTML = groups.map(function (g) {
-        var opts = (ADDONS[g] || []).map(function (a, i) {
-          return (
-            '<button type="button" class="addon-opt" data-key="' + g + ":" + i + '">' +
-              '<span class="opt-label"><span class="check" aria-hidden="true"></span>' + esc(a.name) + "</span>" +
-              '<span class="opt-price">+' + a.price + " ₽</span>" +
-            "</button>"
-          );
-        }).join("");
-        return (
-          '<p class="pmodal-label">' + esc(ADDON_GROUP_LABELS[g] || g) + "</p>" +
-          '<div class="addon-options">' + opts + "</div>"
-        );
-      }).join("");
-      addonsBlock.hidden = false;
-    } else {
-      addonsWrap.innerHTML = "";
-      addonsBlock.hidden = true;
-    }
-
-    syncProductModal();
-    openModal($("#productModal"), $("#productModal"));
-  }
-
-  function syncProductModal() {
-    var p = pm.product;
-
-    // подсветка выбранного объёма
-    $$("#pmodalSizes .size-opt").forEach(function (el) {
-      el.classList.toggle("selected", Number(el.dataset.size) === pm.sizeIndex);
-    });
-
-    // подсветка выбранных добавок
-    $$("#pmodalAddons .addon-opt").forEach(function (el) {
-      el.classList.toggle("selected", pm.addons.indexOf(el.dataset.key) !== -1);
-    });
-
-    // цена
-    var addonPrice = pm.addons.reduce(function (s, key) {
-      var parts = key.split(":");
-      var group = ADDONS[parts[0]];
-      return s + (group ? group[Number(parts[1])].price : 0);
-    }, 0);
-    var unit = p.sizes[pm.sizeIndex].price + addonPrice;
-    $("#pmodalAddBtn").textContent = "Добавить в корзину — " + money(unit);
-  }
-
-  /* ------------------------------------------------------------------
-     11. ОФОРМЛЕНИЕ ЗАКАЗА
-     ------------------------------------------------------------------ */
   function renderCheckoutFields() {
     var wrap = $("#checkoutFields");
+    if (!wrap) return;
+
     // сохраняем введённые значения при переключении типа заказа
     var vals = {};
     $$("#checkoutFields input, #checkoutFields textarea").forEach(function (el) {
@@ -620,11 +479,12 @@
     });
 
     var html = "";
-    html += fieldHtml("coName", "Имя", "Как к вам обращаться", "text", true);
-    html += fieldHtml("coPhone", "Телефон", "+7 (___) ___-__-__", "tel", true);
+    html += fieldHtml("coName", "Имя", "Как к вам обращаться", "text", false);
+    html += fieldHtml("coPhone", "Телефон", "+7 (___) ___-__-__", "tel", false);
 
+    // Адрес спрашиваем только для доставки
     if (orderType === "delivery") {
-      html += fieldHtml("coAddress", "Адрес", "Улица, дом", "text", true);
+      html += fieldHtml("coAddress", "Адрес доставки", "Улица, дом", "text", true);
       html += fieldHtml("coEntrance", "Подъезд / этаж / квартира", "Необязательно", "text", false);
     }
 
@@ -633,23 +493,17 @@
       '<textarea id="coComment" rows="2" maxlength="300" placeholder="Пожелания к заказу"></textarea></label>';
 
     wrap.innerHTML = html;
+
     Object.keys(vals).forEach(function (id) {
       var el = document.getElementById(id);
       if (el) el.value = vals[id];
     });
   }
 
-  function fieldHtml(id, label, placeholder, type, required) {
-    return (
-      '<label class="field"><span class="field-label">' + label + (required ? "" : ' <i class="optional">необязательно</i>') + "</span>" +
-      '<input type="' + type + '" id="' + id + '" maxlength="40" placeholder="' + esc(placeholder) + '"' + (required ? " required" : "") + "></label>"
-    );
-  }
-
   function collectCheckout() {
     return {
-      name: $("#coName").value.trim(),
-      phone: $("#coPhone").value.trim(),
+      name: $("#coName") ? $("#coName").value.trim() : "",
+      phone: $("#coPhone") ? $("#coPhone").value.trim() : "",
       address: $("#coAddress") ? $("#coAddress").value.trim() : "",
       entrance: $("#coEntrance") ? $("#coEntrance").value.trim() : "",
       comment: $("#coComment") ? $("#coComment").value.trim() : "",
@@ -683,10 +537,13 @@
     }
 
     lines.push("Итого: " + money(cartTotal()));
-    lines.push("Имя: " + data.name);
-    lines.push("Телефон: " + data.phone);
+
+    // Имя и телефон НЕ обязательны
+    lines.push("Имя: " + (data.name || "не указано"));
+    lines.push("Телефон: " + (data.phone || "не указан"));
+
     if (orderType === "delivery") {
-      lines.push("Адрес: " + data.address);
+      lines.push("Адрес: " + (data.address || "не указан"));
       if (data.entrance) lines.push("Подъезд/этаж/квартира: " + data.entrance);
     }
     if (data.comment) lines.push("Комментарий: " + data.comment);
@@ -695,10 +552,11 @@
   }
 
   /* ------------------------------------------------------------------
-     12. БРОНИРОВАНИЕ СТОЛИКА
+     БРОНИРОВАНИЕ
      ------------------------------------------------------------------ */
   function buildTimeOptions() {
     var sel = $("#bkTime");
+    if (!sel) return;
     var opts = [];
     for (var h = 9; h <= 22; h++) {
       for (var m = 0; m < 60; m += 30) {
@@ -710,9 +568,10 @@
   }
 
   function setMinDate() {
+    var input = $("#bkDate");
+    if (!input) return;
     var d = new Date();
     var iso = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
-    var input = $("#bkDate");
     input.min = iso;
     input.value = input.value || iso;
   }
@@ -720,8 +579,8 @@
   function buildBookingMessage(data) {
     var lines = [];
     lines.push("Здравствуйте! Хочу забронировать столик в SABLYA COFFEE.");
-    lines.push("Имя: " + data.name);
-    lines.push("Телефон: " + data.phone);
+    lines.push("Имя: " + (data.name || "не указано"));
+    lines.push("Телефон: " + (data.phone || "не указан"));
     lines.push("Гостей: " + data.guests);
     lines.push("Дата: " + data.date);
     lines.push("Время: " + data.time);
@@ -730,10 +589,11 @@
   }
 
   /* ------------------------------------------------------------------
-     13. ОТЗЫВЫ
+     ОТЗЫВЫ
      ------------------------------------------------------------------ */
   function renderReviews() {
     var grid = $("#reviewsGrid");
+    if (!grid) return;
     grid.innerHTML = publishedReviews.map(function (r) {
       var stars = "";
       for (var i = 1; i <= 5; i++) stars += i <= r.rating ? "★" : "☆";
@@ -747,98 +607,268 @@
     }).join("");
   }
 
-  function buildReviewMessage(data) {
-    return [
-      "Здравствуйте! Хочу оставить отзыв о SABLYA COFFEE.",
-      "Имя: " + data.name,
-      "Оценка: " + data.rating + "/5",
-      "Отзыв: " + data.text,
-    ].join("\n");
-  }
-
   function renderStars() {
     $$("#rvStars .star").forEach(function (btn) {
       btn.classList.toggle("active", Number(btn.dataset.val) <= reviewRating);
     });
   }
 
-  /* ------------------------------------------------------------------
-     14. ПРОКРУТКА И ПОДСВЕТКА НАВИГАЦИИ
-     ------------------------------------------------------------------ */
-  function initReveal() {
-    if (!("IntersectionObserver" in window)) {
-      $$(".reveal").forEach(function (el) { el.classList.add("in"); });
-      return;
-    }
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
-      });
-    }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
-    $$(".reveal").forEach(function (el) { io.observe(el); });
+  function buildReviewMessage(data) {
+    return [
+      "Здравствуйте! Хочу оставить отзыв о SABLYA COFFEE.",
+      "Имя: " + (data.name || "не указано"),
+      "Оценка: " + data.rating + "/5",
+      "Отзыв: " + data.text,
+    ].join("\n");
   }
 
-  function initScrollSpy() {
-    var targets = [
-      { id: "hero", navs: ["home"] },
-      { id: "menu", navs: ["menu"] },
-      { id: "booking", navs: ["booking"] },
-      { id: "contacts", navs: ["contacts"] },
-    ];
-    var ticking = false;
+  /* ------------------------------------------------------------------
+     ОБЩИЙ КАРКАС СТРАНИЦЫ (шапка, подвал, корзина, модальные окна)
+     ------------------------------------------------------------------ */
+  var IC_CART =
+    '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<path d="M6 8h12l-1.2 11.2a1.8 1.8 0 0 1-1.8 1.6H9a1.8 1.8 0 0 1-1.8-1.6L6 8Z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/>' +
+    "</svg>";
+  var IC_HOME =
+    '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<path d="M4 11 12 4l8 7"/><path d="M6 9.5V20h12V9.5"/>' +
+    "</svg>";
+  var IC_MENU =
+    '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<path d="M5 5h14v3H5z"/><path d="M5 12h14v3H5z"/><path d="M5 19h9v3H5z"/>' +
+    "</svg>";
+  var IC_BOOK =
+    '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4M16 3v4M4 11h16"/><path d="M12 14l1.6 1.6L16 13.5"/>' +
+    "</svg>";
+  var IC_PIN =
+    '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<path d="M12 21s7-5.1 7-11a7 7 0 1 0-14 0c0 5.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/>' +
+    "</svg>";
 
-    function update() {
-      ticking = false;
-      var pos = window.scrollY + 140;
-      var current = "home";
-      targets.forEach(function (t) {
-        var el = document.getElementById(t.id);
-        if (el && el.offsetTop <= pos) current = t.id;
-      });
-      if (current === "contacts") {
-        var footer = document.querySelector(".site-footer");
-        if (footer && window.scrollY + window.innerHeight >= footer.offsetTop) current = "contacts";
+  var NAV_LINKS = [
+    ["index.html", "Главная"],
+    ["menu.html", "Меню"],
+    ["about.html", "О нас"],
+    ["booking.html", "Бронь"],
+    ["reviews.html", "Отзывы"],
+    ["contacts.html", "Контакты"],
+  ];
+
+  var headerHtml =
+    '<header class="site-header" id="siteHeader">' +
+      '<div class="container header-inner">' +
+        '<a class="logo" href="index.html" aria-label="SABLYA COFFEE — на главную">' +
+          '<span class="logo-mark" aria-hidden="true">S</span>' +
+          '<span class="logo-text">SABLYA&nbsp;<em>COFFEE</em></span>' +
+        "</a>" +
+        '<nav class="top-nav" aria-label="Основная навигация">' +
+          NAV_LINKS.map(function (l) { return '<a class="nav-link" href="' + l[0] + '">' + l[1] + "</a>"; }).join("") +
+        "</nav>" +
+        '<button class="cart-btn" id="headerCartBtn" type="button" aria-label="Открыть корзину">' +
+          IC_CART +
+          '<span class="cart-badge" id="cartBadge" hidden>0</span>' +
+        "</button>" +
+      "</div>" +
+    "</header>";
+
+  var footerHtml =
+    '<footer class="site-footer">' +
+      '<div class="container">' +
+        '<p class="footer-brand">SABLYA COFFEE</p>' +
+        '<p class="footer-tagline">Вкус кофе. Характер Кавказа.</p>' +
+        '<nav class="footer-nav" aria-label="Навигация в подвале">' +
+          '<a href="menu.html">Меню</a>' +
+          '<a href="about.html">О нас</a>' +
+          '<a href="booking.html">Бронь</a>' +
+          '<a href="reviews.html">Отзывы</a>' +
+          '<a href="contacts.html">Контакты</a>' +
+        "</nav>" +
+        '<div class="footer-social">' +
+          '<a href="' + CONFIG.instagram + '" target="_blank" rel="noopener">Instagram</a>' +
+          '<span class="dot" aria-hidden="true"></span>' +
+          '<a href="' + CONFIG.whatsappGroup + '" target="_blank" rel="noopener">WhatsApp</a>' +
+        "</div>" +
+        '<p class="footer-copy">© SABLYA COFFEE · <span id="footerYear">2026</span> · Бабаюрт</p>' +
+      "</div>" +
+    "</footer>";
+
+  var bottomNavHtml =
+    '<nav class="bottom-nav" aria-label="Мобильная навигация">' +
+      '<a href="index.html" class="bn-item" data-bn="home">' + IC_HOME + "<span>Главная</span></a>" +
+      '<a href="menu.html" class="bn-item" data-bn="menu">' + IC_MENU + "<span>Меню</span></a>" +
+      '<button class="bn-item" id="bnCart" type="button" data-bn="cart">' +
+        '<span class="bn-cart-icon">' + IC_CART + '<span class="cart-badge" id="bnCartBadge" hidden>0</span></span>' +
+        "<span>Корзина</span>" +
+      "</button>" +
+      '<a href="booking.html" class="bn-item" data-bn="booking">' + IC_BOOK + "<span>Бронь</span></a>" +
+      '<a href="contacts.html" class="bn-item" data-bn="contacts">' + IC_PIN + "<span>Контакты</span></a>" +
+    "</nav>";
+
+  var cartModalHtml =
+    '<div class="modal" id="cartModal" aria-hidden="true">' +
+      '<div class="modal-backdrop" data-close></div>' +
+      '<div class="modal-panel modal-panel--cart" role="dialog" aria-modal="true" aria-label="Корзина">' +
+        '<div class="modal-head">' +
+          '<h2 class="modal-title">Корзина</h2>' +
+          '<button class="modal-close" data-close type="button" aria-label="Закрыть корзину">×</button>' +
+        "</div>" +
+        '<div class="cart-scroll">' +
+          '<div id="cartItems" class="cart-items"></div>' +
+          '<div id="cartEmpty" class="cart-empty">' +
+            "<p>В корзине пока пусто</p>" +
+            '<p class="cart-empty-sub">Загляните в меню — там много интересного.</p>' +
+            '<button class="btn btn--outline" id="toMenuBtn" type="button">Перейти в меню</button>' +
+          "</div>" +
+          '<div id="cartBody" class="cart-body" hidden>' +
+            '<div class="cart-tools">' +
+              '<span class="cart-save-note">Корзина сохраняется автоматически</span>' +
+              '<button class="link-btn link-btn--danger" id="clearCartBtn" type="button">Очистить корзину</button>' +
+            "</div>" +
+            '<div class="order-type">' +
+              '<p class="field-label">Тип заказа</p>' +
+              '<div class="order-type-grid" id="orderTypeWrap">' +
+                '<button class="order-type-btn" type="button" data-type="dine"><span class="ot-emoji" aria-hidden="true">🪑</span>В заведении</button>' +
+                '<button class="order-type-btn" type="button" data-type="takeaway"><span class="ot-emoji" aria-hidden="true">🛍</span>С собой</button>' +
+                '<button class="order-type-btn" type="button" data-type="delivery"><span class="ot-emoji" aria-hidden="true">🛵</span>Доставка</button>' +
+              "</div>" +
+            "</div>" +
+            '<form id="checkoutForm" novalidate>' +
+              '<div class="form-fields" id="checkoutFields"></div>' +
+              '<div class="cart-total-row"><span>Итого</span><strong id="cartTotal">0 ₽</strong></div>' +
+              '<button type="submit" class="btn btn--primary btn--wide" id="submitOrderBtn">Оформить заказ</button>' +
+              '<p class="form-hint">Заказ откроется в WhatsApp — останется нажать «Отправить».</p>' +
+            "</form>" +
+          "</div>" +
+        "</div>" +
+      "</div>" +
+    "</div>";
+
+  var productModalHtml =
+    '<div class="modal" id="productModal" aria-hidden="true">' +
+      '<div class="modal-backdrop" data-close></div>' +
+      '<div class="modal-panel modal-panel--product" role="dialog" aria-modal="true" aria-labelledby="pmodalName">' +
+        '<div class="modal-head">' +
+          '<h2 class="modal-title" id="pmodalName"></h2>' +
+          '<button class="modal-close" data-close type="button" aria-label="Закрыть">×</button>' +
+        "</div>" +
+        '<div class="modal-body">' +
+          '<p class="modal-desc" id="pmodalDesc"></p>' +
+          '<div class="pmodal-cat" id="pmodalCat"></div>' +
+          '<div class="pmodal-block" id="pmodalSizesBlock">' +
+            '<p class="pmodal-label">Объём</p>' +
+            '<div class="size-options" id="pmodalSizes" role="radiogroup" aria-label="Выберите объём"></div>' +
+          "</div>" +
+          '<div class="pmodal-block" id="pmodalAddonsBlock" hidden>' +
+            '<p class="pmodal-label">Добавки</p>' +
+            '<div id="pmodalAddons"></div>' +
+          "</div>" +
+          '<div class="pmodal-bottom">' +
+            '<div class="stepper">' +
+              '<button type="button" class="stepper-btn" id="pqMinus" aria-label="Меньше">−</button>' +
+              '<span class="stepper-value" id="pqValue">1</span>' +
+              '<button type="button" class="stepper-btn" id="pqPlus" aria-label="Больше">+</button>' +
+            "</div>" +
+            '<button class="btn btn--primary btn--grow" id="pmodalAddBtn" type="button">Добавить в корзину</button>' +
+          "</div>" +
+        "</div>" +
+      "</div>" +
+    "</div>";
+
+  var reviewModalHtml =
+    '<div class="modal" id="reviewModal" aria-hidden="true">' +
+      '<div class="modal-backdrop" data-close></div>' +
+      '<div class="modal-panel" role="dialog" aria-modal="true" aria-label="Оставить отзыв">' +
+        '<div class="modal-head">' +
+          '<h2 class="modal-title">Оставить отзыв</h2>' +
+          '<button class="modal-close" data-close type="button" aria-label="Закрыть">×</button>' +
+        "</div>" +
+        '<div class="modal-body">' +
+          '<form id="reviewForm" novalidate>' +
+            '<label class="field">' +
+              '<span class="field-label">Имя <i class="optional">необязательно</i></span>' +
+              '<input type="text" id="rvName" maxlength="40" placeholder="Ваше имя">' +
+            "</label>" +
+            '<div class="field" style="margin-top:14px;">' +
+              '<span class="field-label">Оценка <i class="field-required">обязательно</i></span>' +
+              '<div class="stars" id="rvStars" role="radiogroup" aria-label="Оценка от 1 до 5">' +
+                '<button type="button" class="star" data-val="1" aria-label="1 звезда">★</button>' +
+                '<button type="button" class="star" data-val="2" aria-label="2 звезды">★</button>' +
+                '<button type="button" class="star" data-val="3" aria-label="3 звезды">★</button>' +
+                '<button type="button" class="star" data-val="4" aria-label="4 звезды">★</button>' +
+                '<button type="button" class="star" data-val="5" aria-label="5 звёзд">★</button>' +
+              "</div>" +
+            "</div>" +
+            '<label class="field" style="margin-top:14px;">' +
+              '<span class="field-label">Отзыв <i class="field-required">обязательно</i></span>' +
+              '<textarea id="rvText" rows="4" maxlength="600" placeholder="Поделитесь впечатлениями"></textarea>' +
+            "</label>" +
+            '<button type="submit" class="btn btn--primary btn--wide" style="margin-top:16px;">Отправить отзыв</button>' +
+            '<p class="form-hint">Отзыв отправится нам в WhatsApp. После модерации он появится на сайте.</p>' +
+          "</form>" +
+        "</div>" +
+      "</div>" +
+    "</div>";
+
+  var toastHtml = '<div class="toast" id="toast" role="status" aria-live="polite"></div>';
+
+  function parseHtml(html) {
+    var d = document.createElement("div");
+    d.innerHTML = html;
+    return d.firstElementChild;
+  }
+
+  function setActiveNav() {
+    var file = (window.location.pathname.split("/").pop() || "index.html").toLowerCase();
+    if (!file || file === "/") file = "index.html";
+
+    $$(".site-header .nav-link").forEach(function (a) {
+      var href = (a.getAttribute("href") || "").toLowerCase();
+      if (href === file) {
+        a.classList.add("active");
+        a.setAttribute("aria-current", "page");
       }
-      $$(".bn-item").forEach(function (el) {
-        el.classList.toggle("active", el.dataset.bn === (current === "hero" ? "home" : current));
-      });
-      $$(".top-nav .nav-link").forEach(function (el) {
-        var href = el.getAttribute("href");
-        el.classList.toggle("active", href === "#" + current);
-      });
-    }
-
-    window.addEventListener("scroll", function () {
-      if (!ticking) { ticking = true; requestAnimationFrame(update); }
-    }, { passive: true });
-    update();
+    });
+    $$(".bottom-nav .bn-item").forEach(function (a) {
+      var href = (a.getAttribute("href") || "").toLowerCase();
+      if (href === file) a.classList.add("active");
+    });
   }
 
-  /* ------------------------------------------------------------------
-     15. ИНИЦИАЛИЗАЦИЯ
-     ------------------------------------------------------------------ */
-  function init() {
-    // Статистика
-    var sp = $("#statProducts");
-    var sc = $("#statCategories");
-    if (sp) sp.textContent = products.length;
-    if (sc) sc.textContent = categories.length - 1;
+  function bindCartModal() {
+    var cartModal = $("#cartModal");
+    if (!cartModal) return;
 
-    var year = $("#footerYear");
-    if (year) year.textContent = new Date().getFullYear();
+    cartModal.addEventListener("click", function (e) {
+      if (e.target.closest("[data-close]")) closeModal(cartModal);
+    });
 
-    // Меню
-    renderChips();
-    renderMenu();
-    renderReviews();
-    renderCartUI();
+    $("#toMenuBtn").addEventListener("click", function () {
+      closeModal(cartModal);
+      window.location.href = "menu.html";
+    });
 
-    // Бронирование
-    buildTimeOptions();
-    setMinDate();
+    // Очистка корзины с подтверждением
+    var clearBtn = $("#clearCartBtn");
+    var clearTimer = null;
+    clearBtn.addEventListener("click", function () {
+      if (clearBtn.dataset.armed !== "1") {
+        clearBtn.dataset.armed = "1";
+        clearBtn.textContent = "Точно очистить?";
+        clearTimeout(clearTimer);
+        clearTimer = setTimeout(function () {
+          clearBtn.dataset.armed = "";
+          clearBtn.textContent = "Очистить корзину";
+        }, 3000);
+        return;
+      }
+      clearBtn.dataset.armed = "";
+      clearBtn.textContent = "Очистить корзину";
+      clearCart();
+      toast("Корзина очищена");
+    });
 
-    // Форма заказа
-    renderCheckoutFields();
+    // Тип заказа
     $$("#orderTypeWrap .order-type-btn").forEach(function (btn) {
       btn.addEventListener("click", function () {
         orderType = btn.dataset.type;
@@ -848,10 +878,260 @@
         renderCheckoutFields();
       });
     });
-    var defaultTypeBtn = document.querySelector('#orderTypeWrap .order-type-btn[data-type="dine"]');
-    if (defaultTypeBtn) defaultTypeBtn.classList.add("selected");
+    var dineBtn = document.querySelector('#orderTypeWrap .order-type-btn[data-type="dine"]');
+    if (dineBtn) dineBtn.classList.add("selected");
+    renderCheckoutFields();
 
-    // Категории (делегирование)
+    // Управление корзиной (делегирование)
+    $("#cartItems").addEventListener("click", function (e) {
+      var itemEl = e.target.closest(".cart-item");
+      if (!itemEl) return;
+      var key = itemEl.dataset.key;
+      var action = e.target.closest("[data-action]");
+      if (!action) return;
+      if (action.dataset.action === "remove") {
+        setQty(key, 0);
+        toast("Товар удалён");
+      } else if (action.dataset.action === "minus") {
+        var cur = cart.find(function (i) { return i.key === key; });
+        if (cur) setQty(key, cur.qty - 1);
+      } else if (action.dataset.action === "plus") {
+        var cur2 = cart.find(function (i) { return i.key === key; });
+        if (cur2) setQty(key, cur2.qty + 1);
+      }
+    });
+
+    // Сброс подсветки ошибки при вводе
+    $("#checkoutFields").addEventListener("input", function (e) {
+      var f = e.target.closest(".field-error");
+      if (f) f.classList.remove("field-error");
+    });
+
+    // ============ ОФОРМЛЕНИЕ ЗАКАЗА ============
+    $("#checkoutForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      // 1. Корзина не пустая
+      if (!cart.length) {
+        toast("Корзина пуста");
+        return;
+      }
+
+      var data = collectCheckout();
+
+      // 2. Для доставки адрес обязателен — с понятной ошибкой
+      if (orderType === "delivery" && !data.address) {
+        toast("Укажите адрес доставки");
+        var addr = $("#coAddress");
+        if (addr) {
+          addr.closest(".field").classList.add("field-error");
+          try { addr.focus({ preventScroll: true }); } catch (err) {}
+        }
+        return;
+      }
+
+      // 3. Формируем сообщение и открываем WhatsApp
+      openWhatsApp(buildOrderMessage(data));
+      toast("Заказ сформирован в WhatsApp");
+    });
+  }
+
+  function injectShell() {
+    var body = document.body;
+    var main = document.getElementById("main");
+
+    var header = parseHtml(headerHtml);
+    if (main) {
+      body.insertBefore(header, main);
+    } else {
+      body.insertBefore(header, body.firstChild);
+    }
+
+    body.appendChild(parseHtml(footerHtml));
+    body.appendChild(parseHtml(bottomNavHtml));
+    body.appendChild(parseHtml(cartModalHtml));
+    body.appendChild(parseHtml(toastHtml));
+
+    if (PAGE === "menu") body.appendChild(parseHtml(productModalHtml));
+    if (PAGE === "reviews") body.appendChild(parseHtml(reviewModalHtml));
+
+    // Открытие корзины из шапки и нижней навигации
+    var headerBtn = $("#headerCartBtn");
+    if (headerBtn) headerBtn.addEventListener("click", function () { openModal($("#cartModal"), headerBtn); });
+    var bnCart = $("#bnCart");
+    if (bnCart) bnCart.addEventListener("click", function () { openModal($("#cartModal"), bnCart); });
+
+    bindCartModal();
+    setActiveNav();
+  }
+
+  /* ------------------------------------------------------------------
+     СТРАНИЦА МЕНЮ
+     ------------------------------------------------------------------ */
+  function renderChips() {
+    var wrap = $("#categoryChips");
+    if (!wrap) return;
+    wrap.innerHTML = categories.map(function (c) {
+      var count = c.id === "all" ? products.length : products.filter(function (p) { return p.category === c.id; }).length;
+      var cls = "chip" + (c.id === activeCategory ? " active" : "");
+      return (
+        '<button type="button" class="' + cls + '" data-cat="' + c.id + '" role="tab" aria-selected="' + (c.id === activeCategory) + '">' +
+          esc(c.label) +
+          '<span class="chip-count">' + count + "</span>" +
+        "</button>"
+      );
+    }).join("");
+  }
+
+  // Поиск с учётом русских словоформ: «коктейль» находит «Коктейли»
+  function normSearch(s) {
+    return String(s || "").toLowerCase().replace(/ё/g, "е");
+  }
+  function stemSearch(s) {
+    return s.replace(/(ами|ями|ией|ия|ию|ие|ий|ах|ях|ов|ев|ом|ем|ой|ей|ам|ям|ы|и|а|я|у|ю|о|е|ь)$/g, "");
+  }
+
+  function filteredProducts() {
+    var q = normSearch(searchQuery.trim());
+    return products.filter(function (p) {
+      var byCat = activeCategory === "all" || p.category === activeCategory;
+      if (!byCat) return false;
+      if (!q) return true;
+      var hay = normSearch(p.name + " " + categoryLabel(p.category) + " " + (p.desc || ""));
+      if (hay.indexOf(q) !== -1) return true;
+      return stemSearch(hay).indexOf(stemSearch(q)) !== -1;
+    });
+  }
+
+  function renderMenu() {
+    var grid = $("#productGrid");
+    if (!grid) return;
+    var list = filteredProducts();
+    var empty = $("#menuEmpty");
+
+    if (!list.length) {
+      grid.innerHTML = "";
+      if (empty) {
+        empty.hidden = false;
+        $("#emptyQuery").textContent = searchQuery.trim();
+      }
+      return;
+    }
+
+    if (empty) empty.hidden = true;
+
+    grid.innerHTML = list.map(function (p) {
+      var sizesHtml = p.sizes.map(function (s, i) {
+        return (
+          '<div class="size-row" data-size="' + i + '" role="button" tabindex="0" aria-label="' + esc(s.volume) + " — " + money(s.price) + '">' +
+            '<span class="size-vol">' + esc(s.volume) + "</span>" +
+            '<span class="size-price">' + money(s.price) + "</span>" +
+          "</div>"
+        );
+      }).join("");
+
+      var imageHtml = "";
+      if (p.image) {
+        imageHtml = '<div class="pc-img"><img src="' + esc(p.image) + '" alt="' + esc(p.name) + '" loading="lazy"></div>';
+      }
+
+      return (
+        '<article class="product-card" data-id="' + p.id + '">' +
+          imageHtml +
+          '<span class="pc-cat">' + esc(categoryLabel(p.category)) + "</span>" +
+          '<h3 class="pc-name">' + esc(p.name) + "</h3>" +
+          '<p class="pc-desc">' + esc(p.desc || "") + "</p>" +
+          '<div class="pc-sizes">' + sizesHtml + "</div>" +
+          '<button type="button" class="btn btn--outline btn--sm pc-add" data-id="' + p.id + '">Добавить</button>' +
+        "</article>"
+      );
+    }).join("");
+  }
+
+  function openProductModal(productId, presetSize) {
+    var p = products.find(function (x) { return x.id === productId; });
+    if (!p) return;
+
+    pm = {
+      product: p,
+      sizeIndex: Math.min(presetSize || 0, p.sizes.length - 1),
+      addons: [],
+      qty: 1,
+    };
+
+    $("#pmodalName").textContent = p.name;
+    $("#pmodalDesc").textContent = p.desc || "";
+    $("#pmodalCat").textContent = categoryLabel(p.category);
+    $("#pqValue").textContent = "1";
+
+    var sizesWrap = $("#pmodalSizes");
+    sizesWrap.innerHTML = p.sizes.map(function (s, i) {
+      return (
+        '<button type="button" class="size-opt" data-size="' + i + '">' +
+          '<span class="opt-label"><span class="radio" aria-hidden="true"></span>' + esc(s.volume) + "</span>" +
+          '<span class="opt-price">' + money(s.price) + "</span>" +
+        "</button>"
+      );
+    }).join("");
+
+    var addonsWrap = $("#pmodalAddons");
+    var addonsBlock = $("#pmodalAddonsBlock");
+    var groups = p.addons || [];
+    if (groups.length) {
+      addonsWrap.innerHTML = groups.map(function (g) {
+        var opts = (ADDONS[g] || []).map(function (a, i) {
+          return (
+            '<button type="button" class="addon-opt" data-key="' + g + ":" + i + '">' +
+              '<span class="opt-label"><span class="check" aria-hidden="true"></span>' + esc(a.name) + "</span>" +
+              '<span class="opt-price">+' + a.price + " ₽</span>" +
+            "</button>"
+          );
+        }).join("");
+        return (
+          '<p class="pmodal-label">' + esc(ADDON_GROUP_LABELS[g] || g) + "</p>" +
+          '<div class="addon-options">' + opts + "</div>"
+        );
+      }).join("");
+      addonsBlock.hidden = false;
+    } else {
+      addonsWrap.innerHTML = "";
+      addonsBlock.hidden = true;
+    }
+
+    syncProductModal();
+    openModal($("#productModal"), $("#productModal"));
+  }
+
+  function syncProductModal() {
+    if (!pm) return;
+    var p = pm.product;
+
+    $$("#pmodalSizes .size-opt").forEach(function (el) {
+      el.classList.toggle("selected", Number(el.dataset.size) === pm.sizeIndex);
+    });
+    $$("#pmodalAddons .addon-opt").forEach(function (el) {
+      el.classList.toggle("selected", pm.addons.indexOf(el.dataset.key) !== -1);
+    });
+
+    var addonPrice = pm.addons.reduce(function (s, key) {
+      var parts = key.split(":");
+      var group = ADDONS[parts[0]];
+      return s + (group ? group[Number(parts[1])].price : 0);
+    }, 0);
+    var unit = p.sizes[pm.sizeIndex].price + addonPrice;
+    $("#pmodalAddBtn").textContent = "Добавить в корзину — " + money(unit);
+  }
+
+  function initMenuPage() {
+    if (!$("#categoryChips")) return;
+
+    var count = $("#menuCount");
+    if (count) count.textContent = products.length;
+
+    renderChips();
+    renderMenu();
+
+    // Категории
     $("#categoryChips").addEventListener("click", function (e) {
       var chip = e.target.closest(".chip");
       if (!chip) return;
@@ -859,7 +1139,9 @@
       renderChips();
       renderMenu();
       var grid = $("#productGrid");
-      if (grid.firstElementChild) grid.firstElementChild.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      if (grid && grid.firstElementChild) {
+        grid.firstElementChild.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
     });
 
     // Поиск
@@ -877,22 +1159,17 @@
       searchInput.focus();
     });
 
-    // Карточки товаров (делегирование)
+    // Карточки товаров
     $("#productGrid").addEventListener("click", function (e) {
-      var sizeRow = e.target.closest(".size-row");
-      var addBtn = e.target.closest(".pc-add");
       var card = e.target.closest(".product-card");
       if (!card) return;
       var id = Number(card.dataset.id);
-      if (sizeRow) {
-        openProductModal(id, Number(sizeRow.dataset.size));
-      } else if (addBtn) {
-        openProductModal(id, 0);
-      } else {
-        openProductModal(id, 0);
-      }
+      var sizeRow = e.target.closest(".size-row");
+      var addBtn = e.target.closest(".pc-add");
+      if (sizeRow) openProductModal(id, Number(sizeRow.dataset.size));
+      else if (addBtn) openProductModal(id, 0);
+      else openProductModal(id, 0);
     });
-    // Доступность: Enter на строке объёма
     $("#productGrid").addEventListener("keydown", function (e) {
       if (e.key !== "Enter" && e.key !== " ") return;
       var sizeRow = e.target.closest(".size-row");
@@ -902,7 +1179,7 @@
       }
     });
 
-    // Модалка товара
+    // Модальное окно товара
     $("#pmodalSizes").addEventListener("click", function (e) {
       var opt = e.target.closest(".size-opt");
       if (!opt || !pm) return;
@@ -940,71 +1217,23 @@
       }
     });
 
-    // Открытие корзины
-    ["#headerCartBtn", "#bnCart", "#heroOrderBtn"].forEach(function (sel) {
-      var btn = $(sel);
-      if (btn) btn.addEventListener("click", function () { openModal($("#cartModal"), btn); });
-    });
-    $("#toMenuBtn").addEventListener("click", function () {
-      closeModal($("#cartModal"));
-      document.getElementById("menu").scrollIntoView({ behavior: "smooth" });
-    });
+    var productModal = $("#productModal");
+    if (productModal) {
+      productModal.addEventListener("click", function (e) {
+        if (e.target.closest("[data-close]")) closeModal(productModal);
+      });
+    }
+  }
 
-    // Управление корзиной (делегирование)
-    $("#cartItems").addEventListener("click", function (e) {
-      var itemEl = e.target.closest(".cart-item");
-      if (!itemEl) return;
-      var key = itemEl.dataset.key;
-      var action = e.target.closest("[data-action]");
-      if (!action) return;
-      if (action.dataset.action === "remove") {
-        setQty(key, 0);
-        toast("Товар удалён");
-      } else if (action.dataset.action === "minus") {
-        var cur = cart.find(function (i) { return i.key === key; });
-        if (cur) setQty(key, cur.qty - 1);
-      } else if (action.dataset.action === "plus") {
-        var cur2 = cart.find(function (i) { return i.key === key; });
-        if (cur2) setQty(key, cur2.qty + 1);
-      }
-    });
+  /* ------------------------------------------------------------------
+     СТРАНИЦА БРОНИРОВАНИЯ
+     ------------------------------------------------------------------ */
+  function initBookingPage() {
+    if (!$("#bookingForm")) return;
 
-    // Очистка корзины (двойное подтверждение)
-    var clearBtn = $("#clearCartBtn");
-    var clearTimer = null;
-    clearBtn.addEventListener("click", function () {
-      if (clearBtn.dataset.armed !== "1") {
-        clearBtn.dataset.armed = "1";
-        clearBtn.textContent = "Точно очистить?";
-        clearTimeout(clearTimer);
-        clearTimer = setTimeout(function () {
-          clearBtn.dataset.armed = "";
-          clearBtn.textContent = "Очистить корзину";
-        }, 3000);
-        return;
-      }
-      clearBtn.dataset.armed = "";
-      clearBtn.textContent = "Очистить корзину";
-      clearCart();
-      toast("Корзина очищена");
-    });
+    buildTimeOptions();
+    setMinDate();
 
-    // Оформление заказа
-    $("#checkoutForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-      if (!cart.length) {
-        toast("Корзина пуста — добавьте напитки");
-        return;
-      }
-      var data = collectCheckout();
-      if (!data.name) { toast("Пожалуйста, укажите имя"); return; }
-      if (!isValidPhone(data.phone)) { toast("Пожалуйста, укажите корректный телефон"); return; }
-      if (orderType === "delivery" && !data.address) { toast("Пожалуйста, укажите адрес доставки"); return; }
-      openWhatsApp(buildOrderMessage(data));
-      toast("Заказ сформирован в WhatsApp");
-    });
-
-    // Бронирование
     var guests = 2;
     function setGuests(v) {
       guests = Math.max(1, Math.min(20, v));
@@ -1015,70 +1244,108 @@
 
     $("#bookingForm").addEventListener("submit", function (e) {
       e.preventDefault();
+
       var name = $("#bkName").value.trim();
       var phone = $("#bkPhone").value.trim();
       var date = $("#bkDate").value;
       var time = $("#bkTime").value;
       var comment = $("#bkComment").value.trim();
 
-      if (!name) { toast("Пожалуйста, укажите имя"); return; }
-      if (!isValidPhone(phone)) { toast("Пожалуйста, укажите корректный телефон"); return; }
+      // Обязательны только дата и время
       if (!date) { toast("Пожалуйста, выберите дату"); return; }
+      if (date < isoToday()) { toast("Нельзя выбрать прошедшую дату"); return; }
       if (!time) { toast("Пожалуйста, выберите время"); return; }
-
-      var d = new Date();
-      var todayIso = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
-      if (date < todayIso) { toast("Нельзя выбрать прошедшую дату"); return; }
 
       openWhatsApp(buildBookingMessage({ name: name, phone: phone, guests: guests, date: date, time: time, comment: comment }));
       toast("Бронь сформирована в WhatsApp");
     });
+  }
 
-    // Отзывы
+  /* ------------------------------------------------------------------
+     СТРАНИЦА ОТЗЫВОВ
+     ------------------------------------------------------------------ */
+  function initReviewsPage() {
+    if (!$("#reviewsGrid")) return;
+
+    renderReviews();
     renderStars();
+
     $("#rvStars").addEventListener("click", function (e) {
       var star = e.target.closest(".star");
       if (!star) return;
       reviewRating = Number(star.dataset.val);
       renderStars();
     });
+
     $("#openReviewBtn").addEventListener("click", function () {
       openModal($("#reviewModal"), $("#openReviewBtn"));
     });
+
+    var reviewModal = $("#reviewModal");
+    if (reviewModal) {
+      reviewModal.addEventListener("click", function (e) {
+        if (e.target.closest("[data-close]")) closeModal(reviewModal);
+      });
+    }
+
     $("#reviewForm").addEventListener("submit", function (e) {
       e.preventDefault();
       var name = $("#rvName").value.trim();
       var text = $("#rvText").value.trim();
-      if (!name) { toast("Пожалуйста, укажите имя"); return; }
+
+      // Обязателен только текст
       if (!text) { toast("Пожалуйста, напишите отзыв"); return; }
+
       openWhatsApp(buildReviewMessage({ name: name, rating: reviewRating, text: text }));
       closeModal($("#reviewModal"));
       $("#rvText").value = "";
       $("#rvName").value = "";
       toast("Отзыв отправлен, спасибо!");
     });
+  }
 
-    // Модальные окна: закрытие
-    $$(".modal").forEach(function (modal) {
-      modal.addEventListener("click", function (e) {
-        if (e.target.closest("[data-close]")) closeModal(modal);
+  /* ------------------------------------------------------------------
+     ПРОЧЕЕ: появление при прокрутке, якоря, ESC
+     ------------------------------------------------------------------ */
+  function initReveal() {
+    if (!("IntersectionObserver" in window)) {
+      $$(".reveal").forEach(function (el) { el.classList.add("in"); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
       });
-      modal.querySelectorAll(".modal-close").forEach(function (btn) {
-        btn.addEventListener("click", function () { closeModal(modal); });
-      });
-    });
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") closeAllModals();
-    });
+    }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+    $$(".reveal").forEach(function (el) { io.observe(el); });
+  }
+
+  /* ------------------------------------------------------------------
+     ИНИЦИАЛИЗАЦИЯ
+     ------------------------------------------------------------------ */
+  function init() {
+    injectShell();
+    renderCartUI();
+
+    var year = $("#footerYear");
+    if (year) year.textContent = new Date().getFullYear();
+
+    var sp = $("#statProducts");
+    var sc = $("#statCategories");
+    if (sp) sp.textContent = products.length;
+    if (sc) sc.textContent = categories.length - 1;
+
+    if (PAGE === "menu") initMenuPage();
+    if (PAGE === "booking") initBookingPage();
+    if (PAGE === "reviews") initReviewsPage();
 
     initReveal();
-    initScrollSpy();
 
-    // Плавная прокрутка для якорных ссылок с учётом шапки
+    // Плавная прокрутка для внутренних якорей (например #hero на главной)
     $$('a[href^="#"]').forEach(function (a) {
       a.addEventListener("click", function (e) {
         var id = a.getAttribute("href");
-        if (id.length > 1) {
+        if (id && id.length > 1) {
           var target = document.querySelector(id);
           if (target) {
             e.preventDefault();
@@ -1087,18 +1354,22 @@
         }
       });
     });
+
+    // ESC закрывает модальные окна
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") closeAllModals();
+    });
   }
 
-  /* ------------------------------------------------------------------
-     16. СТАРТ
-     ------------------------------------------------------------------ */
-  if (typeof document !== "undefined") {
+  function boot() {
+    if (typeof document === "undefined") return; // node-совместимость (тесты данных)
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", init);
     } else {
       init();
     }
   }
+  boot();
 
   /* Экспорт для проверки данных (node tests) */
   if (typeof module !== "undefined" && module.exports) {

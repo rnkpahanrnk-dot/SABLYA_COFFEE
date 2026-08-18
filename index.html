@@ -7,24 +7,19 @@
   <meta name="description" content="SABLYA COFFEE — кофе, авторские напитки, лимонады, коктейли, чай и уютная атмосфера в Бабаюрте. Меню, доставка и бронирование столиков.">
   <meta name="theme-color" content="#2b2019">
 
-  <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="SABLYA COFFEE — Вкус кофе. Характер Кавказа.">
   <meta property="og:description" content="Кофе, авторские напитки, лимонады, коктейли, чай и уютная атмосфера в Бабаюрте. Меню, доставка и бронирование столиков.">
   <meta property="og:locale" content="ru_RU">
-  <!-- После публикации на GitHub Pages укажите реальный адрес сайта: -->
-  <!-- <meta property="og:url" content="https://ВАШ-ЛОГИН.github.io/SABLYA-COFFEE/"> -->
 
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232b2019'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='40' font-weight='700' fill='%23f7f1e8' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
 
-  <!-- Шрифты: изящный сериф для заголовков + аккуратный гротеск для текста (с запасными системными шрифтами) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
 
-  <!-- Структурированные данные для поисковиков -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -45,36 +40,7 @@
   }
   </script>
 </head>
-<body>
-
-  <a class="skip-link" href="#menu">Перейти к меню</a>
-
-  <!-- ======================= ШАПКА ======================= -->
-  <header class="site-header" id="siteHeader">
-    <div class="container header-inner">
-      <a class="logo" href="#hero" aria-label="SABLYA COFFEE — на главную">
-        <span class="logo-mark" aria-hidden="true">S</span>
-        <span class="logo-text">SABLYA&nbsp;<em>COFFEE</em></span>
-      </a>
-
-      <nav class="top-nav" aria-label="Основная навигация">
-        <a href="#hero" class="nav-link">Главная</a>
-        <a href="#menu" class="nav-link">Меню</a>
-        <a href="#about" class="nav-link">О нас</a>
-        <a href="#booking" class="nav-link">Бронь</a>
-        <a href="#reviews" class="nav-link">Отзывы</a>
-        <a href="#contacts" class="nav-link">Контакты</a>
-      </nav>
-
-      <button class="cart-btn" id="headerCartBtn" aria-label="Открыть корзину">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M6 8h12l-1.2 11.2a1.8 1.8 0 0 1-1.8 1.6H9a1.8 1.8 0 0 1-1.8-1.6L6 8Z"/>
-          <path d="M9 10V6a3 3 0 0 1 6 0v4"/>
-        </svg>
-        <span class="cart-badge" id="cartBadge" hidden>0</span>
-      </button>
-    </div>
-  </header>
+<body data-page="home">
 
   <main id="main">
 
@@ -86,7 +52,6 @@
           <path d="M0 10h66"/>
           <path d="M174 10h66"/>
           <path d="M120 3l5 7-5 7-5-7 5-7z"/>
-          <path d="M84 10l4 0"/><path d="M156 10l4 0"/>
           <circle cx="72" cy="10" r="2"/><circle cx="168" cy="10" r="2"/>
         </svg>
         <p class="hero-kicker">Кофейня&nbsp;·&nbsp;Бабаюрт</p>
@@ -95,9 +60,9 @@
         <p class="hero-text">Кофе, авторские напитки и тёплая атмосфера.</p>
 
         <div class="hero-actions">
-          <a href="#menu" class="btn btn--primary">Открыть меню</a>
-          <a href="#booking" class="btn btn--outline">Забронировать столик</a>
-          <button class="btn btn--ghost" id="heroOrderBtn" type="button">Заказать</button>
+          <a href="menu.html" class="btn btn--primary">Открыть меню</a>
+          <a href="booking.html" class="btn btn--outline">Забронировать столик</a>
+          <a href="menu.html" class="btn btn--ghost">Заказать</a>
         </div>
 
         <p class="hero-stats">
@@ -110,7 +75,7 @@
       </div>
     </section>
 
-    <!-- ======================= О НАС ======================= -->
+    <!-- ======================= О НАС (кратко) ======================= -->
     <section class="section" id="about">
       <div class="container narrow">
         <div class="section-head reveal">
@@ -125,6 +90,7 @@
 
         <div class="about-text reveal">
           <p>SABLYA COFFEE — место, где современная кофейная культура встречается с характером Кавказа. Здесь мы готовим кофе, авторские напитки и любимые классические позиции для тех, кто ценит вкус, атмосферу и настоящее гостеприимство.</p>
+          <p class="about-more"><a class="link-btn" href="about.html">Подробнее о нас →</a></p>
         </div>
 
         <div class="about-grid">
@@ -136,40 +102,8 @@
       </div>
     </section>
 
-    <!-- ======================= МЕНЮ ======================= -->
-    <section class="section section--menu" id="menu">
-      <div class="container">
-        <div class="section-head reveal">
-          <svg class="ornament" viewBox="0 0 240 20" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true">
-            <path d="M0 10h66"/><path d="M174 10h66"/>
-            <path d="M120 3l5 7-5 7-5-7 5-7z"/>
-            <circle cx="72" cy="10" r="2"/><circle cx="168" cy="10" r="2"/>
-          </svg>
-          <p class="kicker">Меню</p>
-          <h2 class="section-title">Наше меню</h2>
-          <p class="section-sub">Всего <span id="menuCount">–</span> позиций. Выберите напиток — добавки и объёмы можно настроить в карточке товара.</p>
-        </div>
-
-        <div class="menu-toolbar reveal">
-          <div class="search-wrap">
-            <svg class="search-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
-              <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
-            </svg>
-            <input type="search" id="searchInput" class="search-input" placeholder="Найти напиток или десерт…" autocomplete="off" aria-label="Поиск по меню">
-            <button class="search-clear" id="searchClear" type="button" aria-label="Очистить поиск" hidden>×</button>
-          </div>
-        </div>
-
-        <div class="chips reveal" id="categoryChips" role="tablist" aria-label="Категории меню"></div>
-
-        <div class="product-grid" id="productGrid" aria-live="polite"></div>
-
-        <p class="menu-empty" id="menuEmpty" hidden>По запросу «<span id="emptyQuery"></span>» ничего не найдено. Попробуйте изменить поиск.</p>
-      </div>
-    </section>
-
-    <!-- ======================= БРОНИРОВАНИЕ ======================= -->
-    <section class="section section--warm" id="booking">
+    <!-- ======================= КАК ЗАКАЗАТЬ ======================= -->
+    <section class="section section--warm">
       <div class="container narrow">
         <div class="section-head reveal">
           <svg class="ornament" viewBox="0 0 240 20" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true">
@@ -177,77 +111,37 @@
             <path d="M120 3l5 7-5 7-5-7 5-7z"/>
             <circle cx="72" cy="10" r="2"/><circle cx="168" cy="10" r="2"/>
           </svg>
-          <p class="kicker">Бронирование</p>
-          <h2 class="section-title">Забронировать столик</h2>
-          <p class="section-sub">Заполните форму — подтверждение брони придёт в WhatsApp.</p>
+          <p class="kicker">Как заказать</p>
+          <h2 class="section-title">Просто и быстро</h2>
         </div>
 
-        <form class="booking-form reveal" id="bookingForm" novalidate>
-          <div class="form-grid">
-            <label class="field">
-              <span class="field-label">Имя</span>
-              <input type="text" id="bkName" maxlength="40" placeholder="Как к вам обращаться" required>
-            </label>
-            <label class="field">
-              <span class="field-label">Телефон</span>
-              <input type="tel" id="bkPhone" maxlength="20" placeholder="+7 (___) ___-__-__" inputmode="tel" required>
-            </label>
+        <div class="steps">
+          <div class="step reveal">
+            <span class="step-num" aria-hidden="true">1</span>
+            <h3>Выберите напитки</h3>
+            <p>Откройте меню и добавьте любимые позиции в корзину.</p>
           </div>
-          <div class="form-grid">
-            <div class="field">
-              <span class="field-label">Количество гостей</span>
-              <div class="stepper">
-                <button type="button" class="stepper-btn" id="guestsMinus" aria-label="Меньше гостей">−</button>
-                <span class="stepper-value" id="guestsValue">2</span>
-                <button type="button" class="stepper-btn" id="guestsPlus" aria-label="Больше гостей">+</button>
-              </div>
-            </div>
-            <div class="field">
-              <span class="field-label">Время</span>
-              <select id="bkTime" class="select" required></select>
-            </div>
+          <div class="step reveal">
+            <span class="step-num" aria-hidden="true">2</span>
+            <h3>Оформите заказ</h3>
+            <p>Укажите, как удобнее: с собой, в заведении или доставка.</p>
           </div>
-          <div class="form-grid">
-            <label class="field">
-              <span class="field-label">Дата</span>
-              <input type="date" id="bkDate" class="input-date" required>
-            </label>
-            <label class="field">
-              <span class="field-label">Комментарий <i class="optional">необязательно</i></span>
-              <input type="text" id="bkComment" maxlength="200" placeholder="Пожелания к столику">
-            </label>
+          <div class="step reveal">
+            <span class="step-num" aria-hidden="true">3</span>
+            <h3>Заберите заказ</h3>
+            <p>Заказ улетает в WhatsApp — мы всё приготовим к вашему приходу.</p>
           </div>
-          <button type="submit" class="btn btn--primary btn--wide">Забронировать</button>
-          <p class="form-hint">Бронь откроется в WhatsApp — останется нажать «Отправить».</p>
-        </form>
-      </div>
-    </section>
-
-    <!-- ======================= ОТЗЫВЫ ======================= -->
-    <section class="section" id="reviews">
-      <div class="container">
-        <div class="section-head reveal">
-          <svg class="ornament" viewBox="0 0 240 20" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true">
-            <path d="M0 10h66"/><path d="M174 10h66"/>
-            <path d="M120 3l5 7-5 7-5-7 5-7z"/>
-            <circle cx="72" cy="10" r="2"/><circle cx="168" cy="10" r="2"/>
-          </svg>
-          <p class="kicker">Отзывы</p>
-          <h2 class="section-title">Отзывы наших гостей</h2>
-          <p class="section-sub">Каждый напиток здесь готовят так, как для своих.</p>
         </div>
 
-        <div class="reviews-grid" id="reviewsGrid"></div>
-
-        <div class="reviews-cta reveal">
-          <button class="btn btn--outline" id="openReviewBtn" type="button">Оставить отзыв</button>
+        <div class="cta-row reveal">
+          <a href="menu.html" class="btn btn--primary">Открыть меню</a>
         </div>
       </div>
     </section>
 
-    <!-- ======================= КОНТАКТЫ ======================= -->
-    <section class="section section--warm" id="contacts">
-      <div class="container">
+    <!-- ======================= КОНТАКТЫ (кратко) ======================= -->
+    <section class="section" id="home-contacts">
+      <div class="container narrow">
         <div class="section-head reveal">
           <svg class="ornament" viewBox="0 0 240 20" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true">
             <path d="M0 10h66"/><path d="M174 10h66"/>
@@ -255,251 +149,49 @@
             <circle cx="72" cy="10" r="2"/><circle cx="168" cy="10" r="2"/>
           </svg>
           <p class="kicker">Контакты</p>
-          <h2 class="section-title">Контакты</h2>
+          <h2 class="section-title">Как нас найти</h2>
         </div>
 
-        <div class="contacts-grid">
-          <div class="contacts-info reveal">
-            <p class="contacts-brand">SABLYA COFFEE</p>
-            <ul class="contacts-list">
-              <li class="contact-item">
-                <span class="contact-icon" aria-hidden="true">📍</span>
-                <span>Бабаюрт, ул. Ирчи Казака, 54</span>
-              </li>
-              <li class="contact-item">
-                <span class="contact-icon" aria-hidden="true">🕐</span>
-                <span>Ежедневно: 09:00–23:00</span>
-              </li>
-              <li class="contact-item">
-                <span class="contact-icon" aria-hidden="true">📞</span>
-                <a href="tel:+79284567776">+7 (928) 456-77-76</a>
-              </li>
-              <li class="contact-item">
-                <span class="contact-icon" aria-hidden="true">📷</span>
-                <a href="https://www.instagram.com/sabllyaa?utm_source=qr" target="_blank" rel="noopener">Instagram: @sabllyaa</a>
-              </li>
-            </ul>
+        <ul class="contacts-list reveal" style="max-width:420px;margin:0 auto;">
+          <li class="contact-item">
+            <span class="contact-icon" aria-hidden="true">📍</span>
+            <span>Бабаюрт, ул. Ирчи Казака, 54</span>
+          </li>
+          <li class="contact-item">
+            <span class="contact-icon" aria-hidden="true">🕐</span>
+            <span>Ежедневно: 09:00–23:00</span>
+          </li>
+          <li class="contact-item">
+            <span class="contact-icon" aria-hidden="true">📞</span>
+            <a href="tel:+79284567776">+7 (928) 456-77-76</a>
+          </li>
+          <li class="contact-item">
+            <span class="contact-icon" aria-hidden="true">📷</span>
+            <a href="https://www.instagram.com/sabllyaa?utm_source=qr" target="_blank" rel="noopener">Instagram: @sabllyaa</a>
+          </li>
+        </ul>
 
-            <div class="contacts-actions">
-              <a class="btn btn--outline btn--sm" href="tel:+79284567776">Позвонить</a>
-              <a class="btn btn--outline btn--sm" href="https://www.instagram.com/sabllyaa?utm_source=qr" target="_blank" rel="noopener">Instagram</a>
-              <a class="btn btn--outline btn--sm" href="https://chat.whatsapp.com/LUt8cAMwP643f9Od00mOk7?s=sh&p=a&ilr=1" target="_blank" rel="noopener">WhatsApp</a>
-              <a class="btn btn--outline btn--sm" href="https://yandex.ru/maps/?text=%D0%91%D0%B0%D0%B1%D0%B0%D1%8E%D1%80%D1%82%2C%20%D1%83%D0%BB.%20%D0%98%D1%80%D1%87%D0%B8%20%D0%9A%D0%B0%D0%B7%D0%B0%D0%BA%D0%B0%2C%2054" target="_blank" rel="noopener">Построить маршрут</a>
-            </div>
-
-            <div class="social-note reveal">
-              <p><strong>Присоединяйтесь к нашей группе WhatsApp</strong></p>
-              <a class="link-btn" href="https://chat.whatsapp.com/LUt8cAMwP643f9Od00mOk7?s=sh&p=a&ilr=1" target="_blank" rel="noopener">Наш WhatsApp →</a>
-            </div>
-          </div>
-
-          <div class="map-wrap reveal">
-            <iframe
-              title="Карта — SABLYA COFFEE, Бабаюрт, ул. Ирчи Казака, 54"
-              src="https://www.openstreetmap.org/export/embed.html?bbox=46.7595%2C43.5895%2C46.7995%2C43.6095&amp;layer=mapnik&amp;marker=43.5995%2C46.7795"
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"></iframe>
-            <a class="btn btn--outline btn--sm map-route" href="https://yandex.ru/maps/?text=%D0%91%D0%B0%D0%B1%D0%B0%D1%8E%D1%80%D1%82%2C%20%D1%83%D0%BB.%20%D0%98%D1%80%D1%87%D0%B8%20%D0%9A%D0%B0%D0%B7%D0%B0%D0%BA%D0%B0%2C%2054" target="_blank" rel="noopener">Построить маршрут</a>
-          </div>
+        <div class="cta-row reveal">
+          <a class="btn btn--outline btn--sm" href="tel:+79284567776">Позвонить</a>
+          <a class="btn btn--outline btn--sm" href="https://www.instagram.com/sabllyaa?utm_source=qr" target="_blank" rel="noopener">Instagram</a>
+          <a class="btn btn--outline btn--sm" href="https://chat.whatsapp.com/LUt8cAMwP643f9Od00mOk7?s=sh&p=a&ilr=1" target="_blank" rel="noopener">WhatsApp</a>
+          <a class="btn btn--outline btn--sm" href="contacts.html">Контакты и карта</a>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- ======================= ПОДВАЛ ======================= -->
-  <footer class="site-footer">
-    <div class="container">
-      <p class="footer-brand">SABLYA COFFEE</p>
-      <p class="footer-tagline">Вкус кофе. Характер Кавказа.</p>
-      <nav class="footer-nav" aria-label="Навигация в подвале">
-        <a href="#menu">Меню</a>
-        <a href="#about">О нас</a>
-        <a href="#booking">Бронь</a>
-        <a href="#reviews">Отзывы</a>
-        <a href="#contacts">Контакты</a>
-      </nav>
-      <div class="footer-social">
-        <a href="https://www.instagram.com/sabllyaa?utm_source=qr" target="_blank" rel="noopener">Instagram</a>
-        <span class="dot" aria-hidden="true"></span>
-        <a href="https://chat.whatsapp.com/LUt8cAMwP643f9Od00mOk7?s=sh&p=a&ilr=1" target="_blank" rel="noopener">WhatsApp</a>
-      </div>
-      <p class="footer-copy">© SABLYA COFFEE · <span id="footerYear">2026</span> · Бабаюрт</p>
-    </div>
-  </footer>
-
-  <!-- ======================= МОБИЛЬНАЯ НИЖНЯЯ НАВИГАЦИЯ ======================= -->
-  <nav class="bottom-nav" aria-label="Мобильная навигация">
-    <a href="#hero" class="bn-item" data-bn="home">
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M4 11 12 4l8 7"/><path d="M6 9.5V20h12V9.5"/>
-      </svg>
-      <span>Главная</span>
-    </a>
-    <a href="#menu" class="bn-item" data-bn="menu">
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M5 5h14v3H5z"/><path d="M5 12h14v3H5z"/><path d="M5 19h9v3H5z"/>
-      </svg>
-      <span>Меню</span>
-    </a>
-    <button class="bn-item" data-bn="cart" id="bnCart" type="button">
-      <span class="bn-cart-icon">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M6 8h12l-1.2 11.2a1.8 1.8 0 0 1-1.8 1.6H9a1.8 1.8 0 0 1-1.8-1.6L6 8Z"/>
-          <path d="M9 10V6a3 3 0 0 1 6 0v4"/>
-        </svg>
-        <span class="cart-badge" id="bnCartBadge" hidden>0</span>
-      </span>
-      <span>Корзина</span>
-    </button>
-    <a href="#booking" class="bn-item" data-bn="booking">
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4M16 3v4M4 11h16"/><path d="M12 14l1.6 1.6L16 13.5"/>
-      </svg>
-      <span>Бронь</span>
-    </button>
-    <a href="#contacts" class="bn-item" data-bn="contacts">
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M12 21s7-5.1 7-11a7 7 0 1 0-14 0c0 5.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/>
-      </svg>
-      <span>Контакты</span>
-    </button>
-  </nav>
-
-  <!-- ======================= МОДАЛЬНОЕ ОКНО ТОВАРА ======================= -->
-  <div class="modal" id="productModal" aria-hidden="true">
-    <div class="modal-backdrop" data-close></div>
-    <div class="modal-panel modal-panel--product" role="dialog" aria-modal="true" aria-labelledby="pmodalName">
-      <div class="modal-head">
-        <h2 class="modal-title" id="pmodalName"></h2>
-        <button class="modal-close" data-close type="button" aria-label="Закрыть">×</button>
-      </div>
-      <div class="modal-body">
-        <p class="modal-desc" id="pmodalDesc"></p>
-        <div class="pmodal-cat" id="pmodalCat"></div>
-
-        <div class="pmodal-block" id="pmodalSizesBlock">
-          <p class="pmodal-label">Объём</p>
-          <div class="size-options" id="pmodalSizes" role="radiogroup" aria-label="Выберите объём"></div>
-        </div>
-
-        <div class="pmodal-block" id="pmodalAddonsBlock" hidden>
-          <p class="pmodal-label">Добавки</p>
-          <div id="pmodalAddons"></div>
-        </div>
-
-        <div class="pmodal-bottom">
-          <div class="stepper">
-            <button type="button" class="stepper-btn" id="pqMinus" aria-label="Меньше">−</button>
-            <span class="stepper-value" id="pqValue">1</span>
-            <button type="button" class="stepper-btn" id="pqPlus" aria-label="Больше">+</button>
-          </div>
-          <button class="btn btn--primary btn--grow" id="pmodalAddBtn" type="button">Добавить в корзину</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ======================= МОДАЛЬНОЕ ОКНО КОРЗИНЫ ======================= -->
-  <div class="modal" id="cartModal" aria-hidden="true">
-    <div class="modal-backdrop" data-close></div>
-    <div class="modal-panel modal-panel--cart" role="dialog" aria-modal="true" aria-label="Корзина">
-      <div class="modal-head">
-        <h2 class="modal-title">Корзина</h2>
-        <button class="modal-close" data-close type="button" aria-label="Закрыть корзину">×</button>
-      </div>
-      <div class="cart-scroll">
-        <div id="cartItems" class="cart-items"></div>
-
-        <div id="cartEmpty" class="cart-empty">
-          <p>В корзине пока пусто</p>
-          <p class="cart-empty-sub">Загляните в меню — там много интересного.</p>
-          <button class="btn btn--outline" id="toMenuBtn" type="button">Перейти в меню</button>
-        </div>
-
-        <div id="cartBody" class="cart-body" hidden>
-          <div class="cart-tools">
-            <span class="cart-save-note">Корзина сохраняется автоматически</span>
-            <button class="link-btn link-btn--danger" id="clearCartBtn" type="button">Очистить корзину</button>
-          </div>
-
-          <div class="order-type">
-            <p class="field-label">Тип заказа</p>
-            <div class="order-type-grid" id="orderTypeWrap">
-              <button class="order-type-btn" type="button" data-type="dine">
-                <span class="ot-emoji" aria-hidden="true">🪑</span>В заведении
-              </button>
-              <button class="order-type-btn" type="button" data-type="takeaway">
-                <span class="ot-emoji" aria-hidden="true">🛍</span>С собой
-              </button>
-              <button class="order-type-btn" type="button" data-type="delivery">
-                <span class="ot-emoji" aria-hidden="true">🛵</span>Доставка
-              </button>
-            </div>
-          </div>
-
-          <form id="checkoutForm" novalidate>
-            <div class="form-fields" id="checkoutFields"></div>
-
-            <div class="cart-total-row">
-              <span>Итого</span>
-              <strong id="cartTotal">0 ₽</strong>
-            </div>
-
-            <button type="submit" class="btn btn--primary btn--wide" id="submitOrderBtn">Оформить заказ</button>
-            <p class="form-hint">Заказ откроется в WhatsApp — останется нажать «Отправить».</p>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ======================= МОДАЛЬНОЕ ОКНО ОТЗЫВА ======================= -->
-  <div class="modal" id="reviewModal" aria-hidden="true">
-    <div class="modal-backdrop" data-close></div>
-    <div class="modal-panel" role="dialog" aria-modal="true" aria-label="Оставить отзыв">
-      <div class="modal-head">
-        <h2 class="modal-title">Оставить отзыв</h2>
-        <button class="modal-close" data-close type="button" aria-label="Закрыть">×</button>
-      </div>
-      <div class="modal-body">
-        <form id="reviewForm" novalidate>
-          <label class="field">
-            <span class="field-label">Имя</span>
-            <input type="text" id="rvName" maxlength="40" placeholder="Ваше имя" required>
-          </label>
-
-          <div class="field">
-            <span class="field-label">Оценка</span>
-            <div class="stars" id="rvStars" role="radiogroup" aria-label="Оценка от 1 до 5">
-              <button type="button" class="star" data-val="1" aria-label="1 звезда">★</button>
-              <button type="button" class="star" data-val="2" aria-label="2 звезды">★</button>
-              <button type="button" class="star" data-val="3" aria-label="3 звезды">★</button>
-              <button type="button" class="star" data-val="4" aria-label="4 звезды">★</button>
-              <button type="button" class="star" data-val="5" aria-label="5 звёзд">★</button>
-            </div>
-          </div>
-
-          <label class="field">
-            <span class="field-label">Отзыв</span>
-            <textarea id="rvText" rows="4" maxlength="600" placeholder="Поделитесь впечатлениями" required></textarea>
-          </label>
-
-          <button type="submit" class="btn btn--primary btn--wide">Отправить отзыв</button>
-          <p class="form-hint">Отзыв отправится нам в WhatsApp. После модерации он появится на сайте.</p>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- Уведомления -->
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
   <noscript>
-    <p style="text-align:center;padding:40px 16px;font-family:system-ui,sans-serif;color:#33261d;">
-      Для работы меню и корзины включите JavaScript.
+    <p style="text-align:center;padding:24px 16px;font-family:system-ui,sans-serif;color:#33261d;">
+      Для полной работы сайта включите JavaScript. Разделы:
+      <a href="menu.html">Меню</a> ·
+      <a href="about.html">О нас</a> ·
+      <a href="booking.html">Бронь</a> ·
+      <a href="reviews.html">Отзывы</a> ·
+      <a href="contacts.html">Контакты</a>
     </p>
   </noscript>
 
   <script src="script.js"></script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2d3fe6d4a4dee45',t:'MTc4NzA4ODM1NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

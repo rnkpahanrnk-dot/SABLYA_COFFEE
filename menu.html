@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Меню — SABLYA COFFEE</title>
+  <meta name="description" content="Полное меню SABLYA COFFEE: кофе, рафы, холодный кофе, чай, авторские чаи, коктейли, лимонады, смузи, фреши, мороженое. Заказ с собой, в заведении или доставка через WhatsApp.">
+  <meta name="theme-color" content="#2b2019">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Меню — SABLYA COFFEE">
+  <meta property="og:description" content="Кофе, авторские напитки, лимонады, коктейли, чай. Заказ в заведении, с собой или доставка.">
+  <meta property="og:locale" content="ru_RU">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232b2019'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='40' font-weight='700' fill='%23f7f1e8' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="menu">
+
+  <main id="main">
+
+    <!-- ======================= ЗАГОЛОВОК СТРАНИЦЫ ======================= -->
+    <section class="page-hero">
+      <div class="hero-pattern" aria-hidden="true"></div>
+      <div class="container page-hero-inner">
+        <svg class="ornament" viewBox="0 0 240 20" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true">
+          <path d="M0 10h66"/>
+          <path d="M174 10h66"/>
+          <path d="M120 3l5 7-5 7-5-7 5-7z"/>
+          <circle cx="72" cy="10" r="2"/><circle cx="168" cy="10" r="2"/>
+        </svg>
+        <p class="kicker">Меню</p>
+        <h1>Наше меню</h1>
+        <p class="page-sub">Всего <span id="menuCount">–</span> позиций. Поиск, категории и корзина — прямо здесь. Имя и телефон для заказа не обязательны.</p>
+      </div>
+    </section>
+
+    <!-- ======================= МЕНЮ ======================= -->
+    <section class="section section--menu" id="menuSection">
+      <div class="container">
+
+        <div class="menu-toolbar reveal">
+          <div class="search-wrap">
+            <svg class="search-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+            </svg>
+            <input type="search" id="searchInput" class="search-input" placeholder="Найти напиток или десерт…" autocomplete="off" aria-label="Поиск по меню">
+            <button class="search-clear" id="searchClear" type="button" aria-label="Очистить поиск" hidden>×</button>
+          </div>
+        </div>
+
+        <div class="chips reveal" id="categoryChips" role="tablist" aria-label="Категории меню"></div>
+
+        <div class="product-grid" id="productGrid" aria-live="polite"></div>
+
+        <p class="menu-empty" id="menuEmpty" hidden>По запросу «<span id="emptyQuery"></span>» ничего не найдено. Попробуйте изменить поиск.</p>
+      </div>
+    </section>
+  </main>
+
+  <noscript>
+    <p style="text-align:center;padding:24px 16px;font-family:system-ui,sans-serif;color:#33261d;">
+      Для работы меню и корзины включите JavaScript.
+      <a href="index.html">На главную</a> ·
+      <a href="booking.html">Бронь</a> ·
+      <a href="contacts.html">Контакты</a>
+    </p>
+  </noscript>
+
+  <script src="script.js"></script>
+</body>
+</html>
